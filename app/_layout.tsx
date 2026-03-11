@@ -9,15 +9,10 @@ export default function RootLayout() {
       <StatusBar style="auto" />
       <Stack
         screenOptions={{
-          headerStyle: { backgroundColor: '#4CAF82' },
-          headerTintColor: '#fff',
+          headerTintColor: '#4CAF82',
           headerTitleStyle: { fontWeight: 'bold' },
         }}
-      >
-        <Stack.Screen name="index" options={{ title: '小芽成长' }} />
-        <Stack.Screen name="children/new" options={{ title: '新建档案' }} />
-        <Stack.Screen name="settings/index" options={{ title: '设置' }} />
-      </Stack>
+      />
     </GestureHandlerRootView>
   );
 }
