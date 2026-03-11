@@ -56,7 +56,19 @@ export default function ChildDetailScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       {/* 配置 Stack header 标题 */}
-      <Stack.Screen options={{ title: child.name }} />
+      <Stack.Screen
+        options={{
+          title: child.name,
+          headerRight: () => (
+            <TouchableOpacity
+              style={styles.editBtn}
+              onPress={() => router.push(`/children/${childId}/edit` as never)}
+            >
+              <Text style={styles.editBtnText}>编辑</Text>
+            </TouchableOpacity>
+          ),
+        }}
+      />
 
       {/* 顶部摘要 */}
       <View style={styles.summary}>
@@ -201,4 +213,7 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   fabText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+
+  editBtn: { paddingHorizontal: 8, paddingVertical: 6 },
+  editBtnText: { color: '#4CAF82', fontSize: 18, fontWeight: '600' },
 });
