@@ -1,6 +1,6 @@
 # 小芽成长 · 开发计划书
 
-> 版本：v0.1 · 日期：2026-03-11
+> 版本：v0.2 · 日期：2026-03-11
 > 原则：**先能跑通，再逐步专业化**
 
 ---
@@ -206,114 +206,117 @@ P62 · 比中位数高 2.1 cm
 
 | 层级 | 技术 | 理由 |
 |------|------|------|
-| 框架 | Expo SDK + React Native | 跨平台，开发效率高 |
-| 路由 | Expo Router | 文件路由，结构清晰 |
-| 语言 | TypeScript | 类型安全，降低 bug |
-| 图表 | react-native-svg | 矢量绘制，支持缩放，完全可控 |
+| 框架 | Expo SDK 54 + React Native 0.81.5 + React 19.1.0 | 跨平台，开发效率高 |
+| 路由 | Expo Router v6 | 文件路由，结构清晰 |
+| 语言 | TypeScript ~5.9.2 | 类型安全，降低 bug |
+| 图表 | react-native-svg 15.12.1 | 矢量绘制，完全可控 |
+| 手势 | react-native-gesture-handler ~2.28.0 | 手势支持（缩放留待 P1） |
 | 状态管理 | Zustand | 轻量，易学，适合本地记录型 app |
-| 本地存储 | expo-sqlite | 结构化数据，可靠持久化 |
+| 本地存储 | expo-sqlite ~16.0.10 | 结构化数据，可靠持久化 |
 | 日期计算 | date-fns | 轻量，API 友好 |
 | 多语言 | react-i18next | 成熟方案，支持五语言 |
 | 数据验证 | Zod | 类型与验证统一 |
+
+> **注意：** react-native-reanimated 4.x 与 Expo SDK 54 存在兼容问题，已移除。图表缩放（P1 阶段）优先用 SVG viewBox 重绘方案实现，无需动画库。
 
 ---
 
 ## 5. 项目目录结构
 
+> ✅ 已创建的文件用 `✅` 标注，待创建用 `○` 标注。
+
 ```
 KidSprout/
 ├─ app/                          # Expo Router 路由页面（仅编排，不放重逻辑）
-│  ├─ _layout.tsx
-│  ├─ index.tsx                  # 首页 / 孩子列表
-│  ├─ children/
-│  │  ├─ new.tsx                 # 新建孩子
+│  ├─ _layout.tsx          ✅
+│  ├─ index.tsx            ✅    # 目前：图表 Demo 页；后续改为孩子列表
+│  ○ children/
+│  │  ○ new.tsx                  # 新建孩子
 │  │  └─ [childId]/
-│  │     ├─ index.tsx            # 孩子详情（Tab 外壳）
-│  │     ├─ chart.tsx            # 曲线页
-│  │     ├─ records.tsx          # 记录页
-│  │     ├─ analysis.tsx         # 分析页
-│  │     ├─ add-measurement.tsx  # 新增记录
+│  │     ○ index.tsx             # 孩子详情（Tab 外壳）
+│  │     ○ chart.tsx             # 曲线页
+│  │     ○ records.tsx           # 记录页
+│  │     ○ analysis.tsx          # 分析页
+│  │     ○ add-measurement.tsx   # 新增记录
 │  │     └─ edit-measurement.tsx # 编辑记录
-│  └─ settings/
-│     └─ index.tsx               # 设置页
+│  └─ ○ settings/
+│     └─ ○ index.tsx             # 设置页
 │
 ├─ src/
 │  ├─ components/
-│  │  ├─ chart/                  # 图表组件
-│  │  │  ├─ GrowthChart.tsx      # 主图表组件（组合器）
-│  │  │  ├─ ChartAxes.tsx        # 坐标轴
-│  │  │  ├─ PercentileLines.tsx  # 标准百分位曲线
-│  │  │  ├─ MeasurementSeries.tsx# 用户测量点和连线
-│  │  │  ├─ PredictionLine.tsx   # 预测虚线
-│  │  │  └─ ChartTooltip.tsx     # 点击 tooltip
-│  │  ├─ child/
-│  │  │  ├─ ChildCard.tsx        # 首页孩子卡片
-│  │  │  ├─ ChildSummary.tsx     # 详情页顶部摘要
-│  │  │  └─ EmptyMeasurements.tsx# 无记录空状态
-│  │  ├─ forms/
-│  │  │  ├─ ChildForm.tsx        # 新建/编辑孩子表单
-│  │  │  └─ MeasurementForm.tsx  # 录入身高表单
-│  │  └─ common/
-│  │     ├─ AppButton.tsx
-│  │     ├─ AppInput.tsx
-│  │     ├─ AppCard.tsx
-│  │     └─ SectionHeader.tsx
+│  │  ├─ chart/            ✅    # 图表组件（已完成）
+│  │  │  ├─ GrowthChart.tsx      ✅  # 主图表（含 Tooltip）
+│  │  │  ├─ ChartAxes.tsx        ✅  # 坐标轴 + 网格线
+│  │  │  ├─ PercentileLines.tsx  ✅  # 标准百分位曲线
+│  │  │  ├─ MeasurementSeries.tsx✅  # 用户测量点 + 连线
+│  │  │  ├─ chartUtils.ts        ✅  # 坐标映射工具函数
+│  │  │  ○ PredictionLine.tsx        # 预测虚线（阶段五）
+│  │  │  └─ ○ ChartTooltip.tsx       # 独立 Tooltip 组件（阶段四重构）
+│  │  ○ child/
+│  │  │  ○ ChildCard.tsx             # 首页孩子卡片
+│  │  │  ○ ChildSummary.tsx          # 详情页顶部摘要
+│  │  │  └─ ○ EmptyMeasurements.tsx  # 无记录空状态
+│  │  ○ forms/
+│  │  │  ○ ChildForm.tsx             # 新建/编辑孩子表单
+│  │  │  └─ ○ MeasurementForm.tsx    # 录入身高表单
+│  │  └─ ○ common/
+│  │     ○ AppButton.tsx
+│  │     ○ AppInput.tsx
+│  │     ○ AppCard.tsx
+│  │     └─ ○ SectionHeader.tsx
 │  │
 │  ├─ data/
 │  │  └─ standards/
-│  │     └─ who/
-│  │        ├─ height-for-age-girls-0-60m.json
-│  │        ├─ height-for-age-boys-0-60m.json
-│  │        ├─ height-for-age-girls-61-228m.json
-│  │        └─ height-for-age-boys-61-228m.json
+│  │     ├─ japan.ts       ✅    # 日本データ（0-69m 幼児調査 + 72-204m 学校統計）
+│  │     ○ who.ts                # WHO データ（阶段二）
+│  │     └─ ○ china.ts           # 中国データ（后续迭代）
 │  │
-│  ├─ db/                        # 本地数据库层
-│  │  ├─ sqlite.ts               # DB 初始化
-│  │  ├─ schema.ts               # 表结构定义
-│  │  ├─ child.repo.ts           # 孩子 CRUD
-│  │  └─ measurement.repo.ts     # 记录 CRUD
+│  ○ db/                         # 本地数据库层（阶段三）
+│  │  ○ sqlite.ts
+│  │  ○ schema.ts
+│  │  ○ child.repo.ts
+│  │  └─ ○ measurement.repo.ts
 │  │
-│  ├─ hooks/
-│  │  ├─ useChild.ts             # 孩子数据操作
-│  │  ├─ useMeasurements.ts      # 记录数据操作
-│  │  ├─ useGrowthStandard.ts    # 加载标准数据
-│  │  └─ usePercentile.ts        # 百分位计算结果
+│  ○ hooks/                      # 自定义 Hook（阶段三起）
+│  │  ○ useChild.ts
+│  │  ○ useMeasurements.ts
+│  │  ○ useGrowthStandard.ts
+│  │  └─ ○ usePercentile.ts
 │  │
 │  ├─ services/
-│  │  └─ growth/
-│  │     ├─ age.ts               # 月龄计算
-│  │     ├─ interpolation.ts     # 线性插值
-│  │     ├─ percentile.ts        # 百分位估算（MVP：插值法）
-│  │     ├─ zscore.ts            # z-score 计算（第二阶段 LMS）
-│  │     ├─ prediction.ts        # 18 岁身高估算
-│  │     └─ chart.ts             # 图表数据整合
+│  │  └─ growth/           ✅
+│  │     ├─ age.ts               ✅  # 月龄计算
+│  │     ├─ interpolation.ts     ✅  # 线性插值
+│  │     ├─ percentile.ts        ✅  # 百分位估算（插值法）
+│  │     ├─ prediction.ts        ✅  # 18 岁身高估算（骨架）
+│  │     └─ ○ zscore.ts              # LMS z-score 计算（阶段二）
 │  │
-│  ├─ store/
-│  │  ├─ childStore.ts           # 孩子列表全局状态
-│  │  ├─ measurementStore.ts     # 记录全局状态
-│  │  └─ settingsStore.ts        # 设置（语言、数据源等）
+│  ○ store/                      # Zustand 全局状态（阶段三）
+│  │  ○ childStore.ts
+│  │  ○ measurementStore.ts
+│  │  └─ ○ settingsStore.ts
 │  │
-│  ├─ types/
-│  │  ├─ child.ts
-│  │  ├─ growth.ts
-│  │  └─ measurement.ts
+│  ├─ types/               ✅
+│  │  ├─ child.ts          ✅
+│  │  ├─ growth.ts         ✅
+│  │  └─ measurement.ts    ✅
 │  │
-│  ├─ constants/
-│  │  ├─ colors.ts               # 主题色定义
-│  │  ├─ chart.ts                # 图表常量（曲线颜色、线宽等）
-│  │  └─ standards.ts            # 数据源元数据
+│  ├─ constants/           ✅
+│  │  ├─ colors.ts         ✅    # 主题色 #4CAF82
+│  │  ├─ chart.ts          ✅    # 图表常量（padding 等）
+│  │  └─ ○ standards.ts          # 数据源元数据
 │  │
-│  └─ utils/
-│     ├─ date.ts
-│     ├─ number.ts
-│     └─ format.ts
+│  └─ ○ utils/
+│     ○ date.ts
+│     ○ number.ts
+│     └─ ○ format.ts
 │
 ├─ assets/
-├─ doc/                          # 项目文档
-├─ CLAUDE.md
-├─ README.md
-├─ package.json
-└─ tsconfig.json
+├─ doc/                    ✅
+├─ CLAUDE.md               ✅
+├─ README.md               ✅
+├─ package.json            ✅
+└─ tsconfig.json           ✅
 ```
 
 ---
@@ -361,7 +364,7 @@ export type ComputedMeasurement = Measurement & {
 ```
 
 ```ts
-// src/types/growth.ts
+// src/types/growth.ts  ✅ 已实现
 export type GrowthMeta = {
   id: string;
   source: 'WHO' | 'JAPAN' | 'CHINA';
@@ -377,9 +380,13 @@ export type GrowthMeta = {
 export type GrowthRow = {
   ageMonths: number;
   p3?: number;
-  p15?: number;
-  p50: number;
-  p85?: number;
+  p10?: number;   // 日本データで使用
+  p15?: number;   // WHO データ用（予約）
+  p25?: number;   // 日本データで使用
+  p50: number;    // 必須
+  p75?: number;   // 日本データで使用
+  p85?: number;   // WHO データ用（予約）
+  p90?: number;   // 日本データで使用
   p97?: number;
   l?: number;
   m?: number;
@@ -394,80 +401,41 @@ export type GrowthStandardFile = {
 
 ---
 
-## 7. WHO 数据 JSON 格式规范
+## 7. データソース規範
 
-### 7.1 第一阶段：percentile 格式（MVP 使用）
+### 7.1 日本データ（✅ 実装済み）
 
-```json
+`src/data/standards/japan.ts` に TypeScript 定数として格納。
+
+**データ構成：**
+- **0〜69ヶ月**：厚生労働省 令和5年（2023年）乳幼児身体発育調査（表02）
+  区間中央値を `ageMonths` として使用（0, 1, 1.5, 2.5 ... 69）
+- **72〜204ヶ月**：文部科学省 令和7年（2025年）学校保健統計調査
+  各学年 4月時点の月齢（72, 84, 96 ... 204）
+
+**接続方針：**
+- 69ヶ月（幼児調査）→ 72ヶ月（学校統計）でデータソースを切替
+- 60ヶ月・75ヶ月の重複エントリは削除済み（カーブのジャンプを回避）
+- 利用百分位：P3 / P10 / P25 / P50 / P75 / P90 / P97
+
+### 7.2 WHO データ（阶段二で追加予定）
+
+`src/data/standards/who.ts` に同一フォーマットで格納予定。
+
+百分位フィールド：P3 / P15 / P50 / P85 / P97（WHO 公式値）
+
+### 7.3 hybrid フォーマット（阶段二 LMS 実装時）
+
+```ts
+// LMS + percentile 両方を持つ行（精密計算用）
 {
-  "meta": {
-    "id": "who_hfa_girls_61_228m",
-    "source": "WHO",
-    "version": "2007",
-    "indicator": "height-for-age",
-    "sex": "female",
-    "ageMinMonths": 61,
-    "ageMaxMonths": 228,
-    "unit": "cm",
-    "method": "percentile"
-  },
-  "rows": [
-    {
-      "ageMonths": 61,
-      "p3": 100.6,
-      "p15": 104.7,
-      "p50": 109.6,
-      "p85": 114.6,
-      "p97": 118.8
-    }
-  ]
+  ageMonths: 61,
+  l: 1.0, m: 109.6, s: 0.0400,  // LMS: z-score 計算用
+  p3: 100.6, p15: 104.7, p50: 109.6, p85: 114.6, p97: 118.8  // 描画用
 }
 ```
 
-### 7.2 第二阶段：hybrid 格式（同时包含 LMS + percentile）
-
-```json
-{
-  "meta": {
-    "id": "who_hfa_girls_61_228m",
-    "source": "WHO",
-    "version": "2007",
-    "indicator": "height-for-age",
-    "sex": "female",
-    "ageMinMonths": 61,
-    "ageMaxMonths": 228,
-    "unit": "cm",
-    "method": "hybrid"
-  },
-  "rows": [
-    {
-      "ageMonths": 61,
-      "l": 1.0,
-      "m": 109.6,
-      "s": 0.0400,
-      "p3": 100.6,
-      "p15": 104.7,
-      "p50": 109.6,
-      "p85": 114.6,
-      "p97": 118.8
-    }
-  ]
-}
-```
-
-> 画图用 percentile 字段，精确计算用 LMS，两者共存，无需动态反推。
-
-### 7.3 数据文件命名规范
-
-```
-who_hfa_{sex}_{ageMin}_{ageMax}m.json
-```
-
-示例：
-- `who_hfa_girls_0_60m.json`
-- `who_hfa_boys_0_60m.json`
-- `who_hfa_girls_61_228m.json`
-- `who_hfa_boys_61_228m.json`
+> 描画には percentile フィールドを使用、精密計算には LMS を使用。両者共存で動的反推不要。
 
 ---
 
@@ -697,67 +665,70 @@ export function predictAdultHeight(
 
 ## 10. 分阶段开发路线
 
-### 阶段一：图表骨架（约 1 周）
+### 阶段一：图表骨架 ✅ 已完成
 
-- [ ] Expo 项目初始化，配置 TypeScript + Expo Router
-- [ ] 建立 `src/` 目录结构
-- [ ] 实现 `GrowthChart.tsx` 使用固定假数据
-- [ ] 绘制 5 条 percentile 背景曲线
-- [ ] 显示示例用户测量点
+- [x] Expo SDK 54 项目初始化，配置 TypeScript + Expo Router
+- [x] 建立 `src/` 目录结构
+- [x] 整合日本真实数据（令和5年幼児 + 令和7年学校統計）
+- [x] 实现 `GrowthChart.tsx`（含 Tooltip）
+- [x] 绘制 7 条 percentile 曲线（P3/P10/P25/P50/P75/P90/P97）
+- [x] 显示示例用户测量点 + 连线
+- [x] 修复两数据源衔接处的曲线跳动问题
 
-**验收：** 看到图表在模拟器上正常显示
-
----
-
-### 阶段二：数据层接入（约 1 周）
-
-- [ ] 整理 WHO girls/boys 61-228m JSON 文件
-- [ ] 实现 `getAgeInMonths()`
-- [ ] 实现 `interpolateGrowthRow()`
-- [ ] 图表改为读取真实 WHO 数据绘制
-
-**验收：** 曲线与 WHO 官网图表视觉一致
+**验收：** ✅ 图表在模拟器正常显示，曲线平滑
 
 ---
 
-### 阶段三：孩子档案 + 记录（约 1 周）
+### 阶段二：数据层完善（下一阶段）
 
-- [ ] 配置 expo-sqlite，建表
+- [ ] 实现 `src/data/standards/who.ts`（WHO 标准数据）
+- [ ] 实现 `zscore.ts` LMS 精确百分位计算
+- [ ] 完善 `interpolateGrowthRow()` 支持数据源切换
+- [ ] 图表支持日本 / WHO 数据源切换
+
+**验收：** 切换数据源后曲线正确重绘
+
+---
+
+### 阶段三：孩子档案 + 记录
+
+- [ ] 配置 expo-sqlite，建表（children / measurements）
 - [ ] 实现 `child.repo.ts` / `measurement.repo.ts`
 - [ ] 实现 `ChildForm.tsx` 新建孩子
 - [ ] 实现 `MeasurementForm.tsx` 录入身高
-- [ ] 首页孩子列表展示
+- [ ] 首页孩子列表展示（ChildCard）
+- [ ] Zustand store：childStore / measurementStore
 
 **验收：** 可新建孩子，录入身高，列表显示正确
 
 ---
 
-### 阶段四：百分位计算 + 图表整合（约 1 周）
+### 阶段四：百分位计算 + 图表整合
 
-- [ ] 实现 `estimatePercentileFromBands()`
-- [ ] 实现 `rowToBands()`
-- [ ] 将用户测量点真实绘制到成长曲线上
-- [ ] Tooltip 显示百分位信息
-- [ ] 底部摘要卡片
+- [ ] `estimatePercentileFromBands()` 与真实用户数据对接
+- [ ] 将用户测量点通过 `getAgeInMonths()` 映射到图表
+- [ ] Tooltip 显示：日期 / 月龄 / 身高 / 百分位
+- [ ] 底部摘要卡片（当前 percentile / 与中位数差距）
 
 **验收：** 录入身高后，点在曲线图上位置正确，百分位显示合理
 
 ---
 
-### 阶段五：分析页 + 预测（约 3 天）
+### 阶段五：分析页 + 预测
 
-- [ ] 实现 `predictAdultHeight()`
+- [ ] `predictAdultHeight()` 与真实孩子档案对接
 - [ ] 分析页数据统计展示
 - [ ] 增长速度计算（最近 6m / 12m）
+- [ ] 预测虚线 `PredictionLine.tsx`
 
 **验收：** 分析页所有数据展示完整，预测有免责说明
 
 ---
 
-### 阶段六：打磨 & 多语言（约 1 周）
+### 阶段六：打磨 & 多语言
 
 - [ ] 配置 react-i18next，支持中 / 日 / 英 / 西 / 韩
-- [ ] 空状态设计
+- [ ] 空状态设计（EmptyMeasurements）
 - [ ] Loading 状态
 - [ ] 错误处理
 - [ ] iOS / Android 真机测试
