@@ -44,8 +44,14 @@ export function GrowthChart({
 }: Props) {
   const [tooltip, setTooltip] = useState<MeasurementPoint | null>(null);
 
-  // 根据数据范围计算 Y 轴范围
+  // 范围内数据（用于 Y 轴计算）
   const filtered = rows.filter(r => r.ageMonths >= xMin && r.ageMonths <= xMax);
+
+  // 绘图用数据：额外包含 xMax 之后的第一个点，让曲线延伸至右轴边界
+  const sortedRows = [...rows].sort((a, b) => a.ageMonths - b.ageMonths);
+  const firstBeyond = sortedRows.find(r => r.ageMonths > xMax);
+  const drawRows = firstBeyond ? [...filtered, firstBeyond] : filtered;
+
   const allValues = filtered.flatMap(r =>
     [r.p3, r.p10, r.p25, r.p50, r.p75, r.p90, r.p97].filter((v): v is number => v !== undefined)
   );
@@ -65,9 +71,9 @@ export function GrowthChart({
 
   return (
     <View>
-      <Svg width={width} height={height}>
+      <Svg width={width} height={height} overflow="hidden">
         <ChartAxes bounds={bounds} xTicks={xTicks} yTicks={yTicks} />
-        <PercentileLines rows={filtered} bounds={bounds} showLabels={false} />
+        <PercentileLines rows={drawRows} bounds={bounds} showLabels={false} />
         <MeasurementSeries
           points={measurements}
           bounds={bounds}

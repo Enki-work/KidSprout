@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
-  ScrollView, StyleSheet, Alert,
+  ScrollView, StyleSheet, Alert, Platform,
 } from 'react-native';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useChildStore } from '@/store/childStore';
@@ -13,22 +14,29 @@ function genId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
 
+function dateToStr(d: Date): string {
+  return d.toISOString().slice(0, 10);
+}
+
 export default function NewChildScreen() {
   const router = useRouter();
   const addChild = useChildStore(s => s.add);
 
-  const [name, setName]         = useState('');
-  const [sex, setSex]           = useState<Sex>('male');
-  const [birthDate, setBirthDate] = useState(''); // YYYY-MM-DD
-  const [standardId, setStandardId] = useState<StandardId>('japan');
+  const [name, setName]               = useState('');
+  const [sex, setSex]                 = useState<Sex>('male');
+  const [birthDate, setBirthDate]     = useState<Date>(new Date(2022, 0, 1));
+  const [showPicker, setShowPicker]   = useState(false);
+  const [standardId, setStandardId]   = useState<StandardId>('japan');
+
+  function onDateChange(_: DateTimePickerEvent, selected?: Date) {
+    // Android 在选完后自动关闭；iOS 需手动关闭
+    if (Platform.OS === 'android') setShowPicker(false);
+    if (selected) setBirthDate(selected);
+  }
 
   function handleSave() {
     if (!name.trim()) {
       Alert.alert('提示', '请输入孩子姓名');
-      return;
-    }
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(birthDate)) {
-      Alert.alert('提示', '请输入正确的出生日期（格式：YYYY-MM-DD）');
       return;
     }
     const now = new Date().toISOString();
@@ -36,7 +44,7 @@ export default function NewChildScreen() {
       id:         genId(),
       name:       name.trim(),
       sex,
-      birthDate,
+      birthDate:  dateToStr(birthDate),
       standardId,
       createdAt:  now,
       updatedAt:  now,
@@ -77,14 +85,38 @@ export default function NewChildScreen() {
 
         {/* 出生日期 */}
         <Text style={styles.label}>出生日期 *</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="YYYY-MM-DD（例：2022-03-15）"
-          value={birthDate}
-          onChangeText={setBirthDate}
-          keyboardType="numbers-and-punctuation"
-          maxLength={10}
-        />
+
+        {/* iOS：始终内嵌显示 spinner */}
+        {Platform.OS === 'ios' ? (
+          <DateTimePicker
+            value={birthDate}
+            mode="date"
+            display="spinner"
+            onChange={onDateChange}
+            maximumDate={new Date()}
+            locale="zh-CN"
+            style={styles.iosPicker}
+          />
+        ) : (
+          /* Android：点击按钮弹出系统对话框 */
+          <>
+            <TouchableOpacity
+              style={styles.dateBtn}
+              onPress={() => setShowPicker(true)}
+            >
+              <Text style={styles.dateBtnText}>{dateToStr(birthDate)}</Text>
+            </TouchableOpacity>
+            {showPicker && (
+              <DateTimePicker
+                value={birthDate}
+                mode="date"
+                display="default"
+                onChange={onDateChange}
+                maximumDate={new Date()}
+              />
+            )}
+          </>
+        )}
 
         {/* 成长标准 */}
         <Text style={styles.label}>成长标准</Text>
@@ -121,6 +153,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14, paddingVertical: 12,
     fontSize: 16, color: '#1A1A2E', marginTop: 4,
   },
+
+  iosPicker: { marginTop: 4, marginLeft: -8 },
+
+  dateBtn: {
+    borderWidth: 1, borderColor: '#DDD', borderRadius: 10,
+    paddingHorizontal: 14, paddingVertical: 12, marginTop: 4,
+  },
+  dateBtnText: { fontSize: 16, color: '#1A1A2E' },
 
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginTop: 4 },
   chip: {

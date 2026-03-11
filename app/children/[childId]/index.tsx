@@ -3,7 +3,7 @@ import {
   View, Text, ScrollView, TouchableOpacity,
   StyleSheet, Alert,
 } from 'react-native';
-import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
+import { useLocalSearchParams, useRouter, useFocusEffect, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useChildStore } from '@/store/childStore';
 import { useMeasurementStore } from '@/store/measurementStore';
@@ -55,9 +55,11 @@ export default function ChildDetailScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
+      {/* 配置 Stack header 标题 */}
+      <Stack.Screen options={{ title: child.name }} />
+
       {/* 顶部摘要 */}
       <View style={styles.summary}>
-        <Text style={styles.childName}>{child.name}</Text>
         <Text style={styles.childMeta}>
           {child.sex === 'male' ? '男の子' : '女の子'} ·{' '}
           {formatAgeMonths(ageMonths)}
@@ -151,11 +153,10 @@ const styles = StyleSheet.create({
 
   summary: {
     backgroundColor: '#fff',
-    paddingHorizontal: 20, paddingVertical: 14,
+    paddingHorizontal: 20, paddingVertical: 10,
     borderBottomWidth: 1, borderBottomColor: '#EFEFEF',
   },
-  childName: { fontSize: 20, fontWeight: 'bold', color: '#1A1A2E' },
-  childMeta: { fontSize: 13, color: '#888', marginTop: 3 },
+  childMeta: { fontSize: 13, color: '#888' },
 
   tabBar: {
     flexDirection: 'row',

@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity,
-  StyleSheet, Alert, ScrollView,
+  StyleSheet, Alert, ScrollView, Platform,
 } from 'react-native';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMeasurementStore } from '@/store/measurementStore';
@@ -12,8 +13,8 @@ function genId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
 
-function todayStr(): string {
-  return new Date().toISOString().slice(0, 10);
+function dateToStr(d: Date): string {
+  return d.toISOString().slice(0, 10);
 }
 
 export default function AddMeasurementScreen() {
@@ -21,15 +22,17 @@ export default function AddMeasurementScreen() {
   const router = useRouter();
   const addMeasurement = useMeasurementStore(s => s.add);
 
-  const [date, setDate]       = useState(todayStr());
-  const [height, setHeight]   = useState('');
-  const [note, setNote]       = useState('');
+  const [date, setDate]             = useState<Date>(new Date());
+  const [showPicker, setShowPicker] = useState(false);
+  const [height, setHeight]         = useState('');
+  const [note, setNote]             = useState('');
+
+  function onDateChange(_: DateTimePickerEvent, selected?: Date) {
+    if (Platform.OS === 'android') setShowPicker(false);
+    if (selected) setDate(selected);
+  }
 
   function handleSave() {
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-      Alert.alert('提示', '请输入正确的日期（格式：YYYY-MM-DD）');
-      return;
-    }
     const heightNum = parseFloat(height);
     if (isNaN(heightNum) || heightNum < 30 || heightNum > 250) {
       Alert.alert('提示', '请输入合理的身高（30〜250 cm）');
@@ -39,7 +42,7 @@ export default function AddMeasurementScreen() {
     const m: Measurement = {
       id:         genId(),
       childId:    childId!,
-      measuredAt: date,
+      measuredAt: dateToStr(date),
       heightCm:   heightNum,
       note:       note.trim() || undefined,
       createdAt:  now,
@@ -53,16 +56,40 @@ export default function AddMeasurementScreen() {
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
 
+        {/* 测量日期 */}
         <Text style={styles.label}>测量日期 *</Text>
-        <TextInput
-          style={styles.input}
-          value={date}
-          onChangeText={setDate}
-          placeholder="YYYY-MM-DD"
-          keyboardType="numbers-and-punctuation"
-          maxLength={10}
-        />
 
+        {Platform.OS === 'ios' ? (
+          <DateTimePicker
+            value={date}
+            mode="date"
+            display="spinner"
+            onChange={onDateChange}
+            maximumDate={new Date()}
+            locale="zh-CN"
+            style={styles.iosPicker}
+          />
+        ) : (
+          <>
+            <TouchableOpacity
+              style={styles.dateBtn}
+              onPress={() => setShowPicker(true)}
+            >
+              <Text style={styles.dateBtnText}>{dateToStr(date)}</Text>
+            </TouchableOpacity>
+            {showPicker && (
+              <DateTimePicker
+                value={date}
+                mode="date"
+                display="default"
+                onChange={onDateChange}
+                maximumDate={new Date()}
+              />
+            )}
+          </>
+        )}
+
+        {/* 身高 */}
         <Text style={styles.label}>身高（cm）*</Text>
         <TextInput
           style={[styles.input, styles.heightInput]}
@@ -73,6 +100,7 @@ export default function AddMeasurementScreen() {
           maxLength={6}
         />
 
+        {/* 备注 */}
         <Text style={styles.label}>备注（可选）</Text>
         <TextInput
           style={[styles.input, styles.noteInput]}
@@ -101,6 +129,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14, paddingVertical: 12,
     fontSize: 16, color: '#1A1A2E', marginTop: 4,
   },
+
+  iosPicker:   { marginTop: 4, marginLeft: -8 },
+  dateBtn: {
+    borderWidth: 1, borderColor: '#DDD', borderRadius: 10,
+    paddingHorizontal: 14, paddingVertical: 12, marginTop: 4,
+  },
+  dateBtnText: { fontSize: 16, color: '#1A1A2E' },
+
   heightInput: { fontSize: 28, fontWeight: 'bold', textAlign: 'center', color: '#4CAF82' },
   noteInput:   { height: 80, textAlignVertical: 'top' },
 
