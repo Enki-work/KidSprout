@@ -7,6 +7,7 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMeasurementStore } from '@/store/measurementStore';
+import { useChildStore } from '@/store/childStore';
 import { Measurement } from '@/types/measurement';
 
 function genId(): string {
@@ -21,6 +22,10 @@ export default function AddMeasurementScreen() {
   const { childId } = useLocalSearchParams<{ childId: string }>();
   const router = useRouter();
   const addMeasurement = useMeasurementStore(s => s.add);
+  const child = useChildStore(s => s.children.find(c => c.id === childId));
+
+  const today = new Date();
+  const minMeasureDate = child ? new Date(child.birthDate) : new Date(2000, 0, 1);
 
   const [date, setDate]             = useState<Date>(new Date());
   const [showPicker, setShowPicker] = useState(false);
@@ -66,7 +71,8 @@ export default function AddMeasurementScreen() {
             mode="date"
             display="spinner"
             onChange={onDateChange}
-            maximumDate={new Date()}
+            minimumDate={minMeasureDate}
+            maximumDate={today}
             locale="zh-CN"
             style={styles.iosPicker}
           />
@@ -84,7 +90,8 @@ export default function AddMeasurementScreen() {
                 mode="date"
                 display="default"
                 onChange={onDateChange}
-                maximumDate={new Date()}
+                minimumDate={minMeasureDate}
+                maximumDate={today}
               />
             )}
           </>

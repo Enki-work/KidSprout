@@ -22,6 +22,9 @@ export default function NewChildScreen() {
   const router = useRouter();
   const addChild = useChildStore(s => s.add);
 
+  const today = new Date();
+  const minBirthDate = new Date(today.getFullYear() - 20, today.getMonth(), today.getDate());
+
   const [name, setName]               = useState('');
   const [sex, setSex]                 = useState<Sex>('male');
   const [birthDate, setBirthDate]     = useState<Date>(new Date(2022, 0, 1));
@@ -94,7 +97,8 @@ export default function NewChildScreen() {
             mode="date"
             display="spinner"
             onChange={onDateChange}
-            maximumDate={new Date()}
+            minimumDate={minBirthDate}
+            maximumDate={today}
             locale="zh-CN"
             style={styles.iosPicker}
           />
@@ -113,7 +117,8 @@ export default function NewChildScreen() {
                 mode="date"
                 display="default"
                 onChange={onDateChange}
-                maximumDate={new Date()}
+                minimumDate={minBirthDate}
+                maximumDate={today}
               />
             )}
           </>
