@@ -1,6 +1,6 @@
 # 小芽成长 · 开发计划书
 
-> 版本：v0.2 · 日期：2026-03-11
+> 版本：v0.3 · 日期：2026-03-11
 > 原则：**先能跑通，再逐步专业化**
 
 ---
@@ -58,7 +58,7 @@
 |------|------|
 | 编辑 / 删除记录 | 修正录入错误 |
 | 多孩子管理 | 支持家庭多个孩子独立档案 |
-| 数据源切换 | WHO / 日本 / 中国标准切换 |
+| 数据源切换 | ~~WHO / 日本标准切换已在 MVP 实现~~ → 提前完成 |
 | 数据导出 | CSV / PDF 报告 |
 
 ### P2（长期规划）
@@ -268,7 +268,7 @@ KidSprout/
 │  ├─ data/
 │  │  └─ standards/
 │  │     ├─ japan.ts       ✅    # 日本データ（0-69m 幼児調査 + 72-204m 学校統計）
-│  │     ○ who.ts                # WHO データ（阶段二）
+│  │     ├─ who.ts         ✅    # WHO データ（0-228m，WHO2006 + WHO2007）
 │  │     └─ ○ china.ts           # 中国データ（后续迭代）
 │  │
 │  ○ db/                         # 本地数据库层（阶段三）
@@ -304,7 +304,7 @@ KidSprout/
 │  ├─ constants/           ✅
 │  │  ├─ colors.ts         ✅    # 主题色 #4CAF82
 │  │  ├─ chart.ts          ✅    # 图表常量（padding 等）
-│  │  └─ ○ standards.ts          # 数据源元数据
+│  │  └─ standards.ts      ✅    # 数据源注册表 + getStandardFile()
 │  │
 │  └─ ○ utils/
 │     ○ date.ts
@@ -418,11 +418,15 @@ export type GrowthStandardFile = {
 - 60ヶ月・75ヶ月の重複エントリは削除済み（カーブのジャンプを回避）
 - 利用百分位：P3 / P10 / P25 / P50 / P75 / P90 / P97
 
-### 7.2 WHO データ（阶段二で追加予定）
+### 7.2 WHO データ（✅ 実装済み）
 
-`src/data/standards/who.ts` に同一フォーマットで格納予定。
+`src/data/standards/who.ts` に TypeScript 定数として格納（514行）。
 
-百分位フィールド：P3 / P15 / P50 / P85 / P97（WHO 公式値）
+**データ構成：**
+- **0〜60ヶ月**：WHO Child Growth Standards 2006（元データ日単位 → 月齢換算）
+- **61〜228ヶ月**：WHO Reference 2007（月単位）
+
+百分位フィールド：P3 / P10 / P25 / P50 / P75 / P90 / P97（各3桁有効小数）
 
 ### 7.3 hybrid フォーマット（阶段二 LMS 実装時）
 
@@ -679,18 +683,18 @@ export function predictAdultHeight(
 
 ---
 
-### 阶段二：数据层完善（下一阶段）
+### 阶段二：数据层完善 ✅ 已完成
 
-- [ ] 实现 `src/data/standards/who.ts`（WHO 标准数据）
-- [ ] 实现 `zscore.ts` LMS 精确百分位计算
-- [ ] 完善 `interpolateGrowthRow()` 支持数据源切换
-- [ ] 图表支持日本 / WHO 数据源切换
+- [x] 实现 `src/data/standards/who.ts`（WHO 标准数据，0-228月）
+- [x] 实现 `src/constants/standards.ts`（数据源注册表 + `getStandardFile()`）
+- [x] 图表支持日本 / WHO 数据源切换（性别 + 标准源切换按钮）
+- [ ] ~~实现 `zscore.ts` LMS 精确百分位计算~~ → 推迟至 v1.2（MVP 插值法已足够）
 
-**验收：** 切换数据源后曲线正确重绘
+**验收：** ✅ 切换数据源 / 性别后曲线即时重绘
 
 ---
 
-### 阶段三：孩子档案 + 记录
+### 阶段三：孩子档案 + 记录（当前阶段）
 
 - [ ] 配置 expo-sqlite，建表（children / measurements）
 - [ ] 实现 `child.repo.ts` / `measurement.repo.ts`
@@ -742,12 +746,11 @@ export function predictAdultHeight(
 ### v1.1
 - 多孩子管理
 - 编辑 / 删除记录
-- 数据源切换（日本 / 中国标准）
+- 中国标准数据（`china.ts`）
 
 ### v1.2
-- 0-60 月龄数据支持
-- LMS 精确 percentile 计算
-- 双指缩放图表
+- LMS 精确 percentile 计算（`zscore.ts`）
+- 双指缩放图表（SVG viewBox 方案）
 
 ### v1.3
 - 数据导出（CSV）
