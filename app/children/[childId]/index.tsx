@@ -13,6 +13,7 @@ import { getAgeInMonths, formatAgeMonths } from '@/services/growth/age';
 import { GrowthChart } from '@/components/chart/GrowthChart';
 import { MeasurementPoint } from '@/components/chart/MeasurementSeries';
 import { useWindowDimensions } from 'react-native';
+import { DebugAddTestData } from '@/components/debug/DebugAddTestData';
 
 type Tab = 'chart' | 'records';
 
@@ -60,12 +61,15 @@ export default function ChildDetailScreen() {
         options={{
           title: child.name,
           headerRight: () => (
-            <TouchableOpacity
-              style={styles.editBtn}
-              onPress={() => router.push(`/children/${childId}/edit` as never)}
-            >
-              <Text style={styles.editBtnText}>编辑</Text>
-            </TouchableOpacity>
+            <View style={styles.headerRight}>
+              <DebugAddTestData childId={childId ?? ''} />
+              <TouchableOpacity
+                style={styles.editBtn}
+                onPress={() => router.push(`/children/${childId}/edit` as never)}
+              >
+                <Text style={styles.editBtnText}>编辑</Text>
+              </TouchableOpacity>
+            </View>
           ),
         }}
       />
@@ -214,6 +218,8 @@ const styles = StyleSheet.create({
   },
   fabText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
 
+  headerRight: { flexDirection: 'row', alignItems: 'center' },
   editBtn: { paddingHorizontal: 8, paddingVertical: 6 },
   editBtnText: { color: '#4CAF82', fontSize: 18, fontWeight: '600' },
+  debugBtnText: { color: '#FF9500', fontSize: 15, fontWeight: '600' },
 });
