@@ -1,128 +1,130 @@
-import { useState } from 'react';
+import { useCallback } from 'react';
 import {
-  Text, ScrollView, View, TouchableOpacity,
-  useWindowDimensions, StyleSheet,
+  View, Text, FlatList, TouchableOpacity, StyleSheet,
 } from 'react-native';
-import { GrowthChart } from '@/components/chart/GrowthChart';
-import { STANDARDS, getStandardFile, StandardId, Sex } from '@/constants/standards';
+import { useRouter, useFocusEffect } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useChildStore } from '@/store/childStore';
+import { Child } from '@/types/child';
+import { getAgeInMonths, formatAgeMonths } from '@/services/growth/age';
 
-// 示例测量记录（月龄, 身長cm）
-const DEMO_MEASUREMENTS = [
-  { ageMonths:  0,   heightCm: 49.5 },
-  { ageMonths:  3.5, heightCm: 61.0 },
-  { ageMonths:  6.5, heightCm: 67.8 },
-  { ageMonths: 11.5, heightCm: 74.5 },
-  { ageMonths: 15,   heightCm: 79.2 },
-  { ageMonths: 21,   heightCm: 84.0 },
-  { ageMonths: 27,   heightCm: 88.5 },
-  { ageMonths: 33,   heightCm: 93.2 },
-  { ageMonths: 39,   heightCm: 97.5 },
-];
-
-export default function HomeScreen() {
-  const { width } = useWindowDimensions();
-  const chartWidth = width - 32;
-
-  const [standardId, setStandardId] = useState<StandardId>('japan');
-  const [sex, setSex] = useState<Sex>('male');
-
-  const standard = getStandardFile(standardId, sex);
+function ChildCard({ child, onPress }: { child: Child; onPress: () => void }) {
+  const ageMonths = getAgeInMonths(new Date(child.birthDate));
+  const ageText = formatAgeMonths(ageMonths);
+  const sexLabel = child.sex === 'male' ? '男の子' : '女の子';
 
   return (
-    <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
-      <Text style={styles.name}>小花ちゃん · {sex === 'male' ? '男の子' : '女の子'}</Text>
-      <Text style={styles.meta}>3歳3ヶ月 · 最新: 97.5 cm</Text>
+    <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
+      <View style={styles.cardLeft}>
+        <View style={[styles.avatar, child.sex === 'male' ? styles.avatarBoy : styles.avatarGirl]}>
+          <Text style={styles.avatarText}>{child.sex === 'male' ? '♂' : '♀'}</Text>
+        </View>
+      </View>
+      <View style={styles.cardBody}>
+        <Text style={styles.childName}>{child.name}</Text>
+        <Text style={styles.childMeta}>{sexLabel} · {ageText}</Text>
+      </View>
+      <Text style={styles.chevron}>›</Text>
+    </TouchableOpacity>
+  );
+}
 
-      {/* 性別切換 */}
-      <View style={styles.toggleRow}>
-        {(['male', 'female'] as Sex[]).map(s => (
-          <TouchableOpacity
-            key={s}
-            style={[styles.toggleBtn, sex === s && styles.toggleBtnActive]}
-            onPress={() => setSex(s)}
-          >
-            <Text style={[styles.toggleText, sex === s && styles.toggleTextActive]}>
-              {s === 'male' ? '男の子' : '女の子'}
-            </Text>
-          </TouchableOpacity>
-        ))}
+export default function HomeScreen() {
+  const router = useRouter();
+  const { children, load } = useChildStore();
+
+  // 每次回到首页刷新列表
+  useFocusEffect(useCallback(() => { load(); }, []));
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* 标题栏 */}
+      <View style={styles.header}>
+        <Text style={styles.title}>小芽成长</Text>
+        <TouchableOpacity
+          style={styles.addBtn}
+          onPress={() => router.push('/children/new' as never)}
+        >
+          <Text style={styles.addBtnText}>＋ 新建</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* データソース切換 */}
-      <View style={styles.toggleRow}>
-        {STANDARDS.map(std => (
-          <TouchableOpacity
-            key={std.id}
-            style={[styles.toggleBtn, standardId === std.id && styles.toggleBtnActive]}
-            onPress={() => setStandardId(std.id)}
-          >
-            <Text style={[styles.toggleText, standardId === std.id && styles.toggleTextActive]}>
-              {std.labelShort}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* 0〜3歳 乳幼児期 */}
-      <Text style={styles.sectionTitle}>乳幼児期（0〜3歳）</Text>
-      <GrowthChart
-        rows={standard.rows}
-        measurements={DEMO_MEASUREMENTS}
-        xMin={0}
-        xMax={36}
-        width={chartWidth}
-        height={260}
-      />
-
-      {/* 0〜17歳 全体 */}
-      <Text style={styles.sectionTitle}>全体（0〜17歳）</Text>
-      <GrowthChart
-        rows={standard.rows}
-        measurements={DEMO_MEASUREMENTS}
-        xMin={0}
-        xMax={standard.meta.ageMaxMonths}
-        width={chartWidth}
-        height={260}
-      />
-    </ScrollView>
+      {children.length === 0 ? (
+        /* 空状态 */
+        <View style={styles.empty}>
+          <Text style={styles.emptyIcon}>🌱</Text>
+          <Text style={styles.emptyTitle}>还没有孩子档案</Text>
+          <Text style={styles.emptyDesc}>点击右上角「新建」开始记录成长</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={children}
+          keyExtractor={c => c.id}
+          contentContainerStyle={styles.list}
+          renderItem={({ item }) => (
+            <ChildCard
+              child={item}
+              onPress={() => router.push(`/children/${item.id}` as never)}
+            />
+          )}
+        />
+      )}
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: '#fff' },
-  content: { padding: 16, paddingBottom: 40 },
-  name: { fontSize: 20, fontWeight: 'bold', color: '#1A1A2E', marginBottom: 4 },
-  meta: { fontSize: 13, color: '#888', marginBottom: 12 },
+  container: { flex: 1, backgroundColor: '#F7F8FA' },
 
-  toggleRow: {
+  header: {
     flexDirection: 'row',
-    gap: 8,
-    marginBottom: 8,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 12,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#EFEFEF',
   },
-  toggleBtn: {
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: '#4CAF82',
-  },
-  toggleBtnActive: {
+  title: { fontSize: 20, fontWeight: 'bold', color: '#1A1A2E' },
+  addBtn: {
     backgroundColor: '#4CAF82',
+    paddingHorizontal: 16,
+    paddingVertical: 7,
+    borderRadius: 20,
   },
-  toggleText: {
-    fontSize: 13,
-    color: '#4CAF82',
-    fontWeight: '600',
-  },
-  toggleTextActive: {
-    color: '#fff',
-  },
+  addBtnText: { color: '#fff', fontSize: 14, fontWeight: '600' },
 
-  sectionTitle: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#4CAF82',
-    marginTop: 20,
-    marginBottom: 8,
+  list: { padding: 16, gap: 12 },
+
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
   },
+  cardLeft: { marginRight: 12 },
+  avatar: {
+    width: 44, height: 44, borderRadius: 22,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  avatarBoy:  { backgroundColor: '#DFF0FF' },
+  avatarGirl: { backgroundColor: '#FFE4F0' },
+  avatarText: { fontSize: 20 },
+  cardBody: { flex: 1 },
+  childName: { fontSize: 17, fontWeight: '600', color: '#1A1A2E' },
+  childMeta: { fontSize: 13, color: '#888', marginTop: 2 },
+  chevron:   { fontSize: 22, color: '#CCC' },
+
+  empty: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 8 },
+  emptyIcon:  { fontSize: 48 },
+  emptyTitle: { fontSize: 18, fontWeight: '600', color: '#333' },
+  emptyDesc:  { fontSize: 14, color: '#999' },
 });
