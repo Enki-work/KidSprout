@@ -1,6 +1,6 @@
 # 小芽成长 · 开发计划书
 
-> 版本：v0.3 · 日期：2026-03-11
+> 版本：v0.4 · 日期：2026-03-12
 > 原则：**先能跑通，再逐步专业化**
 
 ---
@@ -228,42 +228,30 @@ P62 · 比中位数高 2.1 cm
 ```
 KidSprout/
 ├─ app/                          # Expo Router 路由页面（仅编排，不放重逻辑）
-│  ├─ _layout.tsx          ✅
-│  ├─ index.tsx            ✅    # 目前：图表 Demo 页；后续改为孩子列表
-│  ○ children/
-│  │  ○ new.tsx                  # 新建孩子
-│  │  └─ [childId]/
-│  │     ○ index.tsx             # 孩子详情（Tab 外壳）
-│  │     ○ chart.tsx             # 曲线页
-│  │     ○ records.tsx           # 记录页
-│  │     ○ analysis.tsx          # 分析页
-│  │     ○ add-measurement.tsx   # 新增记录
-│  │     └─ edit-measurement.tsx # 编辑记录
-│  └─ ○ settings/
-│     └─ ○ index.tsx             # 设置页
+│  ├─ _layout.tsx          ✅    # DB初始化、全局 Stack 配置（headerBackButtonDisplayMode等）
+│  ├─ index.tsx            ✅    # 首页孩子列表
+│  └─ children/            ✅
+│     ├─ new.tsx           ✅    # 新建孩子档案
+│     └─ [childId]/
+│        ├─ index.tsx      ✅    # 孩子详情（曲线 + 记录 Tab）
+│        ├─ edit.tsx       ✅    # 编辑 / 删除孩子档案
+│        └─ add-measurement.tsx ✅  # 添加身高记录
 │
 ├─ src/
 │  ├─ components/
-│  │  ├─ chart/            ✅    # 图表组件（已完成）
+│  │  ├─ chart/            ✅    # 图表组件
 │  │  │  ├─ GrowthChart.tsx      ✅  # 主图表（含 Tooltip）
 │  │  │  ├─ ChartAxes.tsx        ✅  # 坐标轴 + 网格线
 │  │  │  ├─ PercentileLines.tsx  ✅  # 标准百分位曲线
 │  │  │  ├─ MeasurementSeries.tsx✅  # 用户测量点 + 连线
 │  │  │  ├─ chartUtils.ts        ✅  # 坐标映射工具函数
-│  │  │  ○ PredictionLine.tsx        # 预测虚线（阶段五）
-│  │  │  └─ ○ ChartTooltip.tsx       # 独立 Tooltip 组件（阶段四重构）
-│  │  ○ child/
-│  │  │  ○ ChildCard.tsx             # 首页孩子卡片
-│  │  │  ○ ChildSummary.tsx          # 详情页顶部摘要
-│  │  │  └─ ○ EmptyMeasurements.tsx  # 无记录空状态
-│  │  ○ forms/
-│  │  │  ○ ChildForm.tsx             # 新建/编辑孩子表单
-│  │  │  └─ ○ MeasurementForm.tsx    # 录入身高表单
-│  │  └─ ○ common/
+│  │  │  └─ ○ PredictionLine.tsx     # 预测虚线（阶段五）
+│  │  ├─ debug/            ✅
+│  │  │  └─ DebugAddTestData.tsx ✅  # [DEV] 批量生成测试数据按钮
+│  │  ○ common/
 │  │     ○ AppButton.tsx
 │  │     ○ AppInput.tsx
-│  │     ○ AppCard.tsx
-│  │     └─ ○ SectionHeader.tsx
+│  │     └─ ○ AppCard.tsx
 │  │
 │  ├─ data/
 │  │  └─ standards/
@@ -271,15 +259,12 @@ KidSprout/
 │  │     ├─ who.ts         ✅    # WHO データ（0-228m，WHO2006 + WHO2007）
 │  │     └─ ○ china.ts           # 中国データ（后续迭代）
 │  │
-│  ○ db/                         # 本地数据库层（阶段三）
-│  │  ○ sqlite.ts
-│  │  ○ schema.ts
-│  │  ○ child.repo.ts
-│  │  └─ ○ measurement.repo.ts
+│  ├─ db/                   ✅    # 本地数据库层
+│  │  ├─ sqlite.ts          ✅    # getDb() 单例 + initDb()
+│  │  ├─ child.repo.ts      ✅    # getAllChildren / insert / update / delete
+│  │  └─ measurement.repo.ts✅   # getMeasurementsByChild / insert / update / delete
 │  │
-│  ○ hooks/                      # 自定义 Hook（阶段三起）
-│  │  ○ useChild.ts
-│  │  ○ useMeasurements.ts
+│  ○ hooks/                      # 自定义 Hook（阶段四起）
 │  │  ○ useGrowthStandard.ts
 │  │  └─ ○ usePercentile.ts
 │  │
@@ -291,9 +276,9 @@ KidSprout/
 │  │     ├─ prediction.ts        ✅  # 18 岁身高估算（骨架）
 │  │     └─ ○ zscore.ts              # LMS z-score 计算（阶段二）
 │  │
-│  ○ store/                      # Zustand 全局状态（阶段三）
-│  │  ○ childStore.ts
-│  │  ○ measurementStore.ts
+│  ├─ store/                ✅    # Zustand 全局状态
+│  │  ├─ childStore.ts      ✅    # children[] + load/add/update/remove
+│  │  ├─ measurementStore.ts✅   # byChild{} + loadForChild/add/update/remove
 │  │  └─ ○ settingsStore.ts
 │  │
 │  ├─ types/               ✅
@@ -694,24 +679,30 @@ export function predictAdultHeight(
 
 ---
 
-### 阶段三：孩子档案 + 记录（当前阶段）
+### 阶段三：孩子档案 + 记录 ✅ 已完成
 
-- [ ] 配置 expo-sqlite，建表（children / measurements）
-- [ ] 实现 `child.repo.ts` / `measurement.repo.ts`
-- [ ] 实现 `ChildForm.tsx` 新建孩子
-- [ ] 实现 `MeasurementForm.tsx` 录入身高
-- [ ] 首页孩子列表展示（ChildCard）
-- [ ] Zustand store：childStore / measurementStore
+- [x] 配置 expo-sqlite，建表（children / measurements，CASCADE 删除）
+- [x] 实现 `child.repo.ts` / `measurement.repo.ts`
+- [x] 首页孩子列表（ChildCard，空状态居中）
+- [x] 新建孩子档案（姓名、性别、出生日期 DatePicker、成长标准）
+- [x] 编辑 / 删除孩子档案（编辑页含确认 Alert）
+- [x] 孩子详情页（曲线 + 记录 Tab）
+- [x] 添加身高记录（DatePicker 日期范围限制：出生日→今天）
+- [x] 删除测量记录（swipe + 确认 Alert）
+- [x] Zustand store：childStore / measurementStore
+- [x] iOS 26 液态玻璃 header 兼容（无背景色按钮、alignSelf、contentStyle、headerBackButtonDisplayMode）
+- [x] `[DEV]` DebugAddTestData 组件（批量生成 0~18 岁测试数据）
 
-**验收：** 可新建孩子，录入身高，列表显示正确
+**验收：** ✅ 可新建/编辑/删除孩子，录入/删除身高，曲线图与记录列表均正常显示
 
 ---
 
-### 阶段四：百分位计算 + 图表整合
+### 阶段四：百分位计算 + 图表整合（当前阶段）
 
 - [ ] `estimatePercentileFromBands()` 与真实用户数据对接
-- [ ] 将用户测量点通过 `getAgeInMonths()` 映射到图表
+- [ ] 详情页顶部摘要显示当前 percentile（如 P68）
 - [ ] Tooltip 显示：日期 / 月龄 / 身高 / 百分位
+- [ ] 记录列表每行显示百分位
 - [ ] 底部摘要卡片（当前 percentile / 与中位数差距）
 
 **验收：** 录入身高后，点在曲线图上位置正确，百分位显示合理
@@ -744,8 +735,8 @@ export function predictAdultHeight(
 ## 11. 后续迭代规划
 
 ### v1.1
-- 多孩子管理
-- 编辑 / 删除记录
+- ~~多孩子管理~~ → 已在 MVP 实现
+- ~~编辑 / 删除记录~~ → 已在 MVP 实现
 - 中国标准数据（`china.ts`）
 
 ### v1.2
