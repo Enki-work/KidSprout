@@ -4,7 +4,7 @@ import {
   ScrollView, StyleSheet, Alert, Platform,
 } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { useRouter } from 'expo-router';
+import { useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useChildStore } from '@/store/childStore';
 import { Child, Sex } from '@/types/child';
@@ -55,6 +55,7 @@ export default function NewChildScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
+      <Stack.Screen options={{ title: '新建档案' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
 
         {/* 姓名 */}

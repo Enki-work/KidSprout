@@ -4,7 +4,7 @@ import {
   StyleSheet, Alert, ScrollView, Platform,
 } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useMeasurementStore } from '@/store/measurementStore';
 import { Measurement } from '@/types/measurement';
@@ -54,6 +54,7 @@ export default function AddMeasurementScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
+      <Stack.Screen options={{ title: '添加身高记录' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
 
         {/* 测量日期 */}
