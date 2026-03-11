@@ -15,9 +15,13 @@ export type GrowthMeta = {
 export type GrowthRow = {
   ageMonths: number;
   p3?: number;
+  p10?: number;
   p15?: number;
+  p25?: number;
   p50: number;
+  p75?: number;
   p85?: number;
+  p90?: number;
   p97?: number;
   l?: number;
   m?: number;
