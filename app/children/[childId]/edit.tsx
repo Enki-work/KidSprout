@@ -17,7 +17,7 @@ function dateToStr(d: Date): string {
 export default function EditChildScreen() {
   const { childId } = useLocalSearchParams<{ childId: string }>();
   const router = useRouter();
-  const { children, update } = useChildStore();
+  const { children, update, remove } = useChildStore();
   const child = children.find(c => c.id === childId);
 
   const today = new Date();
@@ -40,6 +40,24 @@ export default function EditChildScreen() {
   function onDateChange(_: DateTimePickerEvent, selected?: Date) {
     if (Platform.OS === 'android') setShowPicker(false);
     if (selected) setBirthDate(selected);
+  }
+
+  function handleDelete() {
+    Alert.alert(
+      '删除档案',
+      `确认删除「${child.name}」的所有数据？此操作不可撤销。`,
+      [
+        { text: '取消', style: 'cancel' },
+        {
+          text: '删除',
+          style: 'destructive',
+          onPress: () => {
+            remove(child.id);
+            router.dismissAll();
+          },
+        },
+      ],
+    );
   }
 
   function handleSave() {
@@ -144,6 +162,11 @@ export default function EditChildScreen() {
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
           <Text style={styles.saveBtnText}>保存</Text>
         </TouchableOpacity>
+
+        {/* 删除按钮 */}
+        <TouchableOpacity style={styles.deleteBtn} onPress={handleDelete}>
+          <Text style={styles.deleteBtnText}>删除此档案</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -183,4 +206,10 @@ const styles = StyleSheet.create({
     paddingVertical: 15, alignItems: 'center', marginTop: 32,
   },
   saveBtnText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+
+  deleteBtn: {
+    borderWidth: 1, borderColor: '#FF3B30', borderRadius: 12,
+    paddingVertical: 15, alignItems: 'center', marginTop: 12,
+  },
+  deleteBtnText: { color: '#FF3B30', fontSize: 16, fontWeight: '600' },
 });
