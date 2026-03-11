@@ -22,6 +22,8 @@ export default function RootLayout() {
         screenOptions={{
           headerTintColor: '#4CAF82',
           headerTitleStyle: { fontWeight: 'bold' },
+          contentStyle: { backgroundColor: '#F7F8FA' },
+          headerBackButtonDisplayMode: 'minimal',
         }}
       />
     </GestureHandlerRootView>

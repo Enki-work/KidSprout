@@ -95,7 +95,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F7F8FA" },
 
-  addBtn: { paddingHorizontal: 8, paddingVertical: 6 },
+  addBtn: { paddingHorizontal: 8, paddingVertical: 6, alignSelf: 'center' },
   addBtnText: { color: "#4CAF82", fontSize: 18, fontWeight: "600" },
 
   list: { padding: 16, gap: 12 },

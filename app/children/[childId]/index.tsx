@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   },
   fabText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
 
-  headerRight: { flexDirection: 'row', alignItems: 'center' },
+  headerRight: { flexDirection: 'row', alignItems: 'center', alignSelf: 'center' },
   editBtn: { paddingHorizontal: 8, paddingVertical: 6 },
   editBtnText: { color: '#4CAF82', fontSize: 18, fontWeight: '600' },
   debugBtnText: { color: '#FF9500', fontSize: 15, fontWeight: '600' },

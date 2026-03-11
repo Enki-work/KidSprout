@@ -102,6 +102,6 @@ export function DebugAddTestData({ childId }: Props) {
 }
 
 const styles = StyleSheet.create({
-  btn:  { paddingHorizontal: 8, paddingVertical: 6 },
+  btn:  { paddingHorizontal: 8, paddingVertical: 6, alignSelf: 'center' },
   text: { color: '#FF9500', fontSize: 15, fontWeight: '600' },
 });
