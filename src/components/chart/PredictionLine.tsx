@@ -1,6 +1,6 @@
 /**
  * 预测虚线
- * 从最新测量点出发，沿当前百分位延伸至 18 岁（216 月龄）
+ * 从最新测量点出发，沿当前百分位延伸至数据源上限年龄
  */
 
 import React from 'react';
@@ -15,6 +15,7 @@ type Props = {
   percentile: number;
   rows: GrowthRow[];
   bounds: ChartBounds;
+  maxAgeMonths: number;  // 数据源上限月龄（如 WHO=228, 中国=216, 日本=204）
   color?: string;
 };
 
@@ -24,9 +25,10 @@ export function PredictionLine({
   percentile,
   rows,
   bounds,
+  maxAgeMonths,
   color = '#F5A623',
 }: Props) {
-  const maxAge = Math.min(bounds.xMax, 216);
+  const maxAge = Math.min(bounds.xMax, maxAgeMonths);
   if (startAgeMonths >= maxAge) return null;
 
   // 每 6 个月采样一个点

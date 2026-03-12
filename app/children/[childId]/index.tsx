@@ -95,7 +95,7 @@ export default function ChildDetailScreen() {
 
   // 预测配置（仅当有测量记录且未超过数据上限）
   const prediction: PredictionConfig | undefined = latestComputed && latestComputed.ageMonths < maxAgeMonths
-    ? { startAgeMonths: latestComputed.ageMonths, startHeightCm: latestComputed.heightCm, percentile: currentPercentile }
+    ? { startAgeMonths: latestComputed.ageMonths, startHeightCm: latestComputed.heightCm, percentile: currentPercentile, maxAgeMonths }
     : undefined;
 
   // 预测成年身高（以各数据源的最大月龄为目标）

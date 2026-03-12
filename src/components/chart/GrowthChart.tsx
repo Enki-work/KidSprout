@@ -12,6 +12,7 @@ export type PredictionConfig = {
   startAgeMonths: number;
   startHeightCm: number;
   percentile: number;
+  maxAgeMonths: number;  // 数据源上限月龄
 };
 
 type Props = {
@@ -88,6 +89,7 @@ export function GrowthChart({
             startAgeMonths={prediction.startAgeMonths}
             startHeightCm={prediction.startHeightCm}
             percentile={prediction.percentile}
+            maxAgeMonths={prediction.maxAgeMonths}
             rows={rows}
             bounds={bounds}
           />
