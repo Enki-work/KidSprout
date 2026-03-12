@@ -44,31 +44,31 @@
 
 ### P0（必须上线）
 
-| 功能 | 说明 |
-|------|------|
-| 新建孩子档案 | 姓名、性别、出生日期 |
-| 录入身高记录 | 日期 + 身高 cm |
-| 成长曲线展示 | WHO 标准 5 条 percentile 线 + 用户测量点 |
-| Percentile 计算 | 基于百分位插值估算 |
-| 18 岁身高估算 | 沿当前 percentile 延伸到 18 岁 |
+| 功能            | 说明                                     |
+| --------------- | ---------------------------------------- |
+| 新建孩子档案    | 姓名、性别、出生日期                     |
+| 录入身高记录    | 日期 + 身高 cm                           |
+| 成长曲线展示    | WHO 标准 5 条 percentile 线 + 用户测量点 |
+| Percentile 计算 | 基于百分位插值估算                       |
+| 18 岁身高估算   | 沿当前 percentile 延伸到 18 岁           |
 
 ### P1（第二版迭代）
 
-| 功能 | 说明 |
-|------|------|
-| 编辑 / 删除记录 | 修正录入错误 |
-| 多孩子管理 | 支持家庭多个孩子独立档案 |
-| 数据源切换 | ~~WHO / 日本标准切换已在 MVP 实现~~ → 提前完成 |
-| 数据导出 | CSV / PDF 报告 |
+| 功能            | 说明                                           |
+| --------------- | ---------------------------------------------- |
+| 编辑 / 删除记录 | 修正录入错误                                   |
+| 多孩子管理      | 支持家庭多个孩子独立档案                       |
+| 数据源切换      | ~~WHO / 日本标准切换已在 MVP 实现~~ → 提前完成 |
+| 数据导出        | CSV / PDF 报告                                 |
 
 ### P2（长期规划）
 
-| 功能 | 说明 |
-|------|------|
-| 云同步 | 多设备同步数据 |
+| 功能     | 说明               |
+| -------- | ------------------ |
+| 云同步   | 多设备同步数据     |
 | 家庭共享 | 父母共用同一份数据 |
-| 定期提醒 | 到期测量提醒通知 |
-| 医生报告 | 专业报告格式导出 |
+| 定期提醒 | 到期测量提醒通知   |
+| 医生报告 | 专业报告格式导出   |
 | 体重曲线 | 扩展 BMI、体重指标 |
 
 ---
@@ -93,10 +93,12 @@
 #### A. 首页 / 孩子列表
 
 **内容**
+
 - 孩子卡片：姓名 / 当前年龄 / 最近身高 / 当前 percentile / 最近测量日期
 - 右下角 FAB 按钮：新建孩子
 
 **交互**
+
 - 点击卡片 → 进入孩子详情页
 
 ---
@@ -104,12 +106,14 @@
 #### B. 新建 / 编辑孩子档案
 
 **MVP 字段**
+
 - 姓名（必填）
 - 性别：女孩 / 男孩（必填）
 - 出生日期（必填）
 - 数据标准（默认 WHO，可选）
 
 **P1 扩展字段**
+
 - 父亲身高（可选）
 - 母亲身高（可选）
 - 备注（可选）
@@ -119,6 +123,7 @@
 #### C. 孩子详情页（顶部摘要 + Tab）
 
 **顶部摘要区**
+
 - 孩子姓名
 - 当前年龄
 - 最近身高
@@ -126,6 +131,7 @@
 - 预测成年身高（如 约 163 cm）
 
 **Tab 页**
+
 - 曲线（默认选中）
 - 记录
 - 分析
@@ -135,6 +141,7 @@
 #### D. 曲线页（核心页）
 
 **图表内容**
+
 - 背景标准曲线：P3 / P15 / P50 / P85 / P97
 - 孩子历史测量点（实心圆点）
 - 测量点连线（实线）
@@ -142,6 +149,7 @@
 - 预测延伸线（虚线）
 
 **Tooltip（点击任意点弹出）**
+
 ```
 2025-11-05
 4岁3个月
@@ -150,6 +158,7 @@ P62 · 比中位数高 2.1 cm
 ```
 
 **页面底部摘要卡**
+
 ```
 当前位于：P72
 接近曲线：P85
@@ -157,6 +166,7 @@ P62 · 比中位数高 2.1 cm
 ```
 
 **空状态**
+
 - 显示标准成长曲线背景
 - 中间提示：「还没有身高记录，先添加第一次测量吧」
 - 按钮：「添加记录」
@@ -167,11 +177,12 @@ P62 · 比中位数高 2.1 cm
 
 **列表（时间倒序）**
 
-| 日期 | 年龄 | 身高 | 百分位 | 备注 |
-|------|------|------|--------|------|
-| 2025-11-05 | 4岁3月 | 104.6 cm | P62 | — |
+| 日期       | 年龄   | 身高     | 百分位 | 备注 |
+| ---------- | ------ | -------- | ------ | ---- |
+| 2025-11-05 | 4岁3月 | 104.6 cm | P62    | —    |
 
 **交互**
+
 - 顶部按钮「新增记录」
 - 长按行 → 编辑 / 删除
 
@@ -180,6 +191,7 @@ P62 · 比中位数高 2.1 cm
 #### F. 分析页
 
 **展示内容**
+
 - 当前身高 & percentile
 - 高于同龄儿童百分比
 - 比同龄中位数高/低多少 cm
@@ -188,6 +200,7 @@ P62 · 比中位数高 2.1 cm
 - 18 岁身高估算（保守文案）
 
 **示例**
+
 ```
 当前身高：128.4 cm  ·  P68
 高于同龄儿童约 68%
@@ -204,18 +217,18 @@ P62 · 比中位数高 2.1 cm
 
 ## 4. 技术选型
 
-| 层级 | 技术 | 理由 |
-|------|------|------|
-| 框架 | Expo SDK 54 + React Native 0.81.5 + React 19.1.0 | 跨平台，开发效率高 |
-| 路由 | Expo Router v6 | 文件路由，结构清晰 |
-| 语言 | TypeScript ~5.9.2 | 类型安全，降低 bug |
-| 图表 | react-native-svg 15.12.1 | 矢量绘制，完全可控 |
-| 手势 | react-native-gesture-handler ~2.28.0 | 手势支持（缩放留待 P1） |
-| 状态管理 | Zustand | 轻量，易学，适合本地记录型 app |
-| 本地存储 | expo-sqlite ~16.0.10 | 结构化数据，可靠持久化 |
-| 日期计算 | date-fns | 轻量，API 友好 |
-| 多语言 | react-i18next | 成熟方案，支持五语言 |
-| 数据验证 | Zod | 类型与验证统一 |
+| 层级     | 技术                                             | 理由                           |
+| -------- | ------------------------------------------------ | ------------------------------ |
+| 框架     | Expo SDK 54 + React Native 0.81.5 + React 19.1.0 | 跨平台，开发效率高             |
+| 路由     | Expo Router v6                                   | 文件路由，结构清晰             |
+| 语言     | TypeScript ~5.9.2                                | 类型安全，降低 bug             |
+| 图表     | react-native-svg 15.12.1                         | 矢量绘制，完全可控             |
+| 手势     | react-native-gesture-handler ~2.28.0             | 手势支持（缩放留待 P1）        |
+| 状态管理 | Zustand                                          | 轻量，易学，适合本地记录型 app |
+| 本地存储 | expo-sqlite ~16.0.10                             | 结构化数据，可靠持久化         |
+| 日期计算 | date-fns                                         | 轻量，API 友好                 |
+| 多语言   | react-i18next                                    | 成熟方案，支持五语言           |
+| 数据验证 | Zod                                              | 类型与验证统一                 |
 
 > **注意：** react-native-reanimated 4.x 与 Expo SDK 54 存在兼容问题，已移除。图表缩放（P1 阶段）优先用 SVG viewBox 重绘方案实现，无需动画库。
 
@@ -312,14 +325,14 @@ KidSprout/
 
 ```ts
 // src/types/child.ts
-export type Sex = 'female' | 'male';
+export type Sex = "female" | "male";
 
 export type Child = {
   id: string;
   name: string;
   sex: Sex;
-  birthDate: string;          // ISO date: "2021-08-15"
-  standardId: string;         // 使用的数据源 ID
+  birthDate: string; // ISO date: "2021-08-15"
+  standardId: string; // 使用的数据源 ID
   fatherHeightCm?: number;
   motherHeightCm?: number;
   createdAt: string;
@@ -332,7 +345,7 @@ export type Child = {
 export type Measurement = {
   id: string;
   childId: string;
-  measuredAt: string;         // ISO date: "2025-11-05"
+  measuredAt: string; // ISO date: "2025-11-05"
   heightCm: number;
   note?: string;
   createdAt: string;
@@ -352,26 +365,26 @@ export type ComputedMeasurement = Measurement & {
 // src/types/growth.ts  ✅ 已实现
 export type GrowthMeta = {
   id: string;
-  source: 'WHO' | 'JAPAN' | 'CHINA';
+  source: "WHO" | "JAPAN" | "CHINA";
   version: string;
-  indicator: 'height-for-age';
+  indicator: "height-for-age";
   sex: Sex;
   ageMinMonths: number;
   ageMaxMonths: number;
-  unit: 'cm';
-  method: 'percentile' | 'lms' | 'hybrid';
+  unit: "cm";
+  method: "percentile" | "lms" | "hybrid";
 };
 
 export type GrowthRow = {
   ageMonths: number;
   p3?: number;
-  p10?: number;   // 日本データで使用
-  p15?: number;   // WHO データ用（予約）
-  p25?: number;   // 日本データで使用
-  p50: number;    // 必須
-  p75?: number;   // 日本データで使用
-  p85?: number;   // WHO データ用（予約）
-  p90?: number;   // 日本データで使用
+  p10?: number; // 日本データで使用
+  p15?: number; // WHO データ用（予約）
+  p25?: number; // 日本データで使用
+  p50: number; // 必須
+  p75?: number; // 日本データで使用
+  p85?: number; // WHO データ用（予約）
+  p90?: number; // 日本データで使用
   p97?: number;
   l?: number;
   m?: number;
@@ -393,12 +406,14 @@ export type GrowthStandardFile = {
 `src/data/standards/japan.ts` に TypeScript 定数として格納。
 
 **データ構成：**
+
 - **0〜69ヶ月**：厚生労働省 令和5年（2023年）乳幼児身体発育調査（表02）
   区間中央値を `ageMonths` として使用（0, 1, 1.5, 2.5 ... 69）
 - **72〜204ヶ月**：文部科学省 令和7年（2025年）学校保健統計調査
   各学年 4月時点の月齢（72, 84, 96 ... 204）
 
 **接続方針：**
+
 - 69ヶ月（幼児調査）→ 72ヶ月（学校統計）でデータソースを切替
 - 60ヶ月・75ヶ月の重複エントリは削除済み（カーブのジャンプを回避）
 - 利用百分位：P3 / P10 / P25 / P50 / P75 / P90 / P97
@@ -408,6 +423,7 @@ export type GrowthStandardFile = {
 `src/data/standards/who.ts` に TypeScript 定数として格納（514行）。
 
 **データ構成：**
+
 - **0〜60ヶ月**：WHO Child Growth Standards 2006（元データ日単位 → 月齢換算）
 - **61〜228ヶ月**：WHO Reference 2007（月単位）
 
@@ -455,11 +471,11 @@ export function lerp(a: number, b: number, t: number): number {
 /** 按月龄插值出对应行数据 */
 export function interpolateGrowthRow(
   ageMonths: number,
-  rows: GrowthRow[]
+  rows: GrowthRow[],
 ): GrowthRow {
   const sorted = [...rows].sort((a, b) => a.ageMonths - b.ageMonths);
-  const lower = [...sorted].reverse().find(r => r.ageMonths <= ageMonths);
-  const upper = sorted.find(r => r.ageMonths > ageMonths);
+  const lower = [...sorted].reverse().find((r) => r.ageMonths <= ageMonths);
+  const upper = sorted.find((r) => r.ageMonths > ageMonths);
 
   if (!lower) return upper!;
   if (!upper) return lower;
@@ -468,14 +484,26 @@ export function interpolateGrowthRow(
 
   return {
     ageMonths,
-    p3:  lower.p3  !== undefined ? lerp(lower.p3,  upper.p3  ?? lower.p3,  t) : undefined,
-    p15: lower.p15 !== undefined ? lerp(lower.p15, upper.p15 ?? lower.p15, t) : undefined,
+    p3:
+      lower.p3 !== undefined
+        ? lerp(lower.p3, upper.p3 ?? lower.p3, t)
+        : undefined,
+    p15:
+      lower.p15 !== undefined
+        ? lerp(lower.p15, upper.p15 ?? lower.p15, t)
+        : undefined,
     p50: lerp(lower.p50, upper.p50, t),
-    p85: lower.p85 !== undefined ? lerp(lower.p85, upper.p85 ?? lower.p85, t) : undefined,
-    p97: lower.p97 !== undefined ? lerp(lower.p97, upper.p97 ?? lower.p97, t) : undefined,
-    l:   lower.l   !== undefined ? lerp(lower.l,   upper.l   ?? lower.l,   t) : undefined,
-    m:   lower.m   !== undefined ? lerp(lower.m,   upper.m   ?? lower.m,   t) : undefined,
-    s:   lower.s   !== undefined ? lerp(lower.s,   upper.s   ?? lower.s,   t) : undefined,
+    p85:
+      lower.p85 !== undefined
+        ? lerp(lower.p85, upper.p85 ?? lower.p85, t)
+        : undefined,
+    p97:
+      lower.p97 !== undefined
+        ? lerp(lower.p97, upper.p97 ?? lower.p97, t)
+        : undefined,
+    l: lower.l !== undefined ? lerp(lower.l, upper.l ?? lower.l, t) : undefined,
+    m: lower.m !== undefined ? lerp(lower.m, upper.m ?? lower.m, t) : undefined,
+    s: lower.s !== undefined ? lerp(lower.s, upper.s ?? lower.s, t) : undefined,
   };
 }
 ```
@@ -489,7 +517,7 @@ type Band = { percentile: number; value: number };
 
 export function estimatePercentileFromBands(
   heightCm: number,
-  bands: Band[]
+  bands: Band[],
 ): number {
   const sorted = [...bands].sort((a, b) => a.percentile - b.percentile);
 
@@ -511,12 +539,12 @@ export function estimatePercentileFromBands(
 /** 从 GrowthRow 构建 Band 数组 */
 export function rowToBands(row: GrowthRow): Band[] {
   return [
-    { percentile: 3,  value: row.p3!  },
+    { percentile: 3, value: row.p3! },
     { percentile: 15, value: row.p15! },
-    { percentile: 50, value: row.p50  },
+    { percentile: 50, value: row.p50 },
     { percentile: 85, value: row.p85! },
     { percentile: 97, value: row.p97! },
-  ].filter(b => b.value !== undefined);
+  ].filter((b) => b.value !== undefined);
 }
 ```
 
@@ -538,8 +566,12 @@ export function zScoreToPercentile(z: number): number {
 
 function normalCDF(z: number): number {
   const t = 1 / (1 + 0.2316419 * Math.abs(z));
-  const d = 0.3989423 * Math.exp(-z * z / 2);
-  const p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.7814779 + t * (-1.8212560 + t * 1.3302744))));
+  const d = 0.3989423 * Math.exp((-z * z) / 2);
+  const p =
+    d *
+    t *
+    (0.3193815 +
+      t * (-0.3565638 + t * (1.7814779 + t * (-1.821256 + t * 1.3302744))));
   return z > 0 ? 1 - p : p;
 }
 ```
@@ -567,13 +599,18 @@ export function predictAdultHeight(
   const sorted = [...bands].sort((a, b) => a.percentile - b.percentile);
 
   if (currentPercentile <= sorted[0].percentile) return sorted[0].value;
-  if (currentPercentile >= sorted.at(-1)!.percentile) return sorted.at(-1)!.value;
+  if (currentPercentile >= sorted.at(-1)!.percentile)
+    return sorted.at(-1)!.value;
 
   for (let i = 0; i < sorted.length - 1; i++) {
     const lo = sorted[i];
     const hi = sorted[i + 1];
-    if (currentPercentile >= lo.percentile && currentPercentile <= hi.percentile) {
-      const t = (currentPercentile - lo.percentile) / (hi.percentile - lo.percentile);
+    if (
+      currentPercentile >= lo.percentile &&
+      currentPercentile <= hi.percentile
+    ) {
+      const t =
+        (currentPercentile - lo.percentile) / (hi.percentile - lo.percentile);
       return lo.value + t * (hi.value - lo.value);
     }
   }
@@ -583,7 +620,7 @@ export function predictAdultHeight(
 ```
 
 > **文案要求（强制）：** 预测结果页面必须包含以下免责说明：
-> *「仅供参考，青春期发育、遗传、营养、睡眠与健康状况都会影响最终身高。」*
+> _「仅供参考，青春期发育、遗传、营养、睡眠与健康状况都会影响最终身高。」_
 
 ---
 
@@ -591,16 +628,16 @@ export function predictAdultHeight(
 
 ### 9.1 颜色方案
 
-| 元素 | 颜色 | 说明 |
-|------|------|------|
-| 主色 | `#4CAF82` | 绿芽色 |
-| P3 / P97 | `#C8C8D0` | 浅灰 |
-| P15 / P85 | `#A0C4E8` | 浅蓝 |
-| P50 | `#3A7EC4` | 深蓝（中位数） |
-| 用户点线 | `#4CAF82` | 主色绿 |
-| 预测虚线 | `#F5A623` | 橙色虚线 |
-| 背景 | `#FFFFFF` | 白色 |
-| 次背景 | `#F7F8FA` | 极浅灰 |
+| 元素      | 颜色      | 说明           |
+| --------- | --------- | -------------- |
+| 主色      | `#4CAF82` | 绿芽色         |
+| P3 / P97  | `#C8C8D0` | 浅灰           |
+| P15 / P85 | `#A0C4E8` | 浅蓝           |
+| P50       | `#3A7EC4` | 深蓝（中位数） |
+| 用户点线  | `#4CAF82` | 主色绿         |
+| 预测虚线  | `#F5A623` | 橙色虚线       |
+| 背景      | `#FFFFFF` | 白色           |
+| 次背景    | `#F7F8FA` | 极浅灰         |
 
 ### 9.2 曲线页布局
 
@@ -630,21 +667,23 @@ export function predictAdultHeight(
 ### 9.3 坐标轴规范
 
 **X 轴（时间）**
+
 - 内部统一使用月龄（整数）
 - 显示转换：`61月 → 5岁1个月` / 整年处理显示为 `5岁`
 - 间隔：0-24m 按 3 月，24m 以后按 12 月
 
 **Y 轴（身高）**
+
 - 自动计算范围：`min(P3) - 5cm` ～ `max(P97) + 5cm`
 - 刻度间隔：10 cm
 
 ### 9.4 交互
 
-| 操作 | 响应 |
-|------|------|
-| 点击测量点 | 显示 Tooltip（日期 / 年龄 / 身高 / percentile） |
-| 长按图表空白处 | 显示十字准星，读取当前坐标对应数值 |
-| 双指缩放 | P1 阶段实现，MVP 暂不支持 |
+| 操作           | 响应                                            |
+| -------------- | ----------------------------------------------- |
+| 点击测量点     | 显示 Tooltip（日期 / 年龄 / 身高 / percentile） |
+| 长按图表空白处 | 显示十字准星，读取当前坐标对应数值              |
+| 双指缩放       | P1 阶段实现，MVP 暂不支持                       |
 
 ### 9.5 实线 vs 虚线区分
 
@@ -745,19 +784,25 @@ export function predictAdultHeight(
 ## 11. 后续迭代规划
 
 ### v1.1
+
 - ~~多孩子管理~~ → 已在 MVP 实现
 - ~~编辑 / 删除记录~~ → 已在 MVP 实现
 - ~~中国标准数据（`china.ts`）~~ → 已在阶段四实现
 
 ### v1.2
+
 - LMS 精确 percentile 计算（`zscore.ts`）
 - 双指缩放图表（SVG viewBox 方案）
 
 ### v1.3
+
 - 数据导出（CSV）
 - 提醒通知
+- 图表导出
+- 数据导入
 
 ### v2.0
+
 - 云同步
 - 家庭共享
 - 体重 / BMI 曲线
@@ -766,4 +811,4 @@ export function predictAdultHeight(
 
 ---
 
-*文档维护：随开发进度更新，重要决策变更需同步至此文档。*
+_文档维护：随开发进度更新，重要决策变更需同步至此文档。_
