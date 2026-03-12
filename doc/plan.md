@@ -1,6 +1,6 @@
 # 小芽成长 · 开发计划书
 
-> 版本：v0.4 · 日期：2026-03-12
+> 版本：v0.5 · 日期：2026-03-12
 > 原则：**先能跑通，再逐步专业化**
 
 ---
@@ -257,16 +257,16 @@ KidSprout/
 │  │  └─ standards/
 │  │     ├─ japan.ts       ✅    # 日本データ（0-69m 幼児調査 + 72-204m 学校統計）
 │  │     ├─ who.ts         ✅    # WHO データ（0-228m，WHO2006 + WHO2007）
-│  │     └─ ○ china.ts           # 中国データ（后续迭代）
+│  │     └─ china.ts       ✅    # 中国データ（WS/T 423—2022 + WS/T 612—2018，0-216m）
 │  │
 │  ├─ db/                   ✅    # 本地数据库层
 │  │  ├─ sqlite.ts          ✅    # getDb() 单例 + initDb()
 │  │  ├─ child.repo.ts      ✅    # getAllChildren / insert / update / delete
 │  │  └─ measurement.repo.ts✅   # getMeasurementsByChild / insert / update / delete
 │  │
-│  ○ hooks/                      # 自定义 Hook（阶段四起）
-│  │  ○ useGrowthStandard.ts
-│  │  └─ ○ usePercentile.ts
+│  ├─ hooks/                ✅    # 自定义 Hook
+│  │  └─ growth/            ✅
+│  │     └─ useComputedMeasurements.ts ✅  # 测量记录 → 百分位/月龄/中位数差计算视图
 │  │
 │  ├─ services/
 │  │  └─ growth/           ✅
@@ -697,19 +697,23 @@ export function predictAdultHeight(
 
 ---
 
-### 阶段四：百分位计算 + 图表整合（当前阶段）
+### 阶段四：百分位计算 + 图表整合 ✅ 已完成
 
-- [ ] `estimatePercentileFromBands()` 与真实用户数据对接
-- [ ] 详情页顶部摘要显示当前 percentile（如 P68）
-- [ ] Tooltip 显示：日期 / 月龄 / 身高 / 百分位
-- [ ] 记录列表每行显示百分位
-- [ ] 底部摘要卡片（当前 percentile / 与中位数差距）
+- [x] `getPercentile()` 对接真实用户数据（月龄插值 + 跨百分位线性估算）
+- [x] `useComputedMeasurements` hook（percentile / ageMonths / medianDeltaCm）
+- [x] 详情页顶部摘要显示当前 percentile（彩色徽章，绿/橙/红）
+- [x] Tooltip 显示：日期 / 月龄 / 身高 / 百分位（P68）
+- [x] 记录列表每行显示百分位（颜色随高低变化）
+- [x] 摘要卡片（当前 percentile / 与中位数差距 / 文字描述）
+- [x] 修复 `rowToBands` 只识别 p15/p85（现兼容所有数据源字段）
+- [x] 中国标准数据（WS/T 423—2022 + WS/T 612—2018，56行/性别）
+- [x] 修复中国数据 1岁→2岁 / 6岁→7岁 曲线不平滑问题（删除 23m / 75m / 78m / 81m 行）
 
-**验收：** 录入身高后，点在曲线图上位置正确，百分位显示合理
+**验收：** ✅ 录入身高后百分位实时显示，Tooltip 内容完整，摘要卡片数据正确
 
 ---
 
-### 阶段五：分析页 + 预测
+### 阶段五：分析页 + 预测（当前阶段）
 
 - [ ] `predictAdultHeight()` 与真实孩子档案对接
 - [ ] 分析页数据统计展示
@@ -737,7 +741,7 @@ export function predictAdultHeight(
 ### v1.1
 - ~~多孩子管理~~ → 已在 MVP 实现
 - ~~编辑 / 删除记录~~ → 已在 MVP 实现
-- 中国标准数据（`china.ts`）
+- ~~中国标准数据（`china.ts`）~~ → 已在阶段四实现
 
 ### v1.2
 - LMS 精确 percentile 计算（`zscore.ts`）
