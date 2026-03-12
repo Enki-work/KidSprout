@@ -179,7 +179,7 @@ export default function ChildDetailScreen() {
       {/* 顶部摘要 */}
       <View style={styles.summary}>
         <Text style={styles.childMeta}>
-          {child.sex === "male" ? "男の子" : "女の子"} ·{" "}
+          {child.sex === "male" ? "男孩" : "女孩"} ·{" "}
           {formatAgeMonths(ageMonths)}
           {latestComputed ? ` · ${latestComputed.heightCm} cm` : ""}
         </Text>
@@ -231,7 +231,7 @@ export default function ChildDetailScreen() {
           style={{ width }}
           contentContainerStyle={styles.chartContent}
         >
-          <Text style={styles.sectionTitle}>乳幼児期（0〜3歳）</Text>
+          <Text style={styles.sectionTitle}>乳幼儿期（0〜3岁）</Text>
           <GrowthChart
             rows={standard.rows}
             measurements={chartPoints}
@@ -242,7 +242,7 @@ export default function ChildDetailScreen() {
             height={240}
           />
           <Text style={styles.sectionTitle}>
-            全体（0〜{Math.floor(standard.meta.ageMaxMonths / 12)}歳）
+            全体（0〜{Math.floor(standard.meta.ageMaxMonths / 12)}岁）
           </Text>
           <GrowthChart
             rows={standard.rows}
@@ -331,12 +331,12 @@ export default function ChildDetailScreen() {
                   style={styles.deleteBtn}
                   onPress={() =>
                     Alert.alert(
-                      "删除记录",
-                      `确认删除 ${m.measuredAt} 的记录？`,
+                      "删除这条记录？",
+                      `${m.measuredAt} 的身高记录将被永久删除。`,
                       [
-                        { text: "取消", style: "cancel" },
+                        { text: "再想想", style: "cancel" },
                         {
-                          text: "删除",
+                          text: "确认删除",
                           style: "destructive",
                           onPress: () => removeMeasurement(m.id, child.id),
                         },

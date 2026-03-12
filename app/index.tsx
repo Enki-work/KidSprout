@@ -15,7 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 function ChildCard({ child, onPress }: { child: Child; onPress: () => void }) {
   const ageMonths = getAgeInMonths(new Date(child.birthDate));
   const ageText = formatAgeMonths(ageMonths);
-  const sexLabel = child.sex === "male" ? "男の子" : "女の子";
+  const sexLabel = child.sex === "male" ? "男孩" : "女孩";
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
@@ -71,8 +71,8 @@ export default function HomeScreen() {
         {children.length === 0 ? (
           <View style={styles.empty}>
             <Text style={styles.emptyIcon}>🌱</Text>
-            <Text style={styles.emptyTitle}>还没有孩子档案</Text>
-            <Text style={styles.emptyDesc}>点击右上角「新建」开始记录成长</Text>
+            <Text style={styles.emptyTitle}>还没有小宝贝的记录呢</Text>
+            <Text style={styles.emptyDesc}>点右上角，开始记录 TA 的第一次测量吧～</Text>
           </View>
         ) : (
           <FlatList

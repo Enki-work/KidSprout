@@ -40,7 +40,7 @@ export default function AddMeasurementScreen() {
   function handleSave() {
     const heightNum = parseFloat(height);
     if (isNaN(heightNum) || heightNum < 30 || heightNum > 250) {
-      Alert.alert('提示', '请输入合理的身高（30〜250 cm）');
+      Alert.alert('好像哪里不对～', '身高请填写 30〜250 cm 之间的数值哦');
       return;
     }
     const now = new Date().toISOString();
@@ -59,11 +59,11 @@ export default function AddMeasurementScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <Stack.Screen options={{ title: '添加身高记录' }} />
+      <Stack.Screen options={{ title: '记录今天的身高 📏' }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
 
         {/* 测量日期 */}
-        <Text style={styles.label}>测量日期 *</Text>
+        <Text style={styles.label}>今天几号测的？</Text>
 
         {Platform.OS === 'ios' ? (
           <DateTimePicker
@@ -98,7 +98,7 @@ export default function AddMeasurementScreen() {
         )}
 
         {/* 身高 */}
-        <Text style={styles.label}>身高（cm）*</Text>
+        <Text style={styles.label}>量了多少？（cm）</Text>
         <TextInput
           style={[styles.input, styles.heightInput]}
           value={height}
@@ -109,18 +109,18 @@ export default function AddMeasurementScreen() {
         />
 
         {/* 备注 */}
-        <Text style={styles.label}>备注（可选）</Text>
+        <Text style={styles.label}>有什么想记下来的吗？</Text>
         <TextInput
           style={[styles.input, styles.noteInput]}
           value={note}
           onChangeText={setNote}
-          placeholder="例：医院体检"
+          placeholder="例：医院体检、家里量的…"
           multiline
           maxLength={100}
         />
 
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
-          <Text style={styles.saveBtnText}>保存记录</Text>
+          <Text style={styles.saveBtnText}>记下来！📝</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
