@@ -84,8 +84,14 @@ export function GrowthChart({
       {/* Tooltip */}
       {tooltip && (
         <View style={styles.tooltip}>
+          {tooltip.date && (
+            <Text style={styles.tooltipDate}>{tooltip.date}</Text>
+          )}
           <Text style={styles.tooltipText}>
             {(tooltip.ageMonths / 12).toFixed(1)} 岁 · {tooltip.heightCm} cm
+            {tooltip.percentile !== undefined
+              ? `  P${Math.round(tooltip.percentile)}`
+              : ''}
           </Text>
         </View>
       )}
@@ -102,6 +108,11 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     paddingHorizontal: 10,
     paddingVertical: 6,
+  },
+  tooltipDate: {
+    color: 'rgba(255,255,255,0.7)',
+    fontSize: 11,
+    marginBottom: 2,
   },
   tooltipText: {
     color: '#fff',

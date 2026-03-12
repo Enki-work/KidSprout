@@ -5,6 +5,8 @@ import { ChartBounds, sx, sy, toPath } from './chartUtils';
 export type MeasurementPoint = {
   ageMonths: number;
   heightCm: number;
+  date?: string;
+  percentile?: number;
 };
 
 type Props = {

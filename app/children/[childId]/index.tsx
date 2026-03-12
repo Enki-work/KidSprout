@@ -14,8 +14,16 @@ import { GrowthChart } from '@/components/chart/GrowthChart';
 import { MeasurementPoint } from '@/components/chart/MeasurementSeries';
 import { useWindowDimensions } from 'react-native';
 import { DebugAddTestData } from '@/components/debug/DebugAddTestData';
+import { useComputedMeasurements } from '@/hooks/growth/useComputedMeasurements';
 
 type Tab = 'chart' | 'records';
+
+/** 百分位显示颜色 */
+function percentileColor(p: number): string {
+  if (p < 3 || p > 97) return '#FF3B30';
+  if (p < 10 || p > 90) return '#FF9500';
+  return '#4CAF82';
+}
 
 export default function ChildDetailScreen() {
   const { childId } = useLocalSearchParams<{ childId: string }>();
@@ -32,7 +40,17 @@ export default function ChildDetailScreen() {
     if (childId) loadForChild(childId);
   }, [childId]));
 
-  if (!child) {
+  // 必须在所有条件返回之前调用 hooks
+  const standard = child
+    ? getStandardFile(child.standardId as StandardId, child.sex)
+    : null;
+  const computed = useComputedMeasurements(
+    measurements,
+    child?.birthDate ?? '',
+    standard?.rows ?? [],
+  );
+
+  if (!child || !standard) {
     return (
       <View style={styles.center}>
         <Text style={styles.notFound}>找不到孩子档案</Text>
@@ -41,22 +59,19 @@ export default function ChildDetailScreen() {
   }
 
   const ageMonths = getAgeInMonths(new Date(child.birthDate));
-  const standard = getStandardFile(child.standardId as StandardId, child.sex);
   const chartWidth = width - 32;
+  const latestComputed = computed.length > 0 ? computed[computed.length - 1] : null;
 
-  // 将测量记录转换为图表数据点
-  const chartPoints: MeasurementPoint[] = measurements.map(m => ({
-    ageMonths: getAgeInMonths(new Date(child.birthDate), new Date(m.measuredAt)),
-    heightCm:  m.heightCm,
+  // 图表数据点（含百分位和日期，用于 Tooltip）
+  const chartPoints: MeasurementPoint[] = computed.map(m => ({
+    ageMonths:  m.ageMonths,
+    heightCm:   m.heightCm,
+    date:       m.measuredAt,
+    percentile: m.percentile,
   }));
-
-  const latestMeasurement = measurements.length > 0
-    ? measurements[measurements.length - 1]
-    : null;
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      {/* 配置 Stack header 标题 */}
       <Stack.Screen
         options={{
           title: child.name,
@@ -77,10 +92,16 @@ export default function ChildDetailScreen() {
       {/* 顶部摘要 */}
       <View style={styles.summary}>
         <Text style={styles.childMeta}>
-          {child.sex === 'male' ? '男の子' : '女の子'} ·{' '}
-          {formatAgeMonths(ageMonths)}
-          {latestMeasurement ? ` · 最新 ${latestMeasurement.heightCm} cm` : ''}
+          {child.sex === 'male' ? '男の子' : '女の子'} · {formatAgeMonths(ageMonths)}
+          {latestComputed ? ` · ${latestComputed.heightCm} cm` : ''}
         </Text>
+        {latestComputed?.percentile !== undefined && (
+          <View style={[styles.percentileBadge, { backgroundColor: percentileColor(latestComputed.percentile) }]}>
+            <Text style={styles.percentileBadgeText}>
+              P{Math.round(latestComputed.percentile)}
+            </Text>
+          </View>
+        )}
       </View>
 
       {/* Tab 切換 */}
@@ -119,34 +140,68 @@ export default function ChildDetailScreen() {
       ) : (
         /* ── 记录页 ── */
         <ScrollView contentContainerStyle={styles.recordsContent}>
-          {measurements.length === 0 ? (
+
+          {/* 摘要卡片 */}
+          {latestComputed && (
+            <View style={styles.summaryCard}>
+              <View style={styles.summaryCardRow}>
+                <View style={styles.summaryCardItem}>
+                  <Text style={styles.summaryCardLabel}>当前百分位</Text>
+                  <Text style={[styles.summaryCardValue, { color: percentileColor(latestComputed.percentile ?? 50) }]}>
+                    P{Math.round(latestComputed.percentile ?? 50)}
+                  </Text>
+                </View>
+                <View style={styles.summaryCardDivider} />
+                <View style={styles.summaryCardItem}>
+                  <Text style={styles.summaryCardLabel}>与中位数</Text>
+                  <Text style={[
+                    styles.summaryCardValue,
+                    { color: (latestComputed.medianDeltaCm ?? 0) >= 0 ? '#4CAF82' : '#FF3B30' },
+                  ]}>
+                    {(latestComputed.medianDeltaCm ?? 0) >= 0 ? '+' : ''}
+                    {latestComputed.medianDeltaCm ?? '-'} cm
+                  </Text>
+                </View>
+              </View>
+              <Text style={styles.summaryCardDesc}>
+                高于 {Math.round(latestComputed.percentile ?? 50)}% 的同龄
+                {child.sex === 'male' ? '男' : '女'}孩
+              </Text>
+            </View>
+          )}
+
+          {computed.length === 0 ? (
             <View style={styles.emptyRecords}>
               <Text style={styles.emptyText}>还没有测量记录</Text>
             </View>
           ) : (
-            [...measurements].reverse().map(m => {
-              const mAgeMonths = getAgeInMonths(new Date(child.birthDate), new Date(m.measuredAt));
-              return (
-                <View key={m.id} style={styles.recordRow}>
-                  <View style={styles.recordMain}>
-                    <Text style={styles.recordDate}>{m.measuredAt}</Text>
-                    <Text style={styles.recordAge}>{formatAgeMonths(mAgeMonths)}</Text>
+            [...computed].reverse().map(m => (
+              <View key={m.id} style={styles.recordRow}>
+                <View style={styles.recordMain}>
+                  <Text style={styles.recordDate}>{m.measuredAt}</Text>
+                  <View style={styles.recordSubRow}>
+                    <Text style={styles.recordAge}>{formatAgeMonths(m.ageMonths)}</Text>
+                    {m.percentile !== undefined && (
+                      <Text style={[styles.recordPercentile, { color: percentileColor(m.percentile) }]}>
+                        · P{Math.round(m.percentile)}
+                      </Text>
+                    )}
                   </View>
-                  <Text style={styles.recordHeight}>{m.heightCm} cm</Text>
-                  <TouchableOpacity
-                    style={styles.deleteBtn}
-                    onPress={() =>
-                      Alert.alert('删除记录', `确认删除 ${m.measuredAt} 的记录？`, [
-                        { text: '取消', style: 'cancel' },
-                        { text: '删除', style: 'destructive', onPress: () => removeMeasurement(m.id, child.id) },
-                      ])
-                    }
-                  >
-                    <Text style={styles.deleteBtnText}>×</Text>
-                  </TouchableOpacity>
                 </View>
-              );
-            })
+                <Text style={styles.recordHeight}>{m.heightCm} cm</Text>
+                <TouchableOpacity
+                  style={styles.deleteBtn}
+                  onPress={() =>
+                    Alert.alert('删除记录', `确认删除 ${m.measuredAt} 的记录？`, [
+                      { text: '取消', style: 'cancel' },
+                      { text: '删除', style: 'destructive', onPress: () => removeMeasurement(m.id, child.id) },
+                    ])
+                  }
+                >
+                  <Text style={styles.deleteBtnText}>×</Text>
+                </TouchableOpacity>
+              </View>
+            ))
           )}
         </ScrollView>
       )}
@@ -171,8 +226,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 20, paddingVertical: 10,
     borderBottomWidth: 1, borderBottomColor: '#EFEFEF',
+    flexDirection: 'row', alignItems: 'center', gap: 8,
   },
-  childMeta: { fontSize: 13, color: '#888' },
+  childMeta:           { fontSize: 13, color: '#888', flex: 1 },
+  percentileBadge:     { borderRadius: 10, paddingHorizontal: 8, paddingVertical: 2 },
+  percentileBadgeText: { color: '#fff', fontSize: 12, fontWeight: '700' },
 
   tabBar: {
     flexDirection: 'row',
@@ -197,16 +255,27 @@ const styles = StyleSheet.create({
   emptyRecords:   { paddingTop: 60, alignItems: 'center' },
   emptyText:      { color: '#999', fontSize: 15 },
 
-  recordRow: {
-    backgroundColor: '#fff', borderRadius: 10,
-    padding: 14, flexDirection: 'row', alignItems: 'center',
+  // 摘要卡片
+  summaryCard: {
+    backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 4,
   },
-  recordMain:   { flex: 1 },
-  recordDate:   { fontSize: 14, fontWeight: '600', color: '#1A1A2E' },
-  recordAge:    { fontSize: 12, color: '#999', marginTop: 2 },
-  recordHeight: { fontSize: 18, fontWeight: 'bold', color: '#4CAF82', marginRight: 12 },
-  deleteBtn:    { padding: 4 },
-  deleteBtnText:{ fontSize: 20, color: '#CCC' },
+  summaryCardRow:     { flexDirection: 'row', alignItems: 'center' },
+  summaryCardItem:    { flex: 1, alignItems: 'center' },
+  summaryCardDivider: { width: 1, height: 36, backgroundColor: '#EFEFEF', marginHorizontal: 8 },
+  summaryCardLabel:   { fontSize: 11, color: '#999', marginBottom: 4 },
+  summaryCardValue:   { fontSize: 22, fontWeight: 'bold' },
+  summaryCardDesc:    { fontSize: 12, color: '#999', textAlign: 'center', marginTop: 10 },
+
+  // 记录行
+  recordRow:       { backgroundColor: '#fff', borderRadius: 10, padding: 14, flexDirection: 'row', alignItems: 'center' },
+  recordMain:      { flex: 1 },
+  recordDate:      { fontSize: 14, fontWeight: '600', color: '#1A1A2E' },
+  recordSubRow:    { flexDirection: 'row', alignItems: 'center', marginTop: 2, gap: 4 },
+  recordAge:       { fontSize: 12, color: '#999' },
+  recordPercentile:{ fontSize: 12, fontWeight: '600' },
+  recordHeight:    { fontSize: 18, fontWeight: 'bold', color: '#4CAF82', marginRight: 12 },
+  deleteBtn:       { padding: 4 },
+  deleteBtnText:   { fontSize: 20, color: '#CCC' },
 
   fab: {
     position: 'absolute', bottom: 28, right: 20, left: 20,
@@ -218,8 +287,8 @@ const styles = StyleSheet.create({
   },
   fabText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
 
-  headerRight: { flexDirection: 'row', alignItems: 'center', alignSelf: 'center' },
-  editBtn: { paddingHorizontal: 8, paddingVertical: 6 },
-  editBtnText: { color: '#4CAF82', fontSize: 18, fontWeight: '600' },
+  headerRight:  { flexDirection: 'row', alignItems: 'center', alignSelf: 'center' },
+  editBtn:      { paddingHorizontal: 8, paddingVertical: 6 },
+  editBtnText:  { color: '#4CAF82', fontSize: 18, fontWeight: '600' },
   debugBtnText: { color: '#FF9500', fontSize: 15, fontWeight: '600' },
 });
