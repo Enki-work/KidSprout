@@ -10,19 +10,35 @@ import { useMeasurementStore } from '@/store/measurementStore';
 import { getStandardFile } from '@/constants/standards';
 import { StandardId } from '@/constants/standards';
 import { getAgeInMonths, formatAgeMonths } from '@/services/growth/age';
-import { GrowthChart } from '@/components/chart/GrowthChart';
+import { GrowthChart, PredictionConfig } from '@/components/chart/GrowthChart';
 import { MeasurementPoint } from '@/components/chart/MeasurementSeries';
 import { useWindowDimensions } from 'react-native';
 import { DebugAddTestData } from '@/components/debug/DebugAddTestData';
 import { useComputedMeasurements } from '@/hooks/growth/useComputedMeasurements';
+import { predictAdultHeight } from '@/services/growth/prediction';
+import { ComputedMeasurement } from '@/types/measurement';
 
-type Tab = 'chart' | 'records';
+type Tab = 'chart' | 'records' | 'analysis';
 
 /** 百分位显示颜色 */
 function percentileColor(p: number): string {
   if (p < 3 || p > 97) return '#FF3B30';
   if (p < 10 || p > 90) return '#FF9500';
   return '#4CAF82';
+}
+
+/** 计算最近 N 个月内的身高增长量 */
+function growthIn(computed: ComputedMeasurement[], monthsBack: number): number | null {
+  if (computed.length < 2) return null;
+  const latest = computed[computed.length - 1];
+  const cutoffAge = latest.ageMonths - monthsBack;
+  // 找不超过截止月龄的最早记录（至少要早于期间的一半）
+  const candidates = computed.filter(m => m.ageMonths <= cutoffAge + monthsBack * 0.4 && m.id !== latest.id);
+  if (candidates.length === 0) return null;
+  const ref = candidates.reduce((best, m) =>
+    Math.abs(m.ageMonths - cutoffAge) < Math.abs(best.ageMonths - cutoffAge) ? m : best
+  );
+  return Math.round((latest.heightCm - ref.heightCm) * 10) / 10;
 }
 
 export default function ChildDetailScreen() {
@@ -61,6 +77,7 @@ export default function ChildDetailScreen() {
   const ageMonths = getAgeInMonths(new Date(child.birthDate));
   const chartWidth = width - 32;
   const latestComputed = computed.length > 0 ? computed[computed.length - 1] : null;
+  const currentPercentile = latestComputed?.percentile ?? 50;
 
   // 图表数据点（含百分位和日期，用于 Tooltip）
   const chartPoints: MeasurementPoint[] = computed.map(m => ({
@@ -69,6 +86,24 @@ export default function ChildDetailScreen() {
     date:       m.measuredAt,
     percentile: m.percentile,
   }));
+
+  // 预测配置（仅当有测量记录且未成年）
+  const prediction: PredictionConfig | undefined = latestComputed && latestComputed.ageMonths < 216
+    ? {
+        startAgeMonths: latestComputed.ageMonths,
+        startHeightCm:  latestComputed.heightCm,
+        percentile:     currentPercentile,
+      }
+    : undefined;
+
+  // 预测成年身高
+  const predictedHeight = latestComputed
+    ? Math.round(predictAdultHeight(currentPercentile, standard.rows) * 10) / 10
+    : null;
+
+  // 增长速度
+  const growth6m  = growthIn(computed, 6);
+  const growth12m = growthIn(computed, 12);
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -106,7 +141,7 @@ export default function ChildDetailScreen() {
 
       {/* Tab 切換 */}
       <View style={styles.tabBar}>
-        {([['chart', '成长曲线'], ['records', '测量记录']] as [Tab, string][]).map(([t, label]) => (
+        {([['chart', '曲线'], ['records', '记录'], ['analysis', '分析']] as [Tab, string][]).map(([t, label]) => (
           <TouchableOpacity
             key={t}
             style={[styles.tabBtn, tab === t && styles.tabBtnActive]}
@@ -119,13 +154,14 @@ export default function ChildDetailScreen() {
         ))}
       </View>
 
-      {tab === 'chart' ? (
+      {tab === 'chart' && (
         /* ── 曲线页 ── */
         <ScrollView contentContainerStyle={styles.chartContent}>
           <Text style={styles.sectionTitle}>乳幼児期（0〜3歳）</Text>
           <GrowthChart
             rows={standard.rows}
             measurements={chartPoints}
+            prediction={prediction}
             xMin={0} xMax={36}
             width={chartWidth} height={240}
           />
@@ -133,11 +169,14 @@ export default function ChildDetailScreen() {
           <GrowthChart
             rows={standard.rows}
             measurements={chartPoints}
+            prediction={prediction}
             xMin={0} xMax={standard.meta.ageMaxMonths}
             width={chartWidth} height={240}
           />
         </ScrollView>
-      ) : (
+      )}
+
+      {tab === 'records' && (
         /* ── 记录页 ── */
         <ScrollView contentContainerStyle={styles.recordsContent}>
 
@@ -206,6 +245,78 @@ export default function ChildDetailScreen() {
         </ScrollView>
       )}
 
+      {tab === 'analysis' && (
+        /* ── 分析页 ── */
+        <ScrollView contentContainerStyle={styles.analysisContent}>
+          {!latestComputed ? (
+            <View style={styles.emptyRecords}>
+              <Text style={styles.emptyText}>还没有测量记录</Text>
+            </View>
+          ) : (
+            <>
+              {/* 当前状况 */}
+              <View style={styles.analysisCard}>
+                <Text style={styles.analysisCardTitle}>当前状况</Text>
+                <View style={styles.analysisRow}>
+                  <Text style={styles.analysisLabel}>身高</Text>
+                  <Text style={styles.analysisValue}>{latestComputed.heightCm} cm</Text>
+                </View>
+                <View style={styles.analysisRow}>
+                  <Text style={styles.analysisLabel}>百分位</Text>
+                  <Text style={[styles.analysisValue, { color: percentileColor(currentPercentile) }]}>
+                    P{Math.round(currentPercentile)}
+                  </Text>
+                </View>
+                <View style={styles.analysisRow}>
+                  <Text style={styles.analysisLabel}>与同龄中位数</Text>
+                  <Text style={[
+                    styles.analysisValue,
+                    { color: (latestComputed.medianDeltaCm ?? 0) >= 0 ? '#4CAF82' : '#FF3B30' },
+                  ]}>
+                    {(latestComputed.medianDeltaCm ?? 0) >= 0 ? '+' : ''}
+                    {latestComputed.medianDeltaCm ?? '-'} cm
+                  </Text>
+                </View>
+                <Text style={styles.analysisDesc}>
+                  高于同龄约 {Math.round(currentPercentile)}% 的{child.sex === 'male' ? '男' : '女'}孩
+                </Text>
+              </View>
+
+              {/* 增长速度 */}
+              <View style={styles.analysisCard}>
+                <Text style={styles.analysisCardTitle}>增长速度</Text>
+                {growth6m !== null ? (
+                  <View style={styles.analysisRow}>
+                    <Text style={styles.analysisLabel}>最近 6 个月</Text>
+                    <Text style={styles.analysisValue}>+{growth6m} cm</Text>
+                  </View>
+                ) : null}
+                {growth12m !== null ? (
+                  <View style={styles.analysisRow}>
+                    <Text style={styles.analysisLabel}>最近 12 个月</Text>
+                    <Text style={styles.analysisValue}>+{growth12m} cm</Text>
+                  </View>
+                ) : null}
+                {growth6m === null && growth12m === null && (
+                  <Text style={styles.analysisEmpty}>记录数量不足，无法计算</Text>
+                )}
+              </View>
+
+              {/* 成年身高预测 */}
+              {predictedHeight !== null && latestComputed.ageMonths < 216 && (
+                <View style={styles.analysisCard}>
+                  <Text style={styles.analysisCardTitle}>成年身高估算</Text>
+                  <Text style={styles.predictionHeight}>约 {predictedHeight} cm</Text>
+                  <Text style={styles.predictionDisclaimer}>
+                    仅供参考，青春期发育、遗传、营养、睡眠与健康状况都会影响最终身高。
+                  </Text>
+                </View>
+              )}
+            </>
+          )}
+        </ScrollView>
+      )}
+
       {/* FAB：新增测量 */}
       <TouchableOpacity
         style={styles.fab}
@@ -255,7 +366,7 @@ const styles = StyleSheet.create({
   emptyRecords:   { paddingTop: 60, alignItems: 'center' },
   emptyText:      { color: '#999', fontSize: 15 },
 
-  // 摘要卡片
+  // 摘要卡片（记录页）
   summaryCard: {
     backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 4,
   },
@@ -276,6 +387,32 @@ const styles = StyleSheet.create({
   recordHeight:    { fontSize: 18, fontWeight: 'bold', color: '#4CAF82', marginRight: 12 },
   deleteBtn:       { padding: 4 },
   deleteBtnText:   { fontSize: 20, color: '#CCC' },
+
+  // 分析页
+  analysisContent: { padding: 16, gap: 12, paddingBottom: 100 },
+  analysisCard: {
+    backgroundColor: '#fff', borderRadius: 12, padding: 16,
+  },
+  analysisCardTitle: {
+    fontSize: 13, fontWeight: '700', color: '#4CAF82', marginBottom: 12,
+  },
+  analysisRow: {
+    flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
+    paddingVertical: 6, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: '#F0F0F0',
+  },
+  analysisLabel: { fontSize: 14, color: '#666' },
+  analysisValue: { fontSize: 16, fontWeight: '600', color: '#1A1A2E' },
+  analysisDesc:  { fontSize: 12, color: '#999', marginTop: 10, textAlign: 'center' },
+  analysisEmpty: { fontSize: 13, color: '#CCC', textAlign: 'center', paddingVertical: 8 },
+
+  // 成年身高预测
+  predictionHeight: {
+    fontSize: 36, fontWeight: 'bold', color: '#4CAF82',
+    textAlign: 'center', marginVertical: 12,
+  },
+  predictionDisclaimer: {
+    fontSize: 11, color: '#999', textAlign: 'center', lineHeight: 16,
+  },
 
   fab: {
     position: 'absolute', bottom: 28, right: 20, left: 20,

@@ -33,3 +33,31 @@ export function predictAdultHeight(
 
   return sorted[0].value;
 }
+
+/**
+ * 根据百分位反向查找指定月龄的身高
+ * 与 predictAdultHeight 逻辑相同，但可指定任意月龄
+ */
+export function getHeightAtPercentile(
+  ageMonths: number,
+  percentile: number,
+  rows: GrowthRow[],
+): number | undefined {
+  const row = interpolateGrowthRow(ageMonths, rows);
+  const bands = rowToBands(row);
+  const sorted = [...bands].sort((a, b) => a.percentile - b.percentile);
+
+  if (sorted.length === 0) return undefined;
+  if (percentile <= sorted[0].percentile) return sorted[0].value;
+  if (percentile >= sorted.at(-1)!.percentile) return sorted.at(-1)!.value;
+
+  for (let i = 0; i < sorted.length - 1; i++) {
+    const lo = sorted[i];
+    const hi = sorted[i + 1];
+    if (percentile >= lo.percentile && percentile <= hi.percentile) {
+      const t = (percentile - lo.percentile) / (hi.percentile - lo.percentile);
+      return lo.value + t * (hi.value - lo.value);
+    }
+  }
+  return undefined;
+}

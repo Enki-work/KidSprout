@@ -26,9 +26,13 @@ export function interpolateGrowthRow(ageMonths: number, rows: GrowthRow[]): Grow
   return {
     ageMonths,
     p3:  interp(lower.p3,  upper.p3),
+    p10: interp(lower.p10, upper.p10),
     p15: interp(lower.p15, upper.p15),
+    p25: interp(lower.p25, upper.p25),
     p50: lerp(lower.p50, upper.p50, t),
+    p75: interp(lower.p75, upper.p75),
     p85: interp(lower.p85, upper.p85),
+    p90: interp(lower.p90, upper.p90),
     p97: interp(lower.p97, upper.p97),
     l:   interp(lower.l,   upper.l),
     m:   interp(lower.m,   upper.m),

@@ -6,10 +6,18 @@ import { ChartBounds, DEFAULT_PADDING } from './chartUtils';
 import { ChartAxes } from './ChartAxes';
 import { PercentileLines } from './PercentileLines';
 import { MeasurementSeries, MeasurementPoint } from './MeasurementSeries';
+import { PredictionLine } from './PredictionLine';
+
+export type PredictionConfig = {
+  startAgeMonths: number;
+  startHeightCm: number;
+  percentile: number;
+};
 
 type Props = {
   rows: GrowthRow[];
   measurements?: MeasurementPoint[];
+  prediction?: PredictionConfig;
   // 显示的月龄范围
   xMin?: number;
   xMax?: number;
@@ -37,6 +45,7 @@ function makeXTicks(xMin: number, xMax: number): number[] {
 export function GrowthChart({
   rows,
   measurements = [],
+  prediction,
   xMin = 0,
   xMax = 204,
   width = 360,
@@ -71,9 +80,18 @@ export function GrowthChart({
 
   return (
     <View>
-      <Svg width={width} height={height} overflow="hidden">
+      <Svg width={width} height={height}>
         <ChartAxes bounds={bounds} xTicks={xTicks} yTicks={yTicks} />
         <PercentileLines rows={drawRows} bounds={bounds} showLabels={false} />
+        {prediction && (
+          <PredictionLine
+            startAgeMonths={prediction.startAgeMonths}
+            startHeightCm={prediction.startHeightCm}
+            percentile={prediction.percentile}
+            rows={rows}
+            bounds={bounds}
+          />
+        )}
         <MeasurementSeries
           points={measurements}
           bounds={bounds}
