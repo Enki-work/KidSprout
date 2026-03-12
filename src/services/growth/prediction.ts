@@ -2,20 +2,19 @@ import { GrowthRow } from '@/types/growth';
 import { interpolateGrowthRow } from './interpolation';
 import { rowToBands } from './percentile';
 
-// 18 岁 = 216 月龄
-const ADULT_AGE_MONTHS = 216;
-
 /**
- * 按当前 percentile 估算 18 岁身高
+ * 按当前 percentile 估算成年身高
  * 假设孩子沿当前 percentile 继续成长
  *
+ * @param targetAgeMonths 目标月龄（应传入 standard.meta.ageMaxMonths）
  * 注意：仅供参考，受遗传、营养、睡眠等多种因素影响
  */
 export function predictAdultHeight(
   currentPercentile: number,
-  rows: GrowthRow[]
+  rows: GrowthRow[],
+  targetAgeMonths = 216,
 ): number {
-  const adultRow = interpolateGrowthRow(ADULT_AGE_MONTHS, rows);
+  const adultRow = interpolateGrowthRow(targetAgeMonths, rows);
   const bands = rowToBands(adultRow);
   const sorted = [...bands].sort((a, b) => a.percentile - b.percentile);
 
