@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
   StyleSheet, Alert,
@@ -19,6 +19,8 @@ import { predictAdultHeight } from '@/services/growth/prediction';
 import { ComputedMeasurement } from '@/types/measurement';
 
 type Tab = 'chart' | 'records' | 'analysis';
+const TABS: Tab[] = ['chart', 'records', 'analysis'];
+const TAB_LABELS: Record<Tab, string> = { chart: '曲线', records: '记录', analysis: '分析' };
 
 /** 百分位显示颜色 */
 function percentileColor(p: number): string {
@@ -32,7 +34,6 @@ function growthIn(computed: ComputedMeasurement[], monthsBack: number): number |
   if (computed.length < 2) return null;
   const latest = computed[computed.length - 1];
   const cutoffAge = latest.ageMonths - monthsBack;
-  // 找不超过截止月龄的最早记录（至少要早于期间的一半）
   const candidates = computed.filter(m => m.ageMonths <= cutoffAge + monthsBack * 0.4 && m.id !== latest.id);
   if (candidates.length === 0) return null;
   const ref = candidates.reduce((best, m) =>
@@ -51,6 +52,7 @@ export default function ChildDetailScreen() {
   const measurements = byChild[childId ?? ''] ?? [];
 
   const [tab, setTab] = useState<Tab>('chart');
+  const pagerRef = useRef<ScrollView>(null);
 
   useFocusEffect(useCallback(() => {
     if (childId) loadForChild(childId);
@@ -87,23 +89,34 @@ export default function ChildDetailScreen() {
     percentile: m.percentile,
   }));
 
-  // 预测配置（仅当有测量记录且未成年）
-  const prediction: PredictionConfig | undefined = latestComputed && latestComputed.ageMonths < 216
-    ? {
-        startAgeMonths: latestComputed.ageMonths,
-        startHeightCm:  latestComputed.heightCm,
-        percentile:     currentPercentile,
-      }
+  // 数据源最大月龄（WHO=228, China=216, Japan=204）
+  const maxAgeMonths = standard.meta.ageMaxMonths;
+  const maxAgeYears  = Math.floor(maxAgeMonths / 12);
+
+  // 预测配置（仅当有测量记录且未超过数据上限）
+  const prediction: PredictionConfig | undefined = latestComputed && latestComputed.ageMonths < maxAgeMonths
+    ? { startAgeMonths: latestComputed.ageMonths, startHeightCm: latestComputed.heightCm, percentile: currentPercentile }
     : undefined;
 
-  // 预测成年身高
+  // 预测成年身高（以各数据源的最大月龄为目标）
   const predictedHeight = latestComputed
-    ? Math.round(predictAdultHeight(currentPercentile, standard.rows) * 10) / 10
+    ? Math.round(predictAdultHeight(currentPercentile, standard.rows, maxAgeMonths) * 10) / 10
     : null;
 
   // 增长速度
   const growth6m  = growthIn(computed, 6);
   const growth12m = growthIn(computed, 12);
+
+  function onTabPress(t: Tab) {
+    const idx = TABS.indexOf(t);
+    setTab(t);
+    pagerRef.current?.scrollTo({ x: idx * width, animated: true });
+  }
+
+  function onPagerScroll(x: number) {
+    const idx = Math.round(x / width);
+    if (TABS[idx] && TABS[idx] !== tab) setTab(TABS[idx]);
+  }
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -132,31 +145,38 @@ export default function ChildDetailScreen() {
         </Text>
         {latestComputed?.percentile !== undefined && (
           <View style={[styles.percentileBadge, { backgroundColor: percentileColor(latestComputed.percentile) }]}>
-            <Text style={styles.percentileBadgeText}>
-              P{Math.round(latestComputed.percentile)}
-            </Text>
+            <Text style={styles.percentileBadgeText}>P{Math.round(latestComputed.percentile)}</Text>
           </View>
         )}
       </View>
 
       {/* Tab 切換 */}
       <View style={styles.tabBar}>
-        {([['chart', '曲线'], ['records', '记录'], ['analysis', '分析']] as [Tab, string][]).map(([t, label]) => (
+        {TABS.map(t => (
           <TouchableOpacity
             key={t}
             style={[styles.tabBtn, tab === t && styles.tabBtnActive]}
-            onPress={() => setTab(t)}
+            onPress={() => onTabPress(t)}
           >
             <Text style={[styles.tabText, tab === t && styles.tabTextActive]}>
-              {label}
+              {TAB_LABELS[t]}
             </Text>
           </TouchableOpacity>
         ))}
       </View>
 
-      {tab === 'chart' && (
-        /* ── 曲线页 ── */
-        <ScrollView contentContainerStyle={styles.chartContent}>
+      {/* ── 整页 Pager ── */}
+      <ScrollView
+        ref={pagerRef}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        style={styles.pager}
+        onMomentumScrollEnd={e => onPagerScroll(e.nativeEvent.contentOffset.x)}
+        scrollEventThrottle={16}
+      >
+        {/* Page 0: 曲线 */}
+        <ScrollView style={{ width }} contentContainerStyle={styles.chartContent}>
           <Text style={styles.sectionTitle}>乳幼児期（0〜3歳）</Text>
           <GrowthChart
             rows={standard.rows}
@@ -174,13 +194,9 @@ export default function ChildDetailScreen() {
             width={chartWidth} height={240}
           />
         </ScrollView>
-      )}
 
-      {tab === 'records' && (
-        /* ── 记录页 ── */
-        <ScrollView contentContainerStyle={styles.recordsContent}>
-
-          {/* 摘要卡片 */}
+        {/* Page 1: 记录 */}
+        <ScrollView style={{ width }} contentContainerStyle={styles.recordsContent}>
           {latestComputed && (
             <View style={styles.summaryCard}>
               <View style={styles.summaryCardRow}>
@@ -208,7 +224,6 @@ export default function ChildDetailScreen() {
               </Text>
             </View>
           )}
-
           {computed.length === 0 ? (
             <View style={styles.emptyRecords}>
               <Text style={styles.emptyText}>还没有测量记录</Text>
@@ -243,18 +258,15 @@ export default function ChildDetailScreen() {
             ))
           )}
         </ScrollView>
-      )}
 
-      {tab === 'analysis' && (
-        /* ── 分析页 ── */
-        <ScrollView contentContainerStyle={styles.analysisContent}>
+        {/* Page 2: 分析 */}
+        <ScrollView style={{ width }} contentContainerStyle={styles.analysisContent}>
           {!latestComputed ? (
             <View style={styles.emptyRecords}>
               <Text style={styles.emptyText}>还没有测量记录</Text>
             </View>
           ) : (
             <>
-              {/* 当前状况 */}
               <View style={styles.analysisCard}>
                 <Text style={styles.analysisCardTitle}>当前状况</Text>
                 <View style={styles.analysisRow}>
@@ -282,30 +294,28 @@ export default function ChildDetailScreen() {
                 </Text>
               </View>
 
-              {/* 增长速度 */}
               <View style={styles.analysisCard}>
                 <Text style={styles.analysisCardTitle}>增长速度</Text>
-                {growth6m !== null ? (
+                {growth6m !== null && (
                   <View style={styles.analysisRow}>
                     <Text style={styles.analysisLabel}>最近 6 个月</Text>
                     <Text style={styles.analysisValue}>+{growth6m} cm</Text>
                   </View>
-                ) : null}
-                {growth12m !== null ? (
+                )}
+                {growth12m !== null && (
                   <View style={styles.analysisRow}>
                     <Text style={styles.analysisLabel}>最近 12 个月</Text>
                     <Text style={styles.analysisValue}>+{growth12m} cm</Text>
                   </View>
-                ) : null}
+                )}
                 {growth6m === null && growth12m === null && (
                   <Text style={styles.analysisEmpty}>记录数量不足，无法计算</Text>
                 )}
               </View>
 
-              {/* 成年身高预测 */}
-              {predictedHeight !== null && latestComputed.ageMonths < 216 && (
+              {predictedHeight !== null && latestComputed.ageMonths < maxAgeMonths && (
                 <View style={styles.analysisCard}>
-                  <Text style={styles.analysisCardTitle}>成年身高估算</Text>
+                  <Text style={styles.analysisCardTitle}>{maxAgeYears} 岁身高估算</Text>
                   <Text style={styles.predictionHeight}>约 {predictedHeight} cm</Text>
                   <Text style={styles.predictionDisclaimer}>
                     仅供参考，青春期发育、遗传、营养、睡眠与健康状况都会影响最终身高。
@@ -315,7 +325,7 @@ export default function ChildDetailScreen() {
             </>
           )}
         </ScrollView>
-      )}
+      </ScrollView>
 
       {/* FAB：新增测量 */}
       <TouchableOpacity
@@ -356,6 +366,9 @@ const styles = StyleSheet.create({
   tabText:       { fontSize: 14, color: '#999' },
   tabTextActive: { color: '#4CAF82', fontWeight: '600' },
 
+  // 整页 Pager
+  pager: { flex: 1 },
+
   chartContent:  { padding: 16, paddingBottom: 100 },
   sectionTitle: {
     fontSize: 13, fontWeight: '600', color: '#4CAF82',
@@ -366,7 +379,6 @@ const styles = StyleSheet.create({
   emptyRecords:   { paddingTop: 60, alignItems: 'center' },
   emptyText:      { color: '#999', fontSize: 15 },
 
-  // 摘要卡片（记录页）
   summaryCard: {
     backgroundColor: '#fff', borderRadius: 12, padding: 16, marginBottom: 4,
   },
@@ -377,7 +389,6 @@ const styles = StyleSheet.create({
   summaryCardValue:   { fontSize: 22, fontWeight: 'bold' },
   summaryCardDesc:    { fontSize: 12, color: '#999', textAlign: 'center', marginTop: 10 },
 
-  // 记录行
   recordRow:       { backgroundColor: '#fff', borderRadius: 10, padding: 14, flexDirection: 'row', alignItems: 'center' },
   recordMain:      { flex: 1 },
   recordDate:      { fontSize: 14, fontWeight: '600', color: '#1A1A2E' },
@@ -388,14 +399,9 @@ const styles = StyleSheet.create({
   deleteBtn:       { padding: 4 },
   deleteBtnText:   { fontSize: 20, color: '#CCC' },
 
-  // 分析页
-  analysisContent: { padding: 16, gap: 12, paddingBottom: 100 },
-  analysisCard: {
-    backgroundColor: '#fff', borderRadius: 12, padding: 16,
-  },
-  analysisCardTitle: {
-    fontSize: 13, fontWeight: '700', color: '#4CAF82', marginBottom: 12,
-  },
+  analysisContent:   { padding: 16, gap: 12, paddingBottom: 100 },
+  analysisCard:      { backgroundColor: '#fff', borderRadius: 12, padding: 16 },
+  analysisCardTitle: { fontSize: 13, fontWeight: '700', color: '#4CAF82', marginBottom: 12 },
   analysisRow: {
     flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
     paddingVertical: 6, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: '#F0F0F0',
@@ -405,7 +411,6 @@ const styles = StyleSheet.create({
   analysisDesc:  { fontSize: 12, color: '#999', marginTop: 10, textAlign: 'center' },
   analysisEmpty: { fontSize: 13, color: '#CCC', textAlign: 'center', paddingVertical: 8 },
 
-  // 成年身高预测
   predictionHeight: {
     fontSize: 36, fontWeight: 'bold', color: '#4CAF82',
     textAlign: 'center', marginVertical: 12,
