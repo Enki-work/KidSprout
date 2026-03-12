@@ -3,9 +3,9 @@
  * 统一管理所有可用的成长标准数据
  */
 
+import { CHINA_HEIGHT_BOYS, CHINA_HEIGHT_GIRLS } from '@/data/standards/china';
 import { JAPAN_HEIGHT_BOYS, JAPAN_HEIGHT_GIRLS } from '@/data/standards/japan';
 import { WHO_HEIGHT_BOYS, WHO_HEIGHT_GIRLS } from '@/data/standards/who';
-import { CHINA_HEIGHT_BOYS, CHINA_HEIGHT_GIRLS } from '@/data/standards/china';
 import { GrowthStandardFile } from '@/types/growth';
 
 export type StandardId = 'japan' | 'who' | 'china';
@@ -15,13 +15,14 @@ export type StandardEntry = {
   id: StandardId;
   label: string;         // 显示名称
   labelShort: string;    // 切换按钮用的简称
+  description: string;   // 数据源说明
 };
 
 /** 可用数据源列表 */
 export const STANDARDS: StandardEntry[] = [
-  { id: 'japan', label: '日本 (厚労省)', labelShort: '日本' },
-  { id: 'who',   label: 'WHO',           labelShort: 'WHO'  },
-  { id: 'china', label: '中国 (卫健委)', labelShort: '中国' },
+  { id: 'japan', label: '日本标准', labelShort: '日本标准', description: '根据日本政府統計の総合窓口（e-Stat）统计数据推算结果绘制曲线' },
+  { id: 'who',   label: 'WHO标准',  labelShort: 'WHO标准',  description: '根据WHO公布Length/height-for-age数据推算结果绘制曲线'           },
+  { id: 'china', label: '中国标准', labelShort: '中国标准', description: '根据 中国国家卫生健康委员会 发布的数据推算结果绘制曲线'           },
 ];
 
 /** 根据数据源 ID 和性别获取对应数据 */

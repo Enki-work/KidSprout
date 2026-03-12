@@ -157,6 +157,9 @@ export default function EditChildScreen() {
             </TouchableOpacity>
           ))}
         </View>
+        <Text style={styles.standardDesc}>
+          {STANDARDS.find(s => s.id === standardId)?.description}
+        </Text>
 
         {/* 保存按钮 */}
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
@@ -200,6 +203,7 @@ const styles = StyleSheet.create({
   chipActive:     { backgroundColor: '#4CAF82' },
   chipText:       { fontSize: 14, color: '#4CAF82', fontWeight: '600' },
   chipTextActive: { color: '#fff' },
+  standardDesc: { fontSize: 11, color: '#999', marginTop: 6, lineHeight: 16 },
 
   saveBtn: {
     backgroundColor: '#4CAF82', borderRadius: 12,
