@@ -1,6 +1,6 @@
 # 小芽成长 · 开发计划书
 
-> 版本：v0.5 · 日期：2026-03-12
+> 版本：v0.6 · 日期：2026-03-13
 > 原则：**先能跑通，再逐步专业化**
 
 ---
@@ -245,7 +245,7 @@ KidSprout/
 │  │  │  ├─ PercentileLines.tsx  ✅  # 标准百分位曲线
 │  │  │  ├─ MeasurementSeries.tsx✅  # 用户测量点 + 连线
 │  │  │  ├─ chartUtils.ts        ✅  # 坐标映射工具函数
-│  │  │  └─ ○ PredictionLine.tsx     # 预测虚线（阶段五）
+│  │  │  └─ PredictionLine.tsx   ✅  # 预测虚线（延伸至数据源上限年龄）
 │  │  ├─ debug/            ✅
 │  │  │  └─ DebugAddTestData.tsx ✅  # [DEV] 批量生成测试数据按钮
 │  │  ○ common/
@@ -544,21 +544,24 @@ function normalCDF(z: number): number {
 }
 ```
 
-### 8.5 18 岁身高估算（`services/growth/prediction.ts`）
+### 8.5 成年身高估算（`services/growth/prediction.ts`）
 
-**原理：** 假设孩子沿当前 percentile 继续成长，取 18 岁（216 月龄）对应该 percentile 的身高。
+**原理：** 假设孩子沿当前 percentile 继续成长，取数据源上限月龄对应该 percentile 的身高。
+各标准上限：WHO = 228 月（19岁）/ 中国 = 216 月（18岁）/ 日本 = 204 月（17岁）。
 
 ```ts
 /**
- * 估算 18 岁身高
+ * 估算成年身高
  * @param currentPercentile 当前百分位（0-100）
- * @param rows              标准数据行（需包含到 216 月龄）
+ * @param rows              标准数据行
+ * @param targetAgeMonths   数据源上限月龄（standard.meta.ageMaxMonths）
  */
 export function predictAdultHeight(
   currentPercentile: number,
-  rows: GrowthRow[]
+  rows: GrowthRow[],
+  targetAgeMonths = 216,
 ): number {
-  const adultRow = interpolateGrowthRow(216, rows);
+  const adultRow = interpolateGrowthRow(targetAgeMonths, rows);
   const bands = rowToBands(adultRow);
   // percentile → 对应身高（反向插值）
   const sorted = [...bands].sort((a, b) => a.percentile - b.percentile);
@@ -713,18 +716,21 @@ export function predictAdultHeight(
 
 ---
 
-### 阶段五：分析页 + 预测（当前阶段）
+### 阶段五：分析页 + 预测 ✅ 已完成
 
-- [ ] `predictAdultHeight()` 与真实孩子档案对接
-- [ ] 分析页数据统计展示
-- [ ] 增长速度计算（最近 6m / 12m）
-- [ ] 预测虚线 `PredictionLine.tsx`
+- [x] `predictAdultHeight()` 与真实孩子档案对接，使用 `standard.meta.ageMaxMonths` 作为目标月龄
+- [x] 分析页数据统计展示（当前百分位 / 与中位数差 / 高于同龄百分比）
+- [x] 增长速度计算（最近 6m / 12m，`growthIn()` 函数）
+- [x] 预测虚线 `PredictionLine.tsx`（橙色虚线延伸至数据源上限年龄）
+- [x] 详情页 Tab 支持手势滑动翻页（`ScrollView pagingEnabled`）
+- [x] 成长标准选择时显示数据源说明文字（新建/编辑档案页）
+- [x] 修复 iOS 26 header 按钮在页面切换时偶发拉伸问题
 
-**验收：** 分析页所有数据展示完整，预测有免责说明
+**验收：** ✅ 分析页所有数据展示完整，预测有免责说明，虚线延伸到各标准实际上限年龄
 
 ---
 
-### 阶段六：打磨 & 多语言
+### 阶段六：打磨 & 多语言（当前阶段）
 
 - [ ] 配置 react-i18next，支持中 / 日 / 英 / 西 / 韩
 - [ ] 空状态设计（EmptyMeasurements）
