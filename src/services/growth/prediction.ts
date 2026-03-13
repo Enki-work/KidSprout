@@ -1,6 +1,6 @@
 import { GrowthRow } from '@/types/growth';
 import { interpolateGrowthRow } from './interpolation';
-import { rowToBands } from './percentile';
+import { normalQuantile, PERCENTILE_ZSCORE, rowToBands } from './percentile';
 
 /**
  * 按当前 percentile 估算成年身高
@@ -18,8 +18,27 @@ export function predictAdultHeight(
   const bands = rowToBands(adultRow);
   const sorted = [...bands].sort((a, b) => a.percentile - b.percentile);
 
-  if (currentPercentile <= sorted[0].percentile) return sorted[0].value;
-  if (currentPercentile >= sorted.at(-1)!.percentile) return sorted.at(-1)!.value;
+  if (currentPercentile <= sorted[0].percentile) {
+    // 低于 P3：向下外推
+    const lo2 = sorted[1];
+    if (!lo2 || lo2.value === sorted[0].value) return sorted[0].value;
+    const zLo  = PERCENTILE_ZSCORE[sorted[0].percentile] ?? -1.8808;
+    const zLo2 = PERCENTILE_ZSCORE[lo2.percentile]       ?? -1.2816;
+    const slope = (lo2.value - sorted[0].value) / (zLo2 - zLo); // cm/Z
+    const z = normalQuantile(currentPercentile / 100);
+    return sorted[0].value + slope * (z - zLo);
+  }
+  if (currentPercentile >= sorted.at(-1)!.percentile) {
+    // 高于 P97：向上外推
+    const hi  = sorted.at(-1)!;
+    const hi2 = sorted[sorted.length - 2];
+    if (!hi2 || hi2.value === hi.value) return hi.value;
+    const zHi2 = PERCENTILE_ZSCORE[hi2.percentile] ?? 1.2816;
+    const zHi  = PERCENTILE_ZSCORE[hi.percentile]  ?? 1.8808;
+    const slope = (hi.value - hi2.value) / (zHi - zHi2); // cm/Z
+    const z = normalQuantile(currentPercentile / 100);
+    return hi.value + slope * (z - zHi);
+  }
 
   for (let i = 0; i < sorted.length - 1; i++) {
     const lo = sorted[i];
@@ -47,8 +66,23 @@ export function getHeightAtPercentile(
   const sorted = [...bands].sort((a, b) => a.percentile - b.percentile);
 
   if (sorted.length === 0) return undefined;
-  if (percentile <= sorted[0].percentile) return sorted[0].value;
-  if (percentile >= sorted.at(-1)!.percentile) return sorted.at(-1)!.value;
+  if (percentile <= sorted[0].percentile) {
+    const lo2 = sorted[1];
+    if (!lo2 || lo2.value === sorted[0].value) return sorted[0].value;
+    const zLo  = PERCENTILE_ZSCORE[sorted[0].percentile] ?? -1.8808;
+    const zLo2 = PERCENTILE_ZSCORE[lo2.percentile]       ?? -1.2816;
+    const slope = (lo2.value - sorted[0].value) / (zLo2 - zLo);
+    return sorted[0].value + slope * (normalQuantile(percentile / 100) - zLo);
+  }
+  if (percentile >= sorted.at(-1)!.percentile) {
+    const hi  = sorted.at(-1)!;
+    const hi2 = sorted[sorted.length - 2];
+    if (!hi2 || hi2.value === hi.value) return hi.value;
+    const zHi2 = PERCENTILE_ZSCORE[hi2.percentile] ?? 1.2816;
+    const zHi  = PERCENTILE_ZSCORE[hi.percentile]  ?? 1.8808;
+    const slope = (hi.value - hi2.value) / (zHi - zHi2);
+    return hi.value + slope * (normalQuantile(percentile / 100) - zHi);
+  }
 
   for (let i = 0; i < sorted.length - 1; i++) {
     const lo = sorted[i];
