@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import Svg from 'react-native-svg';
+import Svg, { Defs, ClipPath, Rect, G } from 'react-native-svg';
 import { GrowthRow } from '@/types/growth';
 import { ChartBounds, DEFAULT_PADDING } from './chartUtils';
 import { ChartAxes } from './ChartAxes';
 import { PercentileLines } from './PercentileLines';
 import { MeasurementSeries, MeasurementPoint } from './MeasurementSeries';
 import { PredictionLine } from './PredictionLine';
+import { interpolateGrowthRow } from '@/services/growth/interpolation';
 
 export type PredictionConfig = {
   startAgeMonths: number;
@@ -60,10 +61,17 @@ export function GrowthChart({
   // 范围内数据（用于 Y 轴计算）
   const filtered = rows.filter(r => r.ageMonths >= xMin && r.ageMonths <= xMax);
 
-  // 绘图用数据：额外包含 xMax 之后的第一个点，让曲线延伸至右轴边界
+  // 绘图用数据：
+  // - 左端：插值出 xMin 处的精确行，确保曲线从 Y 轴起点开始
+  // - 右端：额外包含 xMax 之后的第一个点，让曲线延伸至右轴边界
   const sortedRows = [...rows].sort((a, b) => a.ageMonths - b.ageMonths);
   const firstBeyond = sortedRows.find(r => r.ageMonths > xMax);
-  const drawRows = firstBeyond ? [...filtered, firstBeyond] : filtered;
+  const syntheticStart = interpolateGrowthRow(xMin, rows);
+  const drawRows = [
+    syntheticStart,
+    ...filtered.filter(r => r.ageMonths > xMin),
+    ...(firstBeyond ? [firstBeyond] : []),
+  ];
 
   const allValues = filtered.flatMap(r =>
     [r.p3, r.p10, r.p25, r.p50, r.p75, r.p90, r.p97].filter((v): v is number => v !== undefined)
@@ -82,28 +90,43 @@ export function GrowthChart({
   const xTicks = makeXTicks(xMin, xMax);
   const yTicks = makeYTicks(yMin, yMax);
 
+  // 裁剪区：左侧留 8px 冗余，避免边界处的测量圆点被切半
+  const DOT_MARGIN = 8;
+  const clipX = bounds.padding.left - DOT_MARGIN;
+  const clipW = width - clipX - bounds.padding.right;
+  const clipH = height - bounds.padding.top - bounds.padding.bottom;
+
   return (
     <View>
       <Svg width={width} height={height} viewBox={viewBox}>
-        <ChartAxes bounds={bounds} xTicks={xTicks} yTicks={yTicks} />
-        <PercentileLines rows={drawRows} bounds={bounds} showLabels={false} />
-        {/* 仅当预测线起点在显示范围内时才渲染，避免延伸到 Y 轴左侧 */}
-        {prediction && prediction.startAgeMonths >= xMin && (
-          <PredictionLine
-            startAgeMonths={prediction.startAgeMonths}
-            startHeightCm={prediction.startHeightCm}
-            percentile={prediction.percentile}
-            maxAgeMonths={prediction.maxAgeMonths}
-            rows={rows}
+        <Defs>
+          <ClipPath id="chartClip">
+            <Rect x={clipX} y={bounds.padding.top} width={clipW} height={clipH} />
+          </ClipPath>
+        </Defs>
+
+        {/* 曲线 / 预测线 / 测量点（底层，带裁剪） */}
+        <G clipPath="url(#chartClip)">
+          <PercentileLines rows={drawRows} bounds={bounds} showLabels={false} />
+          {prediction && prediction.startAgeMonths >= xMin && (
+            <PredictionLine
+              startAgeMonths={prediction.startAgeMonths}
+              startHeightCm={prediction.startHeightCm}
+              percentile={prediction.percentile}
+              maxAgeMonths={prediction.maxAgeMonths}
+              rows={rows}
+              bounds={bounds}
+            />
+          )}
+          <MeasurementSeries
+            points={measurements.filter(m => m.ageMonths >= xMin && m.ageMonths <= xMax)}
             bounds={bounds}
+            onPressPoint={p => setTooltip(prev => prev?.ageMonths === p.ageMonths ? null : p)}
           />
-        )}
-        {/* 仅渲染 [xMin, xMax] 范围内的测量点，避免落在 Y 轴左侧 */}
-        <MeasurementSeries
-          points={measurements.filter(m => m.ageMonths >= xMin && m.ageMonths <= xMax)}
-          bounds={bounds}
-          onPressPoint={p => setTooltip(prev => prev?.ageMonths === p.ageMonths ? null : p)}
-        />
+        </G>
+
+        {/* 坐标轴最后渲染（顶层），Y 轴线遮盖冗余区内溢出的曲线端 */}
+        <ChartAxes bounds={bounds} xTicks={xTicks} yTicks={yTicks} />
       </Svg>
 
       {/* Tooltip */}
