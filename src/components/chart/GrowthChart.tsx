@@ -24,6 +24,8 @@ type Props = {
   xMax?: number;
   width?: number;
   height?: number;
+  /** 放大页传入，覆盖默认 viewBox 实现双指缩放 */
+  viewBox?: string;
 };
 
 /** 生成 Y 轴刻度（每 10cm 一格） */
@@ -51,6 +53,7 @@ export function GrowthChart({
   xMax = 204,
   width = 360,
   height = 300,
+  viewBox,
 }: Props) {
   const [tooltip, setTooltip] = useState<MeasurementPoint | null>(null);
 
@@ -81,7 +84,7 @@ export function GrowthChart({
 
   return (
     <View>
-      <Svg width={width} height={height}>
+      <Svg width={width} height={height} viewBox={viewBox}>
         <ChartAxes bounds={bounds} xTicks={xTicks} yTicks={yTicks} />
         <PercentileLines rows={drawRows} bounds={bounds} showLabels={false} />
         {prediction && (

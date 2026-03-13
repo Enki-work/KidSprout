@@ -59,16 +59,17 @@ export default function EditChildScreen() {
   }
 
   function handleDelete() {
+    const c = child!;
     Alert.alert(
       "删除成长档案",
-      `「${child.name}」的所有记录将被永久删除，无法恢复。确定要继续吗？`,
+      `「${c.name}」的所有记录将被永久删除，无法恢复。确定要继续吗？`,
       [
         { text: "再想想", style: "cancel" },
         {
           text: "确认删除",
           style: "destructive",
           onPress: () => {
-            remove(child.id);
+            remove(c.id);
             router.dismissAll();
           },
         },
@@ -83,7 +84,7 @@ export default function EditChildScreen() {
     }
     const now = new Date().toISOString();
     update({
-      ...child,
+      ...child!,
       name: name.trim(),
       sex,
       birthDate: dateToStr(birthDate),

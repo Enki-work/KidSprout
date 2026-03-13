@@ -231,7 +231,19 @@ export default function ChildDetailScreen() {
           style={{ width }}
           contentContainerStyle={styles.chartContent}
         >
-          <Text style={styles.sectionTitle}>乳幼儿期（0〜3岁）</Text>
+          <View style={styles.sectionTitleRow}>
+            <Text style={styles.sectionTitle}>乳幼儿期（0〜3岁）</Text>
+            <TouchableOpacity
+              style={styles.expandBtn}
+              onPress={() =>
+                router.push(
+                  `/children/${childId}/chart-fullscreen?xMin=0&xMax=36` as never,
+                )
+              }
+            >
+              <Text style={styles.expandBtnText}>放大</Text>
+            </TouchableOpacity>
+          </View>
           <GrowthChart
             rows={standard.rows}
             measurements={chartPoints}
@@ -241,9 +253,21 @@ export default function ChildDetailScreen() {
             width={chartWidth}
             height={240}
           />
-          <Text style={styles.sectionTitle}>
-            全体（0〜{Math.floor(standard.meta.ageMaxMonths / 12)}岁）
-          </Text>
+          <View style={styles.sectionTitleRow}>
+            <Text style={styles.sectionTitle}>
+              全体（0〜{Math.floor(standard.meta.ageMaxMonths / 12)}岁）
+            </Text>
+            <TouchableOpacity
+              style={styles.expandBtn}
+              onPress={() =>
+                router.push(
+                  `/children/${childId}/chart-fullscreen?xMin=0&xMax=${standard.meta.ageMaxMonths}` as never,
+                )
+              }
+            >
+              <Text style={styles.expandBtnText}>放大</Text>
+            </TouchableOpacity>
+          </View>
           <GrowthChart
             rows={standard.rows}
             measurements={chartPoints}
@@ -558,12 +582,29 @@ const styles = StyleSheet.create({
   pager: { flex: 1 },
 
   chartContent: { padding: 16, paddingBottom: 100 },
+  sectionTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 16,
+    marginBottom: 4,
+  },
   sectionTitle: {
     fontSize: 13,
     fontWeight: "600",
     color: "#4CAF82",
-    marginTop: 16,
-    marginBottom: 8,
+  },
+  expandBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#4CAF82",
+  },
+  expandBtnText: {
+    fontSize: 11,
+    color: "#4CAF82",
+    fontWeight: "600",
   },
 
   recordsContent: { padding: 16, gap: 8, paddingBottom: 100 },
