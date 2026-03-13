@@ -30,6 +30,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 type Tab = "chart" | "records" | "analysis";
 const TABS: Tab[] = ["chart", "records", "analysis"];
+
+/** 年龄段曲线定义（月龄区间） */
+const AGE_SEGMENTS = [
+  { label: "婴幼儿期（0〜3岁）",  xMin: 0,   xMax: 36  },
+  { label: "幼儿期（3〜6岁）",    xMin: 36,  xMax: 72  },
+  { label: "学龄期（6〜12岁）",   xMin: 72,  xMax: 144 },
+  { label: "青春期（12〜18岁）",  xMin: 144, xMax: 216 },
+];
 const TAB_LABELS: Record<Tab, string> = {
   chart: "曲线",
   records: "记录",
@@ -231,28 +239,39 @@ export default function ChildDetailScreen() {
           style={{ width }}
           contentContainerStyle={styles.chartContent}
         >
-          <View style={styles.sectionTitleRow}>
-            <Text style={styles.sectionTitle}>乳幼儿期（0〜3岁）</Text>
-            <TouchableOpacity
-              style={styles.expandBtn}
-              onPress={() =>
-                router.push(
-                  `/children/${childId}/chart-fullscreen?xMin=0&xMax=36` as never,
-                )
-              }
-            >
-              <Text style={styles.expandBtnText}>放大</Text>
-            </TouchableOpacity>
-          </View>
-          <GrowthChart
-            rows={standard.rows}
-            measurements={chartPoints}
-            prediction={prediction}
-            xMin={0}
-            xMax={36}
-            width={chartWidth}
-            height={240}
-          />
+          {/* 各年龄段曲线（有数据才显示） */}
+          {AGE_SEGMENTS.filter(seg =>
+            // 该标准有覆盖此区间 且 孩子在此区间内有测量记录
+            seg.xMin < standard.meta.ageMaxMonths &&
+            chartPoints.some(p => p.ageMonths >= seg.xMin && p.ageMonths < seg.xMax)
+          ).map(seg => (
+            <View key={seg.label}>
+              <View style={styles.sectionTitleRow}>
+                <Text style={styles.sectionTitle}>{seg.label}</Text>
+                <TouchableOpacity
+                  style={styles.expandBtn}
+                  onPress={() =>
+                    router.push(
+                      `/children/${childId}/chart-fullscreen?xMin=${seg.xMin}&xMax=${Math.min(seg.xMax, standard.meta.ageMaxMonths)}` as never,
+                    )
+                  }
+                >
+                  <Text style={styles.expandBtnText}>放大</Text>
+                </TouchableOpacity>
+              </View>
+              <GrowthChart
+                rows={standard.rows}
+                measurements={chartPoints}
+                prediction={prediction}
+                xMin={seg.xMin}
+                xMax={Math.min(seg.xMax, standard.meta.ageMaxMonths)}
+                width={chartWidth}
+                height={240}
+              />
+            </View>
+          ))}
+
+          {/* 全体曲线（始终显示） */}
           <View style={styles.sectionTitleRow}>
             <Text style={styles.sectionTitle}>
               全体（0〜{Math.floor(standard.meta.ageMaxMonths / 12)}岁）
