@@ -87,7 +87,8 @@ export function GrowthChart({
       <Svg width={width} height={height} viewBox={viewBox}>
         <ChartAxes bounds={bounds} xTicks={xTicks} yTicks={yTicks} />
         <PercentileLines rows={drawRows} bounds={bounds} showLabels={false} />
-        {prediction && (
+        {/* 仅当预测线起点在显示范围内时才渲染，避免延伸到 Y 轴左侧 */}
+        {prediction && prediction.startAgeMonths >= xMin && (
           <PredictionLine
             startAgeMonths={prediction.startAgeMonths}
             startHeightCm={prediction.startHeightCm}
@@ -97,8 +98,9 @@ export function GrowthChart({
             bounds={bounds}
           />
         )}
+        {/* 仅渲染 [xMin, xMax] 范围内的测量点，避免落在 Y 轴左侧 */}
         <MeasurementSeries
-          points={measurements}
+          points={measurements.filter(m => m.ageMonths >= xMin && m.ageMonths <= xMax)}
           bounds={bounds}
           onPressPoint={p => setTooltip(prev => prev?.ageMonths === p.ageMonths ? null : p)}
         />
