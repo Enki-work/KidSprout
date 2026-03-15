@@ -37,9 +37,9 @@ function withAndroidLocalizedName(config) {
       );
 
       for (const [lang, name] of Object.entries(APP_NAMES)) {
-        // zh-Hans → values-zh-rHans，其余直接 values-xx
+        // Android BCP 47 格式：zh-Hans → values-b+zh+Hans，其余直接 values-xx
         const folderName = lang === 'zh-Hans'
-          ? 'values-zh-rHans'
+          ? 'values-b+zh+Hans'
           : `values-${lang}`;
 
         const dir = path.join(resDir, folderName);
