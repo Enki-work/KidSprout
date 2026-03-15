@@ -43,5 +43,10 @@ export function initDb(): void {
 
     CREATE INDEX IF NOT EXISTS idx_measurements_child
       ON measurements(child_id, measured_at);
+
+    CREATE TABLE IF NOT EXISTS settings (
+      key   TEXT PRIMARY KEY,
+      value TEXT NOT NULL
+    );
   `);
 }

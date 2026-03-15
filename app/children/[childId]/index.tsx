@@ -18,6 +18,7 @@ import {
 } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   Modal,
   Pressable,
@@ -78,10 +79,12 @@ export default function ChildDetailScreen() {
   const child = useChildStore((s) => s.children.find((c) => c.id === childId));
   const {
     byChild,
+    loadingByChild,
     loadForChild,
     remove: removeMeasurement,
   } = useMeasurementStore();
   const measurements = byChild[childId ?? ""] ?? [];
+  const isMeasurementsLoading = loadingByChild[childId ?? ""] ?? false;
 
   const [tab, setTab] = useState<Tab>("chart");
   const [showPercentileInfo, setShowPercentileInfo] = useState(false);
@@ -234,20 +237,52 @@ export default function ChildDetailScreen() {
           style={{ width }}
           contentContainerStyle={styles.chartContent}
         >
-          {AGE_SEGMENTS.filter(seg =>
-            seg.xMin < standard.meta.ageMaxMonths &&
-            chartPoints.some(p => p.ageMonths >= seg.xMin && p.ageMonths < seg.xMax)
-          ).map(seg => (
-            <View key={seg.key}>
+          {isMeasurementsLoading ? (
+            <ActivityIndicator style={{ marginTop: 60 }} color="#4CAF82" />
+          ) : (
+            <>
+              {AGE_SEGMENTS.filter(seg =>
+                seg.xMin < standard.meta.ageMaxMonths &&
+                chartPoints.some(p => p.ageMonths >= seg.xMin && p.ageMonths < seg.xMax)
+              ).map(seg => (
+                <View key={seg.key}>
+                  <View style={styles.sectionTitleRow}>
+                    <Text style={styles.sectionTitle}>
+                      {t(`childDetail.ageSegments.${seg.key}`)}
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.expandBtn}
+                      onPress={() =>
+                        router.push(
+                          `/children/${childId}/chart-fullscreen?xMin=${seg.xMin}&xMax=${Math.min(seg.xMax, standard.meta.ageMaxMonths)}` as never,
+                        )
+                      }
+                    >
+                      <Text style={styles.expandBtnText}>{t('childDetail.expand')}</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <GrowthChart
+                    rows={standard.rows}
+                    measurements={chartPoints}
+                    prediction={prediction}
+                    xMin={seg.xMin}
+                    xMax={Math.min(seg.xMax, standard.meta.ageMaxMonths)}
+                    width={chartWidth}
+                    height={240}
+                  />
+                </View>
+              ))}
+
+              {/* 全体曲线 */}
               <View style={styles.sectionTitleRow}>
                 <Text style={styles.sectionTitle}>
-                  {t(`childDetail.ageSegments.${seg.key}`)}
+                  {t('childDetail.allAges', { maxAge: maxAgeYears })}
                 </Text>
                 <TouchableOpacity
                   style={styles.expandBtn}
                   onPress={() =>
                     router.push(
-                      `/children/${childId}/chart-fullscreen?xMin=${seg.xMin}&xMax=${Math.min(seg.xMax, standard.meta.ageMaxMonths)}` as never,
+                      `/children/${childId}/chart-fullscreen?xMin=0&xMax=${standard.meta.ageMaxMonths}` as never,
                     )
                   }
                 >
@@ -258,39 +293,13 @@ export default function ChildDetailScreen() {
                 rows={standard.rows}
                 measurements={chartPoints}
                 prediction={prediction}
-                xMin={seg.xMin}
-                xMax={Math.min(seg.xMax, standard.meta.ageMaxMonths)}
+                xMin={0}
+                xMax={standard.meta.ageMaxMonths}
                 width={chartWidth}
                 height={240}
               />
-            </View>
-          ))}
-
-          {/* 全体曲线 */}
-          <View style={styles.sectionTitleRow}>
-            <Text style={styles.sectionTitle}>
-              {t('childDetail.allAges', { maxAge: maxAgeYears })}
-            </Text>
-            <TouchableOpacity
-              style={styles.expandBtn}
-              onPress={() =>
-                router.push(
-                  `/children/${childId}/chart-fullscreen?xMin=0&xMax=${standard.meta.ageMaxMonths}` as never,
-                )
-              }
-            >
-              <Text style={styles.expandBtnText}>{t('childDetail.expand')}</Text>
-            </TouchableOpacity>
-          </View>
-          <GrowthChart
-            rows={standard.rows}
-            measurements={chartPoints}
-            prediction={prediction}
-            xMin={0}
-            xMax={standard.meta.ageMaxMonths}
-            width={chartWidth}
-            height={240}
-          />
+            </>
+          )}
         </ScrollView>
 
         {/* Page 1: 记录 */}

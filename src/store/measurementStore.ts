@@ -10,6 +10,8 @@ import * as repo from '@/db/measurement.repo';
 type MeasurementStore = {
   // key: childId, value: 该孩子所有记录（按时间升序）
   byChild: Record<string, Measurement[]>;
+  // key: childId, value: 是否正在加载
+  loadingByChild: Record<string, boolean>;
   loadForChild:  (childId: string) => void;
   add:    (m: Measurement) => void;
   update: (m: Measurement) => void;
@@ -18,10 +20,19 @@ type MeasurementStore = {
 
 export const useMeasurementStore = create<MeasurementStore>((set) => ({
   byChild: {},
+  loadingByChild: {},
 
   loadForChild: (childId) => {
-    const list = repo.getMeasurementsByChild(childId);
-    set(s => ({ byChild: { ...s.byChild, [childId]: list } }));
+    set(s => ({ loadingByChild: { ...s.loadingByChild, [childId]: true } }));
+    try {
+      const list = repo.getMeasurementsByChild(childId);
+      set(s => ({
+        byChild: { ...s.byChild, [childId]: list },
+        loadingByChild: { ...s.loadingByChild, [childId]: false },
+      }));
+    } catch {
+      set(s => ({ loadingByChild: { ...s.loadingByChild, [childId]: false } }));
+    }
   },
 
   add: (m) => {

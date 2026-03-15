@@ -5,6 +5,7 @@ import { Child } from "@/types/child";
 import { Stack, useFocusEffect, useRouter } from "expo-router";
 import { useCallback } from "react";
 import {
+  ActivityIndicator,
   FlatList,
   StyleSheet,
   Text,
@@ -14,6 +15,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFormatAge } from "@/hooks/useFormatAge";
 import { EmptyState } from "@/components/common/EmptyState";
+import { useAppRating } from "@/hooks/useAppRating";
 
 function ChildCard({ child, onPress }: { child: Child; onPress: () => void }) {
   const { t } = useTranslation();
@@ -48,7 +50,8 @@ function ChildCard({ child, onPress }: { child: Child; onPress: () => void }) {
 export default function HomeScreen() {
   const { t } = useTranslation();
   const router = useRouter();
-  const { children, load } = useChildStore();
+  const { children, isLoading, load } = useChildStore();
+  useAppRating();
 
   useFocusEffect(
     useCallback(() => {
@@ -81,7 +84,9 @@ export default function HomeScreen() {
       />
 
       <SafeAreaView style={styles.container} edges={["bottom"]}>
-        {children.length === 0 ? (
+        {isLoading ? (
+          <ActivityIndicator style={styles.loader} color="#4CAF82" />
+        ) : children.length === 0 ? (
           <EmptyState
             icon="🌱"
             title={t('home.empty.title')}
@@ -101,6 +106,7 @@ export default function HomeScreen() {
           />
         )}
       </SafeAreaView>
+
     </>
   );
 }
@@ -112,6 +118,7 @@ const styles = StyleSheet.create({
   headerBtnText: { color: "#888", fontSize: 18 },
   addBtnText: { color: "#4CAF82", fontSize: 18, fontWeight: "600" },
 
+  loader: { flex: 1 },
   list: { padding: 16, gap: 12 },
 
   card: {

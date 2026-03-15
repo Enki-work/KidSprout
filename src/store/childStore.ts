@@ -8,6 +8,8 @@ import * as repo from '@/db/child.repo';
 
 type ChildStore = {
   children: Child[];
+  isLoading: boolean;
+  error: string | null;
   load: () => void;
   add:    (child: Child) => void;
   update: (child: Child) => void;
@@ -16,10 +18,17 @@ type ChildStore = {
 
 export const useChildStore = create<ChildStore>((set) => ({
   children: [],
+  isLoading: false,
+  error: null,
 
   load: () => {
-    const children = repo.getAllChildren();
-    set({ children });
+    set({ isLoading: true, error: null });
+    try {
+      const children = repo.getAllChildren();
+      set({ children, isLoading: false });
+    } catch (e) {
+      set({ isLoading: false, error: String(e) });
+    }
   },
 
   add: (child) => {

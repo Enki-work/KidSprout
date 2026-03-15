@@ -781,8 +781,9 @@ export function predictAdultHeight(
 - [x] 空状态设计（EmptyState 通用组件）
   - `src/components/common/EmptyState.tsx`：icon + 标题 + 描述 + 可选按钮
   - 首页空状态使用 EmptyState 组件
-- [ ] Loading 状态（DB 操作异步化后再加）
-- [ ] 错误处理（DB 操作异步化后再加）
+- [x] Loading 状态（childStore.isLoading / measurementStore.loadingByChild + ActivityIndicator）
+- [x] 错误处理（try/catch + childStore.error 字段）
+- [x] 应用评分引导（expo-store-review，满 10 次启动触发，30 天冷却）
 - [ ] iOS / Android 真机测试
 
 **验收：** 语言切换正常，真机体验流畅
