@@ -1,0 +1,142 @@
+{
+  "app": {
+    "title": "KidSprout"
+  },
+  "age": {
+    "months": "{{count}}개월",
+    "years": "{{count}}세",
+    "yearsMonths": "{{years}}세 {{months}}개월"
+  },
+  "sex": {
+    "male": "남자아이",
+    "female": "여자아이",
+    "maleSuffix": "남자",
+    "femaleSuffix": "여자"
+  },
+  "home": {
+    "new": "추가",
+    "settings": "설정",
+    "empty": {
+      "title": "아직 기록이 없어요",
+      "desc": "오른쪽 위 버튼을 눌러 첫 번째 키를 기록해 보세요!"
+    }
+  },
+  "newChild": {
+    "title": "프로필 만들기",
+    "labelName": "이름은 무엇인가요?",
+    "namePlaceholder": "아이의 이름",
+    "labelSex": "남자아이인가요, 여자아이인가요?",
+    "labelBirthDate": "생일은 언제인가요?",
+    "labelStandard": "어떤 성장 기준을 사용할까요?",
+    "save": "시작해요!",
+    "alertTitle": "한 가지 더",
+    "alertNameRequired": "아이의 이름을 입력해 주세요 😊"
+  },
+  "editChild": {
+    "title": "프로필 수정",
+    "labelName": "이름은 무엇인가요?",
+    "namePlaceholder": "아이의 이름",
+    "labelSex": "남자아이인가요, 여자아이인가요?",
+    "labelBirthDate": "생일은 언제인가요?",
+    "labelStandard": "어떤 성장 기준을 사용할까요?",
+    "save": "저장하기 ✓",
+    "delete": "프로필 삭제…",
+    "deleteAlertTitle": "프로필 삭제",
+    "deleteAlertMsg": "\"{{name}}\"의 모든 기록이 영구적으로 삭제됩니다. 계속하시겠어요?",
+    "cancel": "취소",
+    "confirmDelete": "삭제",
+    "alertTitle": "한 가지 더",
+    "alertNameRequired": "아이의 이름을 입력해 주세요 😊"
+  },
+  "addMeasurement": {
+    "title": "키 기록하기",
+    "labelDate": "측정일은 언제인가요?",
+    "labelHeight": "키 (cm)",
+    "heightPlaceholder": "예: 98.5",
+    "labelNote": "메모가 있나요?",
+    "notePlaceholder": "예: 건강검진, 집에서 측정…",
+    "save": "기록하기!",
+    "alertTitle": "입력 오류",
+    "alertHeightInvalid": "키는 30~250 cm 사이로 입력해 주세요"
+  },
+  "childDetail": {
+    "notFound": "프로필을 찾을 수 없어요",
+    "edit": "수정",
+    "tabs": {
+      "chart": "차트",
+      "records": "기록",
+      "analysis": "분석"
+    },
+    "ageSegments": {
+      "infant": "영유아기 (0~3세)",
+      "toddler": "유아기 (3~6세)",
+      "school": "학령기 (6~12세)",
+      "teen": "청소년기 (12~18세)"
+    },
+    "allAges": "전체 (0~{{maxAge}}세)",
+    "expand": "확대",
+    "currentPercentile": "현재 백분위",
+    "vsMedian": "중앙값 대비",
+    "higherThan": "같은 나이 {{sex}}아이의 {{p}}%보다 큼",
+    "noRecords": "아직 기록이 없어요",
+    "noRecordsDesc": "아래 버튼을 눌러 첫 번째 키를 추가하세요",
+    "deleteRecord": {
+      "title": "이 기록을 삭제할까요?",
+      "msg": "{{date}}의 키 기록이 영구적으로 삭제됩니다.",
+      "cancel": "취소",
+      "confirm": "삭제"
+    },
+    "addHeight": "＋ 키 추가",
+    "analysis": {
+      "currentStatus": "현재 상태",
+      "height": "키",
+      "percentile": "백분위",
+      "vsMedian": "중앙값 대비",
+      "higherThan": "같은 나이 {{sex}}아이의 약 {{p}}%보다 큼",
+      "growthRate": "성장 속도",
+      "last6m": "최근 6개월",
+      "last12m": "최근 12개월",
+      "insufficientData": "기록이 부족하여 계산 불가",
+      "prediction": "{{maxAge}}세 예상 키",
+      "predictedHeight": "약 {{height}} cm",
+      "disclaimer": "참고용입니다. 최종 키는 사춘기, 유전, 영양, 수면, 건강 상태에 따라 달라집니다."
+    },
+    "percentileModal": {
+      "title": "백분위(Pxx)란?",
+      "body1": "백분위는 같은 나이, 같은 성별의 아이들 중에서 키 순위를 나타냅니다.",
+      "body2prefix": "예를 들어",
+      "body2eg": "P68",
+      "body2": "은 같은 나이 아이들의 68%보다 키가 크고, 나머지 32%보다 작다는 의미입니다.",
+      "normal": "P10 ~ P90  정상 범위",
+      "attention": "P3 ~ P10 또는 P90 ~ P97  다소 낮음/높음, 주의 필요",
+      "warning": "P3 미만 또는 P97 초과  의사 상담 권장",
+      "disclaimer": "백분위는 참고용입니다. 한 번의 수치보다 지속적인 추적이 중요합니다.",
+      "close": "알겠어요"
+    }
+  },
+  "standards": {
+    "japan": {
+      "label": "일본 기준",
+      "description": "일본 정부 통계(e-Stat) 영유아·학교 보건 통계를 기반으로 산출"
+    },
+    "who": {
+      "label": "WHO 기준",
+      "description": "WHO가 공개한 Length/height-for-age 데이터를 기반으로 산출"
+    },
+    "china": {
+      "label": "중국 기준",
+      "description": "중국 국가위생건강위원회 발표 데이터를 기반으로 산출"
+    }
+  },
+  "settings": {
+    "title": "설정",
+    "language": "언어",
+    "languages": {
+      "zh": "中文",
+      "ja": "日本語",
+      "en": "English",
+      "es": "Español",
+      "ko": "한국어"
+    }
+  }
+}

@@ -771,10 +771,18 @@ export function predictAdultHeight(
 
 ### 阶段六：打磨 & 多语言（当前阶段）
 
-- [ ] 配置 react-i18next，支持中 / 日 / 英 / 西 / 韩
-- [ ] 空状态设计（EmptyMeasurements）
-- [ ] Loading 状态
-- [ ] 错误处理
+- [x] 配置 react-i18next，支持中 / 日 / 英 / 西 / 韩
+  - `src/i18n/index.ts`：自动检测设备语言，fallback 到中文
+  - `src/i18n/locales/{zh,ja,en,es,ko}.json`：完整翻译文件
+  - `app/settings/index.tsx`：语言切换设置页（⚙ 按钮进入）
+  - `src/store/settingsStore.ts`：语言状态管理
+  - `src/hooks/useFormatAge.ts`：语言感知的月龄格式化 hook
+  - 所有页面已替换硬编码字符串为 `t()` 调用
+- [x] 空状态设计（EmptyState 通用组件）
+  - `src/components/common/EmptyState.tsx`：icon + 标题 + 描述 + 可选按钮
+  - 首页空状态使用 EmptyState 组件
+- [ ] Loading 状态（DB 操作异步化后再加）
+- [ ] 错误处理（DB 操作异步化后再加）
 - [ ] iOS / Android 真机测试
 
 **验收：** 语言切换正常，真机体验流畅

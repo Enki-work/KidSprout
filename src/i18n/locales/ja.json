@@ -1,0 +1,142 @@
+{
+  "app": {
+    "title": "KidSprout"
+  },
+  "age": {
+    "months": "{{count}}ヶ月",
+    "years": "{{count}}歳",
+    "yearsMonths": "{{years}}歳{{months}}ヶ月"
+  },
+  "sex": {
+    "male": "男の子",
+    "female": "女の子",
+    "maleSuffix": "男の子",
+    "femaleSuffix": "女の子"
+  },
+  "home": {
+    "new": "追加",
+    "settings": "設定",
+    "empty": {
+      "title": "まだ記録がありません",
+      "desc": "右上のボタンから、最初の身長を記録しよう！"
+    }
+  },
+  "newChild": {
+    "title": "プロフィールを作成",
+    "labelName": "名前は？",
+    "namePlaceholder": "お子さまの名前",
+    "labelSex": "男の子？女の子？",
+    "labelBirthDate": "誕生日は？",
+    "labelStandard": "成長基準は？",
+    "save": "さあ、始めよう！",
+    "alertTitle": "入力が必要です",
+    "alertNameRequired": "お子さまの名前を入力してください 😊"
+  },
+  "editChild": {
+    "title": "プロフィールを編集",
+    "labelName": "名前は？",
+    "namePlaceholder": "お子さまの名前",
+    "labelSex": "男の子？女の子？",
+    "labelBirthDate": "誕生日は？",
+    "labelStandard": "成長基準は？",
+    "save": "保存する ✓",
+    "delete": "記録をやめる…",
+    "deleteAlertTitle": "プロフィールを削除",
+    "deleteAlertMsg": "「{{name}}」のすべての記録が完全に削除されます。よろしいですか？",
+    "cancel": "キャンセル",
+    "confirmDelete": "削除する",
+    "alertTitle": "入力が必要です",
+    "alertNameRequired": "お子さまの名前を入力してください 😊"
+  },
+  "addMeasurement": {
+    "title": "身長を記録する",
+    "labelDate": "測定日は？",
+    "labelHeight": "何 cm？",
+    "heightPlaceholder": "例：98.5",
+    "labelNote": "メモはありますか？",
+    "notePlaceholder": "例：健康診断、自宅で計測…",
+    "save": "記録する！",
+    "alertTitle": "入力が正しくありません",
+    "alertHeightInvalid": "身長は 30〜250 cm の範囲で入力してください"
+  },
+  "childDetail": {
+    "notFound": "プロフィールが見つかりません",
+    "edit": "編集",
+    "tabs": {
+      "chart": "グラフ",
+      "records": "記録",
+      "analysis": "分析"
+    },
+    "ageSegments": {
+      "infant": "乳児期（0〜3歳）",
+      "toddler": "幼児期（3〜6歳）",
+      "school": "学童期（6〜12歳）",
+      "teen": "思春期（12〜18歳）"
+    },
+    "allAges": "全体（0〜{{maxAge}}歳）",
+    "expand": "拡大",
+    "currentPercentile": "パーセンタイル",
+    "vsMedian": "中央値との差",
+    "higherThan": "同年齢の{{sex}}の {{p}}% より高い",
+    "noRecords": "まだ記録がありません",
+    "noRecordsDesc": "下のボタンから最初の身長を追加しよう",
+    "deleteRecord": {
+      "title": "この記録を削除しますか？",
+      "msg": "{{date}} の身長記録が完全に削除されます。",
+      "cancel": "キャンセル",
+      "confirm": "削除する"
+    },
+    "addHeight": "＋ 身長を追加",
+    "analysis": {
+      "currentStatus": "現在の状況",
+      "height": "身長",
+      "percentile": "パーセンタイル",
+      "vsMedian": "中央値との差",
+      "higherThan": "同年齢の{{sex}}の約 {{p}}% より高い",
+      "growthRate": "成長速度",
+      "last6m": "過去 6ヶ月",
+      "last12m": "過去 12ヶ月",
+      "insufficientData": "記録が不足しています",
+      "prediction": "{{maxAge}}歳時の身長予測",
+      "predictedHeight": "約 {{height}} cm",
+      "disclaimer": "参考値です。思春期の発育・遺伝・栄養・睡眠・健康状態により最終身長は異なります。"
+    },
+    "percentileModal": {
+      "title": "パーセンタイルとは？",
+      "body1": "パーセンタイルは、同年齢・同性別の子どもの中での身長の位置を示します。",
+      "body2prefix": "例えば",
+      "body2eg": "P68",
+      "body2": "は同年齢の 68% の子より身長が高く、残り 32% より低いことを意味します。",
+      "normal": "P10 〜 P90　正常範囲",
+      "attention": "P3 〜 P10 または P90 〜 P97　やや低め・高め、要注意",
+      "warning": "P3 未満 または P97 以上　医師への相談を推奨",
+      "disclaimer": "パーセンタイルはあくまで参考値です。継続的な追跡が重要です。",
+      "close": "わかりました"
+    }
+  },
+  "standards": {
+    "japan": {
+      "label": "日本基準",
+      "description": "政府統計（e-Stat）の乳幼児・学校保健統計データをもとに算出"
+    },
+    "who": {
+      "label": "WHO 基準",
+      "description": "WHO が公表する Length/height-for-age データをもとに算出"
+    },
+    "china": {
+      "label": "中国基準",
+      "description": "中国国家衛生健康委員会が発表するデータをもとに算出"
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "language": "表示言語",
+    "languages": {
+      "zh": "中文",
+      "ja": "日本語",
+      "en": "English",
+      "es": "Español",
+      "ko": "한국어"
+    }
+  }
+}

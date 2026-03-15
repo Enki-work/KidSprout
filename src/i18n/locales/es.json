@@ -1,0 +1,142 @@
+{
+  "app": {
+    "title": "KidSprout"
+  },
+  "age": {
+    "months": "{{count}} mes",
+    "years": "{{count}} año",
+    "yearsMonths": "{{years}} año {{months}} mes"
+  },
+  "sex": {
+    "male": "Niño",
+    "female": "Niña",
+    "maleSuffix": "niño",
+    "femaleSuffix": "niña"
+  },
+  "home": {
+    "new": "Nuevo",
+    "settings": "Ajustes",
+    "empty": {
+      "title": "Aún no hay registros",
+      "desc": "Toca el botón de arriba a la derecha para empezar a registrar"
+    }
+  },
+  "newChild": {
+    "title": "Crear perfil",
+    "labelName": "¿Cómo se llama?",
+    "namePlaceholder": "Nombre del niño/a",
+    "labelSex": "¿Niño o niña?",
+    "labelBirthDate": "¿Cuándo nació?",
+    "labelStandard": "¿Qué estándar de crecimiento usar?",
+    "save": "¡Vamos!",
+    "alertTitle": "Falta algo",
+    "alertNameRequired": "Por favor ingresa el nombre del niño/a 😊"
+  },
+  "editChild": {
+    "title": "Editar perfil",
+    "labelName": "¿Cómo se llama?",
+    "namePlaceholder": "Nombre del niño/a",
+    "labelSex": "¿Niño o niña?",
+    "labelBirthDate": "¿Cuándo nació?",
+    "labelStandard": "¿Qué estándar de crecimiento usar?",
+    "save": "Guardar cambios ✓",
+    "delete": "Eliminar perfil…",
+    "deleteAlertTitle": "Eliminar perfil",
+    "deleteAlertMsg": "Todos los registros de \"{{name}}\" se eliminarán permanentemente. ¿Estás seguro/a?",
+    "cancel": "Cancelar",
+    "confirmDelete": "Eliminar",
+    "alertTitle": "Falta algo",
+    "alertNameRequired": "Por favor ingresa el nombre del niño/a 😊"
+  },
+  "addMeasurement": {
+    "title": "Registrar altura",
+    "labelDate": "¿Cuándo fue medido/a?",
+    "labelHeight": "Altura (cm)",
+    "heightPlaceholder": "Ej.: 98.5",
+    "labelNote": "¿Alguna nota?",
+    "notePlaceholder": "Ej.: Revisión médica, medido en casa…",
+    "save": "¡Guardar!",
+    "alertTitle": "Entrada inválida",
+    "alertHeightInvalid": "Por favor ingresa una altura entre 30 y 250 cm"
+  },
+  "childDetail": {
+    "notFound": "Perfil no encontrado",
+    "edit": "Editar",
+    "tabs": {
+      "chart": "Gráfica",
+      "records": "Registros",
+      "analysis": "Análisis"
+    },
+    "ageSegments": {
+      "infant": "Bebé (0–3 años)",
+      "toddler": "Infante (3–6 años)",
+      "school": "Escolar (6–12 años)",
+      "teen": "Adolescente (12–18 años)"
+    },
+    "allAges": "Todo (0–{{maxAge}} años)",
+    "expand": "Ampliar",
+    "currentPercentile": "Percentil actual",
+    "vsMedian": "vs Mediana",
+    "higherThan": "Más alto que el {{p}}% de {{sex}}s de la misma edad",
+    "noRecords": "Aún no hay mediciones",
+    "noRecordsDesc": "Toca el botón de abajo para añadir la primera medición",
+    "deleteRecord": {
+      "title": "¿Eliminar este registro?",
+      "msg": "El registro de altura del {{date}} se eliminará permanentemente.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar"
+    },
+    "addHeight": "＋ Añadir altura",
+    "analysis": {
+      "currentStatus": "Estado actual",
+      "height": "Altura",
+      "percentile": "Percentil",
+      "vsMedian": "vs Mediana",
+      "higherThan": "Más alto que ~{{p}}% de {{sex}}s de la misma edad",
+      "growthRate": "Velocidad de crecimiento",
+      "last6m": "Últimos 6 meses",
+      "last12m": "Últimos 12 meses",
+      "insufficientData": "Registros insuficientes para calcular",
+      "prediction": "Altura estimada a los {{maxAge}} años",
+      "predictedHeight": "~{{height}} cm",
+      "disclaimer": "Solo como referencia. La altura final depende de la pubertad, genética, nutrición, sueño y salud general."
+    },
+    "percentileModal": {
+      "title": "¿Qué es el Percentil (Pxx)?",
+      "body1": "El percentil muestra dónde se ubica la altura de tu hijo/a entre niños de la misma edad y sexo.",
+      "body2prefix": "Por ejemplo,",
+      "body2eg": "P68",
+      "body2": "significa que tu hijo/a es más alto/a que el 68% de sus compañeros y más bajo/a que el 32% restante.",
+      "normal": "P10 – P90  Rango normal",
+      "attention": "P3 – P10 o P90 – P97  Ligeramente bajo/alto, vale la pena vigilar",
+      "warning": "Por debajo de P3 o por encima de P97  Consulta a un médico",
+      "disclaimer": "El percentil es solo referencial. Es más importante seguir la tendencia a lo largo del tiempo.",
+      "close": "Entendido"
+    }
+  },
+  "standards": {
+    "japan": {
+      "label": "Estándar Japón",
+      "description": "Basado en estadísticas gubernamentales de Japón (e-Stat)"
+    },
+    "who": {
+      "label": "Estándar OMS",
+      "description": "Basado en datos de talla-para-edad de la OMS"
+    },
+    "china": {
+      "label": "Estándar China",
+      "description": "Basado en datos de la Comisión Nacional de Salud de China"
+    }
+  },
+  "settings": {
+    "title": "Ajustes",
+    "language": "Idioma",
+    "languages": {
+      "zh": "中文",
+      "ja": "日本語",
+      "en": "English",
+      "es": "Español",
+      "ko": "한국어"
+    }
+  }
+}

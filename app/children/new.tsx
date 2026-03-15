@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useState } from "react";
 import {
   View,
@@ -27,6 +28,7 @@ function dateToStr(d: Date): string {
 }
 
 export default function NewChildScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const addChild = useChildStore((s) => s.add);
 
@@ -44,14 +46,13 @@ export default function NewChildScreen() {
   const [standardId, setStandardId] = useState<StandardId>("japan");
 
   function onDateChange(_: DateTimePickerEvent, selected?: Date) {
-    // Android 在选完后自动关闭；iOS 需手动关闭
     if (Platform.OS === "android") setShowPicker(false);
     if (selected) setBirthDate(selected);
   }
 
   function handleSave() {
     if (!name.trim()) {
-      Alert.alert("还差一步", "请填写孩子的名字 😊");
+      Alert.alert(t('newChild.alertTitle'), t('newChild.alertNameRequired'));
       return;
     }
     const now = new Date().toISOString();
@@ -70,23 +71,23 @@ export default function NewChildScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["bottom"]}>
-      <Stack.Screen options={{ title: "为宝宝建个档案 🌱" }} />
+      <Stack.Screen options={{ title: t('newChild.title') }} />
       <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
         {/* 姓名 */}
-        <Text style={styles.label}>叫什么名字？</Text>
+        <Text style={styles.label}>{t('newChild.labelName')}</Text>
         <TextInput
           style={styles.input}
-          placeholder="宝宝的名字"
+          placeholder={t('newChild.namePlaceholder')}
           value={name}
           onChangeText={setName}
           maxLength={20}
         />
 
         {/* 性别 */}
-        <Text style={styles.label}>是男孩还是女孩？</Text>
+        <Text style={styles.label}>{t('newChild.labelSex')}</Text>
         <View style={styles.row}>
           {(["male", "female"] as Sex[]).map((s) => (
             <TouchableOpacity
@@ -97,16 +98,14 @@ export default function NewChildScreen() {
               <Text
                 style={[styles.chipText, sex === s && styles.chipTextActive]}
               >
-                {s === "male" ? "男孩" : "女孩"}
+                {t(`sex.${s}`)}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
 
         {/* 出生日期 */}
-        <Text style={styles.label}>生日是哪天？</Text>
-
-        {/* iOS：始终内嵌显示 spinner */}
+        <Text style={styles.label}>{t('newChild.labelBirthDate')}</Text>
         {Platform.OS === "ios" ? (
           <DateTimePicker
             value={birthDate}
@@ -115,11 +114,9 @@ export default function NewChildScreen() {
             onChange={onDateChange}
             minimumDate={minBirthDate}
             maximumDate={today}
-            locale="zh-CN"
             style={styles.iosPicker}
           />
         ) : (
-          /* Android：点击按钮弹出系统对话框 */
           <>
             <TouchableOpacity
               style={styles.dateBtn}
@@ -141,7 +138,7 @@ export default function NewChildScreen() {
         )}
 
         {/* 成长标准 */}
-        <Text style={styles.label}>参考哪个成长标准？</Text>
+        <Text style={styles.label}>{t('newChild.labelStandard')}</Text>
         <View style={styles.row}>
           {STANDARDS.map((std) => (
             <TouchableOpacity
@@ -155,18 +152,18 @@ export default function NewChildScreen() {
                   standardId === std.id && styles.chipTextActive,
                 ]}
               >
-                {std.label}
+                {t(`standards.${std.id}.label`)}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
         <Text style={styles.standardDesc}>
-          {STANDARDS.find((s) => s.id === standardId)?.description}
+          {t(`standards.${standardId}.description`)}
         </Text>
 
         {/* 保存按钮 */}
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
-          <Text style={styles.saveBtnText}>好啦，出发！🌿</Text>
+          <Text style={styles.saveBtnText}>{t('newChild.save')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

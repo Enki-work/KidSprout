@@ -1,6 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import {
-  View, Text, TextInput, TouchableOpacity,
+  Text, TextInput, TouchableOpacity,
   StyleSheet, Alert, ScrollView, Platform,
 } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
@@ -19,6 +20,7 @@ function dateToStr(d: Date): string {
 }
 
 export default function AddMeasurementScreen() {
+  const { t } = useTranslation();
   const { childId } = useLocalSearchParams<{ childId: string }>();
   const router = useRouter();
   const addMeasurement = useMeasurementStore(s => s.add);
@@ -40,7 +42,7 @@ export default function AddMeasurementScreen() {
   function handleSave() {
     const heightNum = parseFloat(height);
     if (isNaN(heightNum) || heightNum < 30 || heightNum > 250) {
-      Alert.alert('好像哪里不对～', '身高请填写 30〜250 cm 之间的数值哦');
+      Alert.alert(t('addMeasurement.alertTitle'), t('addMeasurement.alertHeightInvalid'));
       return;
     }
     const now = new Date().toISOString();
@@ -59,11 +61,11 @@ export default function AddMeasurementScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
-      <Stack.Screen options={{ title: '记录今天的身高 📏' }} />
+      <Stack.Screen options={{ title: t('addMeasurement.title') }} />
       <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
 
         {/* 测量日期 */}
-        <Text style={styles.label}>今天几号测的？</Text>
+        <Text style={styles.label}>{t('addMeasurement.labelDate')}</Text>
 
         {Platform.OS === 'ios' ? (
           <DateTimePicker
@@ -73,7 +75,6 @@ export default function AddMeasurementScreen() {
             onChange={onDateChange}
             minimumDate={minMeasureDate}
             maximumDate={today}
-            locale="zh-CN"
             style={styles.iosPicker}
           />
         ) : (
@@ -98,29 +99,29 @@ export default function AddMeasurementScreen() {
         )}
 
         {/* 身高 */}
-        <Text style={styles.label}>量了多少？（cm）</Text>
+        <Text style={styles.label}>{t('addMeasurement.labelHeight')}</Text>
         <TextInput
           style={[styles.input, styles.heightInput]}
           value={height}
           onChangeText={setHeight}
-          placeholder="例：98.5"
+          placeholder={t('addMeasurement.heightPlaceholder')}
           keyboardType="decimal-pad"
           maxLength={6}
         />
 
         {/* 备注 */}
-        <Text style={styles.label}>有什么想记下来的吗？</Text>
+        <Text style={styles.label}>{t('addMeasurement.labelNote')}</Text>
         <TextInput
           style={[styles.input, styles.noteInput]}
           value={note}
           onChangeText={setNote}
-          placeholder="例：医院体检、家里量的…"
+          placeholder={t('addMeasurement.notePlaceholder')}
           multiline
           maxLength={100}
         />
 
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
-          <Text style={styles.saveBtnText}>记下来！📝</Text>
+          <Text style={styles.saveBtnText}>{t('addMeasurement.save')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

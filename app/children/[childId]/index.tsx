@@ -1,9 +1,11 @@
+import { useTranslation } from 'react-i18next';
 import { GrowthChart, PredictionConfig } from "@/components/chart/GrowthChart";
 import { MeasurementPoint } from "@/components/chart/MeasurementSeries";
 import { DebugAddTestData } from "@/components/debug/DebugAddTestData";
 import { getStandardFile, StandardId } from "@/constants/standards";
 import { useComputedMeasurements } from "@/hooks/growth/useComputedMeasurements";
-import { formatAgeMonths, getAgeInMonths } from "@/services/growth/age";
+import { useFormatAge } from "@/hooks/useFormatAge";
+import { getAgeInMonths } from "@/services/growth/age";
 import { predictAdultHeight } from "@/services/growth/prediction";
 import { useChildStore } from "@/store/childStore";
 import { useMeasurementStore } from "@/store/measurementStore";
@@ -33,16 +35,11 @@ const TABS: Tab[] = ["chart", "records", "analysis"];
 
 /** 年龄段曲线定义（月龄区间） */
 const AGE_SEGMENTS = [
-  { label: "婴幼儿期（0〜3岁）",  xMin: 0,   xMax: 36  },
-  { label: "幼儿期（3〜6岁）",    xMin: 36,  xMax: 72  },
-  { label: "学龄期（6〜12岁）",   xMin: 72,  xMax: 144 },
-  { label: "青春期（12〜18岁）",  xMin: 144, xMax: 216 },
-];
-const TAB_LABELS: Record<Tab, string> = {
-  chart: "曲线",
-  records: "记录",
-  analysis: "分析",
-};
+  { key: "infant",  xMin: 0,   xMax: 36  },
+  { key: "toddler", xMin: 36,  xMax: 72  },
+  { key: "school",  xMin: 72,  xMax: 144 },
+  { key: "teen",    xMin: 144, xMax: 216 },
+] as const;
 
 /** 百分位显示颜色 */
 function percentileColor(p: number): string {
@@ -72,6 +69,8 @@ function growthIn(
 }
 
 export default function ChildDetailScreen() {
+  const { t } = useTranslation();
+  const formatAge = useFormatAge();
   const { childId } = useLocalSearchParams<{ childId: string }>();
   const router = useRouter();
   const { width } = useWindowDimensions();
@@ -94,7 +93,6 @@ export default function ChildDetailScreen() {
     }, [childId]),
   );
 
-  // 必须在所有条件返回之前调用 hooks
   const standard = child
     ? getStandardFile(child.standardId as StandardId, child.sex)
     : null;
@@ -107,7 +105,7 @@ export default function ChildDetailScreen() {
   if (!child || !standard) {
     return (
       <View style={styles.center}>
-        <Text style={styles.notFound}>找不到孩子档案</Text>
+        <Text style={styles.notFound}>{t('childDetail.notFound')}</Text>
       </View>
     );
   }
@@ -118,7 +116,6 @@ export default function ChildDetailScreen() {
     computed.length > 0 ? computed[computed.length - 1] : null;
   const currentPercentile = latestComputed?.percentile ?? 50;
 
-  // 图表数据点（含百分位和日期，用于 Tooltip）
   const chartPoints: MeasurementPoint[] = computed.map((m) => ({
     ageMonths: m.ageMonths,
     heightCm: m.heightCm,
@@ -126,11 +123,9 @@ export default function ChildDetailScreen() {
     percentile: m.percentile,
   }));
 
-  // 数据源最大月龄（WHO=228, China=216, Japan=204）
   const maxAgeMonths = standard.meta.ageMaxMonths;
   const maxAgeYears = Math.floor(maxAgeMonths / 12);
 
-  // 预测配置（仅当有测量记录且未超过数据上限）
   const prediction: PredictionConfig | undefined =
     latestComputed && latestComputed.ageMonths < maxAgeMonths
       ? {
@@ -141,16 +136,16 @@ export default function ChildDetailScreen() {
         }
       : undefined;
 
-  // 预测成年身高（以各数据源的最大月龄为目标）
   const predictedHeight = latestComputed
     ? Math.round(
         predictAdultHeight(currentPercentile, standard.rows, maxAgeMonths) * 10,
       ) / 10
     : null;
 
-  // 增长速度
   const growth6m = growthIn(computed, 6);
   const growth12m = growthIn(computed, 12);
+
+  const sexSuffix = t(`sex.${child.sex === 'male' ? 'maleSuffix' : 'femaleSuffix'}`);
 
   function onTabPress(t: Tab) {
     const idx = TABS.indexOf(t);
@@ -177,7 +172,7 @@ export default function ChildDetailScreen() {
                   router.push(`/children/${childId}/edit` as never)
                 }
               >
-                <Text style={styles.editBtnText}>编辑</Text>
+                <Text style={styles.editBtnText}>{t('childDetail.edit')}</Text>
               </TouchableOpacity>
             </View>
           ),
@@ -187,8 +182,8 @@ export default function ChildDetailScreen() {
       {/* 顶部摘要 */}
       <View style={styles.summary}>
         <Text style={styles.childMeta}>
-          {child.sex === "male" ? "男孩" : "女孩"} ·{" "}
-          {formatAgeMonths(ageMonths)}
+          {t(`sex.${child.sex}`)} ·{" "}
+          {formatAge(ageMonths)}
           {latestComputed ? ` · ${latestComputed.heightCm} cm` : ""}
         </Text>
         {latestComputed?.percentile !== undefined && (
@@ -209,14 +204,14 @@ export default function ChildDetailScreen() {
 
       {/* Tab 切換 */}
       <View style={styles.tabBar}>
-        {TABS.map((t) => (
+        {TABS.map((tabKey) => (
           <TouchableOpacity
-            key={t}
-            style={[styles.tabBtn, tab === t && styles.tabBtnActive]}
-            onPress={() => onTabPress(t)}
+            key={tabKey}
+            style={[styles.tabBtn, tab === tabKey && styles.tabBtnActive]}
+            onPress={() => onTabPress(tabKey)}
           >
-            <Text style={[styles.tabText, tab === t && styles.tabTextActive]}>
-              {TAB_LABELS[t]}
+            <Text style={[styles.tabText, tab === tabKey && styles.tabTextActive]}>
+              {t(`childDetail.tabs.${tabKey}`)}
             </Text>
           </TouchableOpacity>
         ))}
@@ -239,15 +234,15 @@ export default function ChildDetailScreen() {
           style={{ width }}
           contentContainerStyle={styles.chartContent}
         >
-          {/* 各年龄段曲线（有数据才显示） */}
           {AGE_SEGMENTS.filter(seg =>
-            // 该标准有覆盖此区间 且 孩子在此区间内有测量记录
             seg.xMin < standard.meta.ageMaxMonths &&
             chartPoints.some(p => p.ageMonths >= seg.xMin && p.ageMonths < seg.xMax)
           ).map(seg => (
-            <View key={seg.label}>
+            <View key={seg.key}>
               <View style={styles.sectionTitleRow}>
-                <Text style={styles.sectionTitle}>{seg.label}</Text>
+                <Text style={styles.sectionTitle}>
+                  {t(`childDetail.ageSegments.${seg.key}`)}
+                </Text>
                 <TouchableOpacity
                   style={styles.expandBtn}
                   onPress={() =>
@@ -256,7 +251,7 @@ export default function ChildDetailScreen() {
                     )
                   }
                 >
-                  <Text style={styles.expandBtnText}>放大</Text>
+                  <Text style={styles.expandBtnText}>{t('childDetail.expand')}</Text>
                 </TouchableOpacity>
               </View>
               <GrowthChart
@@ -271,10 +266,10 @@ export default function ChildDetailScreen() {
             </View>
           ))}
 
-          {/* 全体曲线（始终显示） */}
+          {/* 全体曲线 */}
           <View style={styles.sectionTitleRow}>
             <Text style={styles.sectionTitle}>
-              全体（0〜{Math.floor(standard.meta.ageMaxMonths / 12)}岁）
+              {t('childDetail.allAges', { maxAge: maxAgeYears })}
             </Text>
             <TouchableOpacity
               style={styles.expandBtn}
@@ -284,7 +279,7 @@ export default function ChildDetailScreen() {
                 )
               }
             >
-              <Text style={styles.expandBtnText}>放大</Text>
+              <Text style={styles.expandBtnText}>{t('childDetail.expand')}</Text>
             </TouchableOpacity>
           </View>
           <GrowthChart
@@ -307,13 +302,11 @@ export default function ChildDetailScreen() {
             <View style={styles.summaryCard}>
               <View style={styles.summaryCardRow}>
                 <View style={styles.summaryCardItem}>
-                  <Text style={styles.summaryCardLabel}>当前百分位</Text>
+                  <Text style={styles.summaryCardLabel}>{t('childDetail.currentPercentile')}</Text>
                   <Text
                     style={[
                       styles.summaryCardValue,
-                      {
-                        color: percentileColor(latestComputed.percentile ?? 50),
-                      },
+                      { color: percentileColor(latestComputed.percentile ?? 50) },
                     ]}
                   >
                     P{Math.round(latestComputed.percentile ?? 50)}
@@ -321,7 +314,7 @@ export default function ChildDetailScreen() {
                 </View>
                 <View style={styles.summaryCardDivider} />
                 <View style={styles.summaryCardItem}>
-                  <Text style={styles.summaryCardLabel}>与中位数</Text>
+                  <Text style={styles.summaryCardLabel}>{t('childDetail.vsMedian')}</Text>
                   <Text
                     style={[
                       styles.summaryCardValue,
@@ -339,14 +332,16 @@ export default function ChildDetailScreen() {
                 </View>
               </View>
               <Text style={styles.summaryCardDesc}>
-                高于 {Math.round(latestComputed.percentile ?? 50)}% 的同龄
-                {child.sex === "male" ? "男" : "女"}孩
+                {t('childDetail.higherThan', {
+                  p: Math.round(latestComputed.percentile ?? 50),
+                  sex: sexSuffix,
+                })}
               </Text>
             </View>
           )}
           {computed.length === 0 ? (
             <View style={styles.emptyRecords}>
-              <Text style={styles.emptyText}>还没有测量记录</Text>
+              <Text style={styles.emptyText}>{t('childDetail.noRecords')}</Text>
             </View>
           ) : (
             [...computed].reverse().map((m) => (
@@ -355,7 +350,7 @@ export default function ChildDetailScreen() {
                   <Text style={styles.recordDate}>{m.measuredAt}</Text>
                   <View style={styles.recordSubRow}>
                     <Text style={styles.recordAge}>
-                      {formatAgeMonths(m.ageMonths)}
+                      {formatAge(m.ageMonths)}
                     </Text>
                     {m.percentile !== undefined && (
                       <Text
@@ -374,12 +369,12 @@ export default function ChildDetailScreen() {
                   style={styles.deleteBtn}
                   onPress={() =>
                     Alert.alert(
-                      "删除这条记录？",
-                      `${m.measuredAt} 的身高记录将被永久删除。`,
+                      t('childDetail.deleteRecord.title'),
+                      t('childDetail.deleteRecord.msg', { date: m.measuredAt }),
                       [
-                        { text: "再想想", style: "cancel" },
+                        { text: t('childDetail.deleteRecord.cancel'), style: "cancel" },
                         {
-                          text: "确认删除",
+                          text: t('childDetail.deleteRecord.confirm'),
                           style: "destructive",
                           onPress: () => removeMeasurement(m.id, child.id),
                         },
@@ -401,20 +396,20 @@ export default function ChildDetailScreen() {
         >
           {!latestComputed ? (
             <View style={styles.emptyRecords}>
-              <Text style={styles.emptyText}>还没有测量记录</Text>
+              <Text style={styles.emptyText}>{t('childDetail.noRecords')}</Text>
             </View>
           ) : (
             <>
               <View style={styles.analysisCard}>
-                <Text style={styles.analysisCardTitle}>当前状况</Text>
+                <Text style={styles.analysisCardTitle}>{t('childDetail.analysis.currentStatus')}</Text>
                 <View style={styles.analysisRow}>
-                  <Text style={styles.analysisLabel}>身高</Text>
+                  <Text style={styles.analysisLabel}>{t('childDetail.analysis.height')}</Text>
                   <Text style={styles.analysisValue}>
                     {latestComputed.heightCm} cm
                   </Text>
                 </View>
                 <View style={styles.analysisRow}>
-                  <Text style={styles.analysisLabel}>百分位</Text>
+                  <Text style={styles.analysisLabel}>{t('childDetail.analysis.percentile')}</Text>
                   <Text
                     style={[
                       styles.analysisValue,
@@ -425,7 +420,7 @@ export default function ChildDetailScreen() {
                   </Text>
                 </View>
                 <View style={styles.analysisRow}>
-                  <Text style={styles.analysisLabel}>与同龄中位数</Text>
+                  <Text style={styles.analysisLabel}>{t('childDetail.analysis.vsMedian')}</Text>
                   <Text
                     style={[
                       styles.analysisValue,
@@ -442,28 +437,30 @@ export default function ChildDetailScreen() {
                   </Text>
                 </View>
                 <Text style={styles.analysisDesc}>
-                  高于同龄约 {Math.round(currentPercentile)}% 的
-                  {child.sex === "male" ? "男" : "女"}孩
+                  {t('childDetail.analysis.higherThan', {
+                    p: Math.round(currentPercentile),
+                    sex: sexSuffix,
+                  })}
                 </Text>
               </View>
 
               <View style={styles.analysisCard}>
-                <Text style={styles.analysisCardTitle}>增长速度</Text>
+                <Text style={styles.analysisCardTitle}>{t('childDetail.analysis.growthRate')}</Text>
                 {growth6m !== null && (
                   <View style={styles.analysisRow}>
-                    <Text style={styles.analysisLabel}>最近 6 个月</Text>
+                    <Text style={styles.analysisLabel}>{t('childDetail.analysis.last6m')}</Text>
                     <Text style={styles.analysisValue}>+{growth6m} cm</Text>
                   </View>
                 )}
                 {growth12m !== null && (
                   <View style={styles.analysisRow}>
-                    <Text style={styles.analysisLabel}>最近 12 个月</Text>
+                    <Text style={styles.analysisLabel}>{t('childDetail.analysis.last12m')}</Text>
                     <Text style={styles.analysisValue}>+{growth12m} cm</Text>
                   </View>
                 )}
                 {growth6m === null && growth12m === null && (
                   <Text style={styles.analysisEmpty}>
-                    记录数量不足，无法计算
+                    {t('childDetail.analysis.insufficientData')}
                   </Text>
                 )}
               </View>
@@ -472,13 +469,13 @@ export default function ChildDetailScreen() {
                 latestComputed.ageMonths < maxAgeMonths && (
                   <View style={styles.analysisCard}>
                     <Text style={styles.analysisCardTitle}>
-                      {maxAgeYears} 岁身高估算
+                      {t('childDetail.analysis.prediction', { maxAge: maxAgeYears })}
                     </Text>
                     <Text style={styles.predictionHeight}>
-                      约 {predictedHeight} cm
+                      {t('childDetail.analysis.predictedHeight', { height: predictedHeight })}
                     </Text>
                     <Text style={styles.predictionDisclaimer}>
-                      仅供参考，青春期发育、遗传、营养、睡眠与健康状况都会影响最终身高。
+                      {t('childDetail.analysis.disclaimer')}
                     </Text>
                   </View>
                 )}
@@ -494,7 +491,7 @@ export default function ChildDetailScreen() {
           router.push(`/children/${childId}/add-measurement` as never)
         }
       >
-        <Text style={styles.fabText}>＋ 添加身高</Text>
+        <Text style={styles.fabText}>{t('childDetail.addHeight')}</Text>
       </TouchableOpacity>
 
       {/* 百分位说明弹窗 */}
@@ -509,46 +506,41 @@ export default function ChildDetailScreen() {
           onPress={() => setShowPercentileInfo(false)}
         >
           <Pressable style={styles.modalCard} onPress={() => {}}>
-            <Text style={styles.modalTitle}>什么是百分位（Pxx）？</Text>
+            <Text style={styles.modalTitle}>{t('childDetail.percentileModal.title')}</Text>
             <Text style={styles.modalBody}>
-              百分位表示孩子的身高在同龄、同性别儿童中所处的位置。
+              {t('childDetail.percentileModal.body1')}
             </Text>
             <Text style={styles.modalBody}>
-              例如 <Text style={styles.modalBold}>P68</Text>{" "}
-              表示孩子比同龄儿童中 68% 的孩子高，比剩余 32% 的孩子矮。
+              {t('childDetail.percentileModal.body2prefix')}{' '}
+              <Text style={styles.modalBold}>{t('childDetail.percentileModal.body2eg')}</Text>{' '}
+              {t('childDetail.percentileModal.body2')}
             </Text>
             <View style={styles.modalLegend}>
               <View style={styles.modalLegendRow}>
-                <View
-                  style={[styles.modalDot, { backgroundColor: "#4CAF82" }]}
-                />
-                <Text style={styles.modalLegendText}>P10 ~ P90　正常范围</Text>
+                <View style={[styles.modalDot, { backgroundColor: "#4CAF82" }]} />
+                <Text style={styles.modalLegendText}>{t('childDetail.percentileModal.normal')}</Text>
               </View>
               <View style={styles.modalLegendRow}>
-                <View
-                  style={[styles.modalDot, { backgroundColor: "#FF9500" }]}
-                />
+                <View style={[styles.modalDot, { backgroundColor: "#FF9500" }]} />
                 <Text style={styles.modalLegendText}>
-                  P3 ~ P10 或 P90 ~ P97　偏低/偏高，建议关注
+                  {t('childDetail.percentileModal.attention')}
                 </Text>
               </View>
               <View style={styles.modalLegendRow}>
-                <View
-                  style={[styles.modalDot, { backgroundColor: "#FF3B30" }]}
-                />
+                <View style={[styles.modalDot, { backgroundColor: "#FF3B30" }]} />
                 <Text style={styles.modalLegendText}>
-                  P3 以下 或 P97 以上　需咨询医生
+                  {t('childDetail.percentileModal.warning')}
                 </Text>
               </View>
             </View>
             <Text style={styles.modalDisclaimer}>
-              百分位仅供参考，单次数值不能说明问题，持续追踪趋势更重要。
+              {t('childDetail.percentileModal.disclaimer')}
             </Text>
             <TouchableOpacity
               style={styles.modalCloseBtn}
               onPress={() => setShowPercentileInfo(false)}
             >
-              <Text style={styles.modalCloseBtnText}>我知道了</Text>
+              <Text style={styles.modalCloseBtnText}>{t('childDetail.percentileModal.close')}</Text>
             </TouchableOpacity>
           </Pressable>
         </Pressable>
@@ -597,7 +589,6 @@ const styles = StyleSheet.create({
   tabText: { fontSize: 14, color: "#999" },
   tabTextActive: { color: "#4CAF82", fontWeight: "600" },
 
-  // 整页 Pager
   pager: { flex: 1 },
 
   chartContent: { padding: 16, paddingBottom: 100 },
@@ -608,11 +599,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 4,
   },
-  sectionTitle: {
-    fontSize: 13,
-    fontWeight: "600",
-    color: "#4CAF82",
-  },
+  sectionTitle: { fontSize: 13, fontWeight: "600", color: "#4CAF82" },
   expandBtn: {
     paddingHorizontal: 10,
     paddingVertical: 4,
@@ -620,11 +607,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#4CAF82",
   },
-  expandBtnText: {
-    fontSize: 11,
-    color: "#4CAF82",
-    fontWeight: "600",
-  },
+  expandBtnText: { fontSize: 11, color: "#4CAF82", fontWeight: "600" },
 
   recordsContent: { padding: 16, gap: 8, paddingBottom: 100 },
   emptyRecords: { paddingTop: 60, alignItems: "center" },
@@ -751,9 +734,7 @@ const styles = StyleSheet.create({
   },
   editBtn: { paddingHorizontal: 8, paddingVertical: 6, alignSelf: "center" },
   editBtnText: { color: "#4CAF82", fontSize: 18, fontWeight: "600" },
-  debugBtnText: { color: "#FF9500", fontSize: 15, fontWeight: "600" },
 
-  // 百分位说明弹窗
   modalOverlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.45)",

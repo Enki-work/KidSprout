@@ -1,4 +1,5 @@
-import { formatAgeMonths, getAgeInMonths } from "@/services/growth/age";
+import { useTranslation } from 'react-i18next';
+import { getAgeInMonths } from "@/services/growth/age";
 import { useChildStore } from "@/store/childStore";
 import { Child } from "@/types/child";
 import { Stack, useFocusEffect, useRouter } from "expo-router";
@@ -11,11 +12,15 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useFormatAge } from "@/hooks/useFormatAge";
+import { EmptyState } from "@/components/common/EmptyState";
 
 function ChildCard({ child, onPress }: { child: Child; onPress: () => void }) {
+  const { t } = useTranslation();
+  const formatAge = useFormatAge();
   const ageMonths = getAgeInMonths(new Date(child.birthDate));
-  const ageText = formatAgeMonths(ageMonths);
-  const sexLabel = child.sex === "male" ? "男孩" : "女孩";
+  const ageText = formatAge(ageMonths);
+  const sexLabel = t(`sex.${child.sex}`);
 
   return (
     <TouchableOpacity style={styles.card} onPress={onPress} activeOpacity={0.7}>
@@ -41,6 +46,7 @@ function ChildCard({ child, onPress }: { child: Child; onPress: () => void }) {
 }
 
 export default function HomeScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { children, load } = useChildStore();
 
@@ -52,28 +58,35 @@ export default function HomeScreen() {
 
   return (
     <>
-      {/* 配置 Stack 导航器 header */}
       <Stack.Screen
         options={{
-          title: "小芽成长",
+          title: t('app.title'),
           headerRight: () => (
-            <TouchableOpacity
-              onPress={() => router.push("/children/new" as never)}
-              style={styles.addBtn}
-            >
-              <Text style={styles.addBtnText}>新建</Text>
-            </TouchableOpacity>
+            <View style={styles.headerRight}>
+              <TouchableOpacity
+                onPress={() => router.push("/settings" as never)}
+                style={styles.headerBtn}
+              >
+                <Text style={styles.headerBtnText}>⚙</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => router.push("/children/new" as never)}
+                style={styles.headerBtn}
+              >
+                <Text style={styles.addBtnText}>{t('home.new')}</Text>
+              </TouchableOpacity>
+            </View>
           ),
         }}
       />
 
       <SafeAreaView style={styles.container} edges={["bottom"]}>
         {children.length === 0 ? (
-          <View style={styles.empty}>
-            <Text style={styles.emptyIcon}>🌱</Text>
-            <Text style={styles.emptyTitle}>还没有小宝贝的记录呢</Text>
-            <Text style={styles.emptyDesc}>点右上角，开始记录 TA 的第一次测量吧～</Text>
-          </View>
+          <EmptyState
+            icon="🌱"
+            title={t('home.empty.title')}
+            description={t('home.empty.desc')}
+          />
         ) : (
           <FlatList
             data={children}
@@ -94,8 +107,9 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F7F8FA" },
-
-  addBtn: { paddingHorizontal: 8, paddingVertical: 6, alignSelf: 'center' },
+  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  headerBtn: { paddingHorizontal: 6, paddingVertical: 6, alignSelf: 'center' },
+  headerBtnText: { color: "#888", fontSize: 18 },
   addBtnText: { color: "#4CAF82", fontSize: 18, fontWeight: "600" },
 
   list: { padding: 16, gap: 12 },
@@ -128,8 +142,4 @@ const styles = StyleSheet.create({
   childMeta: { fontSize: 13, color: "#888", marginTop: 2 },
   chevron: { fontSize: 22, color: "#CCC" },
 
-  empty: { flex: 1, alignItems: "center", justifyContent: "center", gap: 8 },
-  emptyIcon: { fontSize: 48 },
-  emptyTitle: { fontSize: 18, fontWeight: "600", color: "#333" },
-  emptyDesc: { fontSize: 14, color: "#999" },
 });

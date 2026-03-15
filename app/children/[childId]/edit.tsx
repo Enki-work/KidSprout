@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { StandardId, STANDARDS } from "@/constants/standards";
 import { useChildStore } from "@/store/childStore";
 import { Sex } from "@/types/child";
@@ -23,6 +24,7 @@ function dateToStr(d: Date): string {
 }
 
 export default function EditChildScreen() {
+  const { t } = useTranslation();
   const { childId } = useLocalSearchParams<{ childId: string }>();
   const router = useRouter();
   const { children, update, remove } = useChildStore();
@@ -48,7 +50,7 @@ export default function EditChildScreen() {
   if (!child) {
     return (
       <View style={styles.center}>
-        <Text style={styles.notFound}>找不到孩子档案</Text>
+        <Text style={styles.notFound}>{t('childDetail.notFound')}</Text>
       </View>
     );
   }
@@ -61,12 +63,12 @@ export default function EditChildScreen() {
   function handleDelete() {
     const c = child!;
     Alert.alert(
-      "删除成长档案",
-      `「${c.name}」的所有记录将被永久删除，无法恢复。确定要继续吗？`,
+      t('editChild.deleteAlertTitle'),
+      t('editChild.deleteAlertMsg', { name: c.name }),
       [
-        { text: "再想想", style: "cancel" },
+        { text: t('editChild.cancel'), style: "cancel" },
         {
-          text: "确认删除",
+          text: t('editChild.confirmDelete'),
           style: "destructive",
           onPress: () => {
             remove(c.id);
@@ -79,7 +81,7 @@ export default function EditChildScreen() {
 
   function handleSave() {
     if (!name.trim()) {
-      Alert.alert("还差一步", "请填写孩子的名字 😊");
+      Alert.alert(t('editChild.alertTitle'), t('editChild.alertNameRequired'));
       return;
     }
     const now = new Date().toISOString();
@@ -96,23 +98,23 @@ export default function EditChildScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["bottom"]}>
-      <Stack.Screen options={{ title: "修改一下档案" }} />
+      <Stack.Screen options={{ title: t('editChild.title') }} />
       <ScrollView
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
         {/* 姓名 */}
-        <Text style={styles.label}>叫什么名字？</Text>
+        <Text style={styles.label}>{t('editChild.labelName')}</Text>
         <TextInput
           style={styles.input}
-          placeholder="宝宝的名字"
+          placeholder={t('editChild.namePlaceholder')}
           value={name}
           onChangeText={setName}
           maxLength={20}
         />
 
         {/* 性别 */}
-        <Text style={styles.label}>是男孩还是女孩？</Text>
+        <Text style={styles.label}>{t('editChild.labelSex')}</Text>
         <View style={styles.row}>
           {(["male", "female"] as Sex[]).map((s) => (
             <TouchableOpacity
@@ -123,14 +125,14 @@ export default function EditChildScreen() {
               <Text
                 style={[styles.chipText, sex === s && styles.chipTextActive]}
               >
-                {s === "male" ? "男孩" : "女孩"}
+                {t(`sex.${s}`)}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
 
         {/* 出生日期 */}
-        <Text style={styles.label}>生日是哪天？</Text>
+        <Text style={styles.label}>{t('editChild.labelBirthDate')}</Text>
         {Platform.OS === "ios" ? (
           <DateTimePicker
             value={birthDate}
@@ -139,7 +141,6 @@ export default function EditChildScreen() {
             onChange={onDateChange}
             minimumDate={minBirthDate}
             maximumDate={today}
-            locale="zh-CN"
             style={styles.iosPicker}
           />
         ) : (
@@ -164,7 +165,7 @@ export default function EditChildScreen() {
         )}
 
         {/* 成长标准 */}
-        <Text style={styles.label}>参考哪个成长标准？</Text>
+        <Text style={styles.label}>{t('editChild.labelStandard')}</Text>
         <View style={styles.row}>
           {STANDARDS.map((std) => (
             <TouchableOpacity
@@ -178,23 +179,23 @@ export default function EditChildScreen() {
                   standardId === std.id && styles.chipTextActive,
                 ]}
               >
-                {std.label}
+                {t(`standards.${std.id}.label`)}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
         <Text style={styles.standardDesc}>
-          {STANDARDS.find((s) => s.id === standardId)?.description}
+          {t(`standards.${standardId}.description`)}
         </Text>
 
         {/* 保存按钮 */}
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
-          <Text style={styles.saveBtnText}>好，更新一下 ✓</Text>
+          <Text style={styles.saveBtnText}>{t('editChild.save')}</Text>
         </TouchableOpacity>
 
         {/* 删除按钮 */}
         <TouchableOpacity style={styles.deleteBtn} onPress={handleDelete}>
-          <Text style={styles.deleteBtnText}>不记录了…</Text>
+          <Text style={styles.deleteBtnText}>{t('editChild.delete')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

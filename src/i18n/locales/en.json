@@ -1,0 +1,142 @@
+{
+  "app": {
+    "title": "KidSprout"
+  },
+  "age": {
+    "months": "{{count}}mo",
+    "years": "{{count}}yr",
+    "yearsMonths": "{{years}}yr {{months}}mo"
+  },
+  "sex": {
+    "male": "Boy",
+    "female": "Girl",
+    "maleSuffix": "boy",
+    "femaleSuffix": "girl"
+  },
+  "home": {
+    "new": "New",
+    "settings": "Settings",
+    "empty": {
+      "title": "No children yet",
+      "desc": "Tap the button in the top right to start tracking!"
+    }
+  },
+  "newChild": {
+    "title": "Create a Profile",
+    "labelName": "What's their name?",
+    "namePlaceholder": "Child's name",
+    "labelSex": "Boy or girl?",
+    "labelBirthDate": "When were they born?",
+    "labelStandard": "Which growth standard?",
+    "save": "Let's go!",
+    "alertTitle": "One more thing",
+    "alertNameRequired": "Please enter your child's name 😊"
+  },
+  "editChild": {
+    "title": "Edit Profile",
+    "labelName": "What's their name?",
+    "namePlaceholder": "Child's name",
+    "labelSex": "Boy or girl?",
+    "labelBirthDate": "When were they born?",
+    "labelStandard": "Which growth standard?",
+    "save": "Save changes ✓",
+    "delete": "Remove profile…",
+    "deleteAlertTitle": "Delete Profile",
+    "deleteAlertMsg": "All records for \"{{name}}\" will be permanently deleted. Are you sure?",
+    "cancel": "Cancel",
+    "confirmDelete": "Delete",
+    "alertTitle": "One more thing",
+    "alertNameRequired": "Please enter your child's name 😊"
+  },
+  "addMeasurement": {
+    "title": "Record Height",
+    "labelDate": "When was it measured?",
+    "labelHeight": "Height (cm)",
+    "heightPlaceholder": "e.g. 98.5",
+    "labelNote": "Any notes?",
+    "notePlaceholder": "e.g. Checkup, measured at home…",
+    "save": "Save!",
+    "alertTitle": "Invalid input",
+    "alertHeightInvalid": "Please enter a height between 30 and 250 cm"
+  },
+  "childDetail": {
+    "notFound": "Child profile not found",
+    "edit": "Edit",
+    "tabs": {
+      "chart": "Chart",
+      "records": "Records",
+      "analysis": "Analysis"
+    },
+    "ageSegments": {
+      "infant": "Infant (0–3 yrs)",
+      "toddler": "Toddler (3–6 yrs)",
+      "school": "School Age (6–12 yrs)",
+      "teen": "Teen (12–18 yrs)"
+    },
+    "allAges": "All Ages (0–{{maxAge}} yrs)",
+    "expand": "Expand",
+    "currentPercentile": "Percentile",
+    "vsMedian": "vs Median",
+    "higherThan": "Taller than {{p}}% of same-age {{sex}}s",
+    "noRecords": "No measurements yet",
+    "noRecordsDesc": "Tap the button below to add the first measurement",
+    "deleteRecord": {
+      "title": "Delete this record?",
+      "msg": "The height record from {{date}} will be permanently deleted.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
+    "addHeight": "＋ Add Height",
+    "analysis": {
+      "currentStatus": "Current Status",
+      "height": "Height",
+      "percentile": "Percentile",
+      "vsMedian": "vs Median",
+      "higherThan": "Taller than ~{{p}}% of same-age {{sex}}s",
+      "growthRate": "Growth Rate",
+      "last6m": "Last 6 months",
+      "last12m": "Last 12 months",
+      "insufficientData": "Not enough records to calculate",
+      "prediction": "Predicted Height at {{maxAge}} yrs",
+      "predictedHeight": "~{{height}} cm",
+      "disclaimer": "For reference only. Final height depends on puberty, genetics, nutrition, sleep, and overall health."
+    },
+    "percentileModal": {
+      "title": "What is Percentile (Pxx)?",
+      "body1": "Percentile shows where your child's height ranks among children of the same age and sex.",
+      "body2prefix": "For example,",
+      "body2eg": "P68",
+      "body2": "means your child is taller than 68% of peers and shorter than the remaining 32%.",
+      "normal": "P10 – P90  Normal range",
+      "attention": "P3 – P10 or P90 – P97  Slightly low/high, worth monitoring",
+      "warning": "Below P3 or above P97  Consult a doctor",
+      "disclaimer": "Percentile is for reference only. Tracking trends over time matters more than a single reading.",
+      "close": "Got it"
+    }
+  },
+  "standards": {
+    "japan": {
+      "label": "Japan Standard",
+      "description": "Based on Japan government statistics (e-Stat) infant and school health surveys"
+    },
+    "who": {
+      "label": "WHO Standard",
+      "description": "Based on WHO Length/height-for-age reference data"
+    },
+    "china": {
+      "label": "China Standard",
+      "description": "Based on data from China's National Health Commission"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "languages": {
+      "zh": "中文",
+      "ja": "日本語",
+      "en": "English",
+      "es": "Español",
+      "ko": "한국어"
+    }
+  }
+}
