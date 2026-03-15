@@ -82,6 +82,71 @@ npm run web
 
 ---
 
+## 原生构建（Prebuild）
+
+> 需要配置本地化 App 名称、原生插件等时，需先生成原生代码目录。
+
+### 1. 生成原生代码
+
+```bash
+# 生成 ios/ 和 android/ 目录（首次或 app.json 变更后执行）
+npx expo prebuild
+
+# 指定平台
+npx expo prebuild --platform ios
+npx expo prebuild --platform android
+```
+
+> ⚠️ `prebuild` 会根据 `app.json` 重新生成原生文件，**手动修改的原生文件可能被覆盖**。
+> 建议将 `ios/` 和 `android/` 纳入 Git 管理，每次 prebuild 后用 `git diff` 检查差异。
+
+### 2. 多语言 App 名称（Config Plugin 自动配置）
+
+本地化 App 名称通过 `plugins/withLocalizedAppName.js` 自动生成，**无需手动编辑原生文件**。
+
+| 语言 | App 名 |
+|------|--------|
+| 中文（zh-Hans） | 小芽成长 |
+| 日语（ja） | 成長ツリー |
+| 英 / 西 / 韩（en / es / ko） | KidSprout |
+
+执行 `npx expo prebuild` 后，插件会自动写入：
+- **Android**：`res/values-xx/strings.xml`
+- **iOS**：`xx.lproj/InfoPlist.strings` + `Info.plist` 语言列表
+
+如需修改名称，编辑 `plugins/withLocalizedAppName.js` 中的 `APP_NAMES` 对象，再重新 prebuild 即可。
+
+### 3. 原生运行
+
+```bash
+# iOS（需 Xcode）
+npx expo run:ios
+
+# Android（需 Android Studio + 模拟器/真机）
+npx expo run:android
+```
+
+### 4. EAS Build（云端构建，推荐发布时使用）
+
+```bash
+# 安装 EAS CLI
+npm install -g eas-cli
+
+# 登录 Expo 账号
+eas login
+
+# 初始化 EAS 配置（首次）
+eas build:configure
+
+# 构建 iOS（提交 App Store）
+eas build --platform ios
+
+# 构建 Android（提交 Google Play）
+eas build --platform android
+```
+
+---
+
 ## 数据来源
 
 - [WHO Child Growth Standards](https://www.who.int/tools/child-growth-standards)

@@ -34,7 +34,8 @@
       "expo-router",
       "expo-sqlite",
       "expo-asset",
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      "./plugins/withLocalizedAppName"
     ],
     "experiments": {
       "typedRoutes": true
