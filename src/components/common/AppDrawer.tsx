@@ -16,6 +16,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 const DRAWER_WIDTH = 280;
 
@@ -112,9 +113,9 @@ export function AppDrawer({ visible, onClose }: Props) {
             onPress={() => navigate('/settings')}
             activeOpacity={0.6}
           >
-            <Text style={styles.menuIcon}>🌐</Text>
+            <Ionicons name="language-outline" size={22} color="#4CAF82" style={styles.menuIcon} />
             <Text style={styles.menuLabel}>{t('drawer.language')}</Text>
-            <Text style={styles.menuChevron}>›</Text>
+            <Ionicons name="chevron-forward" size={18} color="#CCC" />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -122,9 +123,9 @@ export function AppDrawer({ visible, onClose }: Props) {
             onPress={() => navigate('/about')}
             activeOpacity={0.6}
           >
-            <Text style={styles.menuIcon}>ℹ️</Text>
+            <Ionicons name="information-circle-outline" size={22} color="#4CAF82" style={styles.menuIcon} />
             <Text style={styles.menuLabel}>{t('drawer.about')}</Text>
-            <Text style={styles.menuChevron}>›</Text>
+            <Ionicons name="chevron-forward" size={18} color="#CCC" />
           </TouchableOpacity>
         </View>
       </Animated.View>
@@ -183,7 +184,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 10,
   },
-  menuIcon: { fontSize: 20, width: 28, textAlign: 'center' },
+  menuIcon: { width: 28, textAlign: 'center' },
   menuLabel: { flex: 1, fontSize: 16, color: '#1A1A2E' },
-  menuChevron: { fontSize: 20, color: '#CCC' },
 });
