@@ -13,9 +13,9 @@
             "身高", "成长曲线", "儿童", "宝宝", "发育", "百分位", "WHO", "身高预测", "成长记录", "育儿"
           ],
           "releaseNotes": "首次发布",
-          "marketingUrl": "https://qiyan.github.io/KidSprout/",
-          "supportUrl": "https://qiyan.github.io/KidSprout/support.html",
-          "privacyPolicyUrl": "https://qiyan.github.io/KidSprout/privacy.html"
+          "marketingUrl": "https://enki-work.github.io/KidSprout/",
+          "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
+          "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
         },
         "ja": {
           "title": "成長ツリー",
@@ -25,9 +25,9 @@
             "身長", "成長曲線", "子ども", "赤ちゃん", "発育", "パーセンタイル", "WHO", "身長予測", "成長記録", "育児"
           ],
           "releaseNotes": "初回リリース",
-          "marketingUrl": "https://qiyan.github.io/KidSprout/",
-          "supportUrl": "https://qiyan.github.io/KidSprout/support.html",
-          "privacyPolicyUrl": "https://qiyan.github.io/KidSprout/privacy.html"
+          "marketingUrl": "https://enki-work.github.io/KidSprout/",
+          "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
+          "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
         },
         "en": {
           "title": "KidSprout",
@@ -37,9 +37,9 @@
             "height", "growth chart", "child", "baby", "development", "percentile", "WHO", "height prediction", "growth tracker", "parenting"
           ],
           "releaseNotes": "Initial release",
-          "marketingUrl": "https://qiyan.github.io/KidSprout/",
-          "supportUrl": "https://qiyan.github.io/KidSprout/support.html",
-          "privacyPolicyUrl": "https://qiyan.github.io/KidSprout/privacy.html"
+          "marketingUrl": "https://enki-work.github.io/KidSprout/",
+          "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
+          "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
         },
         "es": {
           "title": "KidSprout",
@@ -49,9 +49,9 @@
             "estatura", "curva de crecimiento", "niño", "bebé", "desarrollo", "percentil", "OMS", "predicción estatura", "registro crecimiento", "crianza"
           ],
           "releaseNotes": "Versión inicial",
-          "marketingUrl": "https://qiyan.github.io/KidSprout/",
-          "supportUrl": "https://qiyan.github.io/KidSprout/support.html",
-          "privacyPolicyUrl": "https://qiyan.github.io/KidSprout/privacy.html"
+          "marketingUrl": "https://enki-work.github.io/KidSprout/",
+          "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
+          "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
         },
         "ko": {
           "title": "KidSprout",
@@ -61,9 +61,9 @@
             "키", "성장곡선", "아이", "아기", "발육", "백분위", "WHO", "키예측", "성장기록", "육아"
           ],
           "releaseNotes": "첫 번째 출시",
-          "marketingUrl": "https://qiyan.github.io/KidSprout/",
-          "supportUrl": "https://qiyan.github.io/KidSprout/support.html",
-          "privacyPolicyUrl": "https://qiyan.github.io/KidSprout/privacy.html"
+          "marketingUrl": "https://enki-work.github.io/KidSprout/",
+          "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
+          "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
         }
       }
     }
