@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>小芽成长 · KidSprout</title>
+  <meta name="description" content="儿童身高成长记录与科学分析应用，基于 WHO 等权威数据，帮助家长了解孩子成长轨迹。" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green: #4CAF82;
+      --green-dark: #3a9e6f;
+      --green-light: #E8F8EF;
+      --text: #1A1A2E;
+      --sub: #555;
+      --muted: #888;
+      --bg: #F7F8FA;
+      --white: #fff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans", "Noto Sans CJK SC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid #eee;
+      z-index: 100;
+      padding: 0 24px;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon { font-size: 26px; }
+    .nav-logo-text { font-size: 17px; font-weight: 700; color: var(--text); }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a {
+      text-decoration: none; font-size: 14px; color: var(--sub);
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--green); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 100px 24px 60px;
+      background: linear-gradient(160deg, #fff 0%, var(--green-light) 100%);
+    }
+    .hero-icon {
+      width: 120px; height: 120px;
+      border-radius: 28px;
+      background: var(--green-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 64px;
+      margin-bottom: 28px;
+      box-shadow: 0 12px 40px rgba(76,175,130,0.20);
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--green-light);
+      color: var(--green);
+      font-size: 13px; font-weight: 600;
+      border-radius: 20px;
+      padding: 4px 14px;
+      margin-bottom: 18px;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 58px);
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .hero-en {
+      font-size: 18px; color: var(--muted); font-weight: 500;
+      margin-bottom: 20px; letter-spacing: 0.5px;
+    }
+    .hero p {
+      font-size: 18px; color: var(--sub);
+      max-width: 520px; margin: 0 auto 40px;
+      line-height: 1.8;
+    }
+    .hero-cta { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 28px;
+      border-radius: 14px;
+      font-size: 16px; font-weight: 700;
+      text-decoration: none; transition: transform .15s, box-shadow .15s;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+    .btn-primary {
+      background: var(--green); color: #fff;
+      box-shadow: 0 4px 16px rgba(76,175,130,0.35);
+    }
+    .btn-secondary {
+      background: #fff; color: var(--text);
+      border: 2px solid #E0E0E0;
+    }
+
+    /* ── FEATURES ── */
+    section { padding: 80px 24px; }
+    .section-label {
+      text-align: center;
+      font-size: 13px; font-weight: 700;
+      color: var(--green); letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .section-title {
+      text-align: center;
+      font-size: clamp(26px, 4vw, 36px);
+      font-weight: 800; color: var(--text);
+      margin-bottom: 12px;
+    }
+    .section-sub {
+      text-align: center; color: var(--sub);
+      font-size: 16px; max-width: 480px;
+      margin: 0 auto 60px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px; max-width: 1000px; margin: 0 auto;
+    }
+    .feature-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 32px 28px;
+      box-shadow: 0 2px 16px rgba(0,0,0,.06);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(0,0,0,.10);
+    }
+    .feature-icon {
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      background: var(--green-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; margin-bottom: 20px;
+    }
+    .feature-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .feature-card p { font-size: 14px; color: var(--sub); line-height: 1.75; }
+
+    /* ── DATA SOURCES ── */
+    .data-section { background: var(--white); }
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px; max-width: 900px; margin: 0 auto;
+    }
+    .data-card {
+      border: 2px solid var(--green-light);
+      border-radius: 16px; padding: 28px 24px;
+      text-align: center;
+    }
+    .data-card .flag { font-size: 40px; margin-bottom: 12px; }
+    .data-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .data-card p { font-size: 13px; color: var(--muted); }
+
+    /* ── LANGUAGES ── */
+    .lang-section { background: var(--green-light); }
+    .lang-pills {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: 12px; max-width: 600px; margin: 0 auto;
+    }
+    .lang-pill {
+      background: var(--white); border-radius: 40px;
+      padding: 10px 22px; font-size: 15px; font-weight: 600;
+      color: var(--text);
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+
+    /* ── PRIVACY STRIP ── */
+    .privacy-strip {
+      background: var(--green);
+      color: #fff;
+      text-align: center;
+      padding: 60px 24px;
+    }
+    .privacy-strip h2 { font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+    .privacy-strip p { font-size: 16px; opacity: .88; max-width: 480px; margin: 0 auto 28px; }
+    .privacy-strip .btn-outline {
+      display: inline-block;
+      border: 2px solid rgba(255,255,255,.7);
+      color: #fff; border-radius: 12px;
+      padding: 12px 28px; font-size: 15px; font-weight: 700;
+      text-decoration: none; transition: background .2s;
+    }
+    .privacy-strip .btn-outline:hover { background: rgba(255,255,255,.15); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text); color: rgba(255,255,255,.6);
+      text-align: center; padding: 40px 24px;
+      font-size: 13px; line-height: 2;
+    }
+    footer a { color: rgba(255,255,255,.6); text-decoration: none; }
+    footer a:hover { color: var(--green); }
+    .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; }
+
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero h1 { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <span class="nav-logo-icon">🌱</span>
+    <span class="nav-logo-text">小芽成长</span>
+  </a>
+  <div class="nav-links">
+    <a href="#features">功能</a>
+    <a href="#data">数据源</a>
+    <a href="#languages">多语言</a>
+    <a href="support.html">支持</a>
+    <a href="privacy.html">隐私政策</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-icon">🌱</div>
+  <div class="hero-badge">儿童成长追踪 · 科学可视化</div>
+  <h1>小芽成长</h1>
+  <div class="hero-en">KidSprout</div>
+  <p>用科学的成长曲线，见证孩子每一寸成长。基于 WHO 等权威统计数据，帮助家长直观了解孩子在同龄人中的身高位置。</p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="#" id="appstore-btn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+      </svg>
+      App Store
+    </a>
+    <a class="btn btn-secondary" href="#features">了解更多</a>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">核心功能</div>
+  <h2 class="section-title">一切为了孩子的成长</h2>
+  <p class="section-sub">简洁直观的界面，让家长轻松记录、科学分析孩子的身高发育</p>
+
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <h3>成长曲线可视化</h3>
+      <p>基于权威统计数据，实时矢量绘制 0～18 岁各百分位成长曲线。支持图表缩放，将孩子的实测身高叠加显示在曲线图上，一目了然。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>身高百分位分析</h3>
+      <p>通过 LMS 算法精确计算孩子在同龄人中的百分位排名，直观了解孩子身高的相对位置，帮助早期发现发育异常。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔮</div>
+      <h3>18 岁身高预测</h3>
+      <p>基于当前生长趋势，科学预测孩子成年后（18岁）的预期身高区间，为家长提供参考依据。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👨‍👩‍👧‍👦</div>
+      <h3>多孩子档案管理</h3>
+      <p>支持同时管理多个孩子的独立成长档案，每个孩子均有独立的数据记录和成长曲线，互不干扰。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌍</div>
+      <h3>多数据源切换</h3>
+      <p>支持 WHO、日本厚生劳动省、中国权威机构三大数据源，随时切换，对比不同标准下的百分位差异。</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>完全本地存储</h3>
+      <p>所有数据仅存储在您的设备本地，不上传至任何服务器，完全保护孩子的隐私安全。</p>
+    </div>
+  </div>
+</section>
+
+<!-- DATA SOURCES -->
+<section id="data" class="data-section">
+  <div class="section-label">数据来源</div>
+  <h2 class="section-title">权威数据，科学可信</h2>
+  <p class="section-sub">整合全球多国权威机构的儿童身高统计数据，确保百分位计算的准确性</p>
+
+  <div class="data-grid">
+    <div class="data-card">
+      <div class="flag">🌐</div>
+      <h3>WHO 世界卫生组织</h3>
+      <p>全球儿童生长标准，覆盖 0～19 岁，适用于多人种参考</p>
+    </div>
+    <div class="data-card">
+      <div class="flag">🇯🇵</div>
+      <h3>日本厚生劳动省</h3>
+      <p>日本乳幼児身体発育調査数据，适合日本儿童参考</p>
+    </div>
+    <div class="data-card">
+      <div class="flag">🇨🇳</div>
+      <h3>中国权威机构</h3>
+      <p>中国儿童身高发育参考标准，适合中国儿童参考</p>
+    </div>
+  </div>
+</section>
+
+<!-- LANGUAGES -->
+<section id="languages" class="lang-section">
+  <div class="section-label">多语言支持</div>
+  <h2 class="section-title">全球家长都能使用</h2>
+  <p class="section-sub">支持 5 种语言，让来自不同国家的家长都能轻松使用</p>
+  <div class="lang-pills">
+    <span class="lang-pill">🇨🇳 中文</span>
+    <span class="lang-pill">🇯🇵 日本語</span>
+    <span class="lang-pill">🇺🇸 English</span>
+    <span class="lang-pill">🇪🇸 Español</span>
+    <span class="lang-pill">🇰🇷 한국어</span>
+  </div>
+</section>
+
+<!-- PRIVACY STRIP -->
+<div class="privacy-strip">
+  <h2>🔒 您的数据，只属于您</h2>
+  <p>所有孩子的成长数据均存储在本地设备，不收集任何个人信息，不上传任何数据到服务器。</p>
+  <a class="btn-outline" href="privacy.html">查看隐私政策</a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="support.html">支持 · Support</a>
+    <a href="privacy.html">隐私政策 · Privacy Policy</a>
+  </div>
+  <div>© 2026 qiyan · MIT License</div>
+  <div style="margin-top:6px">小芽成长 · KidSprout · 成長ツリー</div>
+</footer>
+
+</body>
+</html>
