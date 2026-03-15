@@ -1,6 +1,6 @@
 /**
  * 左侧抽屉菜单
- * 包含：语言切换入口、关于页面入口
+ * 使用 React Native 内置 Animated API，零原生依赖，兼容 Expo Go
  */
 
 import { useTranslation } from 'react-i18next';
@@ -8,7 +8,6 @@ import { useRouter } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import {
   Animated,
-  Dimensions,
   Modal,
   Pressable,
   StyleSheet,
@@ -19,7 +18,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const DRAWER_WIDTH = 280;
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 type Props = {
   visible: boolean;
@@ -30,34 +28,36 @@ export function AppDrawer({ visible, onClose }: Props) {
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  const translateX = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     if (visible) {
       Animated.parallel([
-        Animated.spring(slideAnim, {
+        Animated.spring(translateX, {
           toValue: 0,
-          damping: 20,
-          stiffness: 200,
+          damping: 22,
+          stiffness: 220,
+          mass: 0.8,
           useNativeDriver: true,
         }),
-        Animated.timing(fadeAnim, {
+        Animated.timing(opacity, {
           toValue: 1,
-          duration: 200,
+          duration: 180,
           useNativeDriver: true,
         }),
       ]).start();
     } else {
       Animated.parallel([
-        Animated.timing(slideAnim, {
+        Animated.timing(translateX, {
           toValue: -DRAWER_WIDTH,
           duration: 200,
           useNativeDriver: true,
         }),
-        Animated.timing(fadeAnim, {
+        Animated.timing(opacity, {
           toValue: 0,
-          duration: 200,
+          duration: 180,
           useNativeDriver: true,
         }),
       ]).start();
@@ -66,8 +66,7 @@ export function AppDrawer({ visible, onClose }: Props) {
 
   function navigate(path: string) {
     onClose();
-    // 等关闭动画完成后再跳转
-    setTimeout(() => router.push(path as never), 220);
+    setTimeout(() => router.push(path as never), 210);
   }
 
   return (
@@ -75,10 +74,11 @@ export function AppDrawer({ visible, onClose }: Props) {
       visible={visible}
       transparent
       animationType="none"
+      statusBarTranslucent
       onRequestClose={onClose}
     >
-      {/* 半透明遮罩 */}
-      <Animated.View style={[styles.backdrop, { opacity: fadeAnim }]}>
+      {/* 遮罩 */}
+      <Animated.View style={[styles.backdrop, { opacity }]}>
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
       </Animated.View>
 
@@ -86,10 +86,13 @@ export function AppDrawer({ visible, onClose }: Props) {
       <Animated.View
         style={[
           styles.drawer,
-          { transform: [{ translateX: slideAnim }], paddingTop: insets.top + 8 },
+          {
+            paddingTop: insets.top + 12,
+            transform: [{ translateX }],
+          },
         ]}
       >
-        {/* 头部：图标 + 应用名 */}
+        {/* 头部 */}
         <View style={styles.header}>
           <View style={styles.iconWrap}>
             <Text style={styles.iconEmoji}>🌱</Text>
@@ -132,7 +135,7 @@ export function AppDrawer({ visible, onClose }: Props) {
 const styles = StyleSheet.create({
   backdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    backgroundColor: 'rgba(0,0,0,0.38)',
   },
   drawer: {
     position: 'absolute',
@@ -142,17 +145,17 @@ const styles = StyleSheet.create({
     width: DRAWER_WIDTH,
     backgroundColor: '#fff',
     shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    shadowOffset: { width: 4, height: 0 },
-    elevation: 12,
+    shadowOpacity: 0.18,
+    shadowRadius: 16,
+    shadowOffset: { width: 6, height: 0 },
+    elevation: 16,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    paddingVertical: 18,
   },
   iconWrap: {
     width: 52,
@@ -164,7 +167,7 @@ const styles = StyleSheet.create({
   },
   iconEmoji: { fontSize: 28 },
   appName: { fontSize: 17, fontWeight: '700', color: '#1A1A2E' },
-  appSub: { fontSize: 13, color: '#888', marginTop: 1 },
+  appSub: { fontSize: 13, color: '#888', marginTop: 2 },
   divider: {
     height: StyleSheet.hairlineWidth,
     backgroundColor: '#EFEFEF',
@@ -176,7 +179,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    paddingVertical: 14,
+    paddingVertical: 15,
     paddingHorizontal: 12,
     borderRadius: 10,
   },
