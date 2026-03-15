@@ -1,0 +1,71 @@
+{
+  "expo": {
+    "apple": {
+      "copyright": "2026 qiyan",
+      "primaryLocale": "zh-Hans",
+      "categories": ["MEDICAL", "HEALTH_AND_FITNESS"],
+      "localizations": {
+        "zh-Hans": {
+          "title": "小芽成长",
+          "subtitle": "儿童身高成长记录与分析",
+          "description": "小芽成长是一款专为家长设计的儿童身高成长记录与分析应用。\n\n通过整合 WHO、日本厚生劳动省、中国权威机构等多国权威统计数据，以可视化成长曲线的方式，帮助家长直观了解孩子在同龄人中的身高位置，并科学预测18岁成年后的预期身高。\n\n【核心功能】\n\n📈 成长曲线可视化\n基于权威统计数据，实时矢量绘制 0～18 岁各百分位成长曲线，支持图表缩放，将孩子的实测身高叠加显示在曲线图上，一目了然。\n\n🌍 多数据源支持\n• WHO：世界卫生组织全球儿童生长标准\n• 日本厚生劳动省：日本儿童身高统计数据\n• 中国权威机构：中国儿童身高发育参考标准\n可随时切换数据源，重新绘制成长曲线进行对比。\n\n👶 身高记录管理\n定期记录孩子身高，自动生成个人成长轨迹，支持多个孩子的独立档案管理，预测18岁成年后的预期身高区间。\n\n🌐 多语言支持\n支持中文、日語、English、Español、한국어。",
+          "keywords": [
+            "身高", "成长曲线", "儿童", "宝宝", "发育", "百分位", "WHO", "身高预测", "成长记录", "育儿"
+          ],
+          "releaseNotes": "首次发布",
+          "marketingUrl": "",
+          "supportUrl": "",
+          "privacyPolicyUrl": ""
+        },
+        "ja": {
+          "title": "成長ツリー",
+          "subtitle": "子どもの身長成長記録と分析",
+          "description": "成長ツリーは、保護者のために設計された子どもの身長成長記録・分析アプリです。\n\nWHO・日本厚生労働省・中国権威機関などの各国公式統計データを統合し、成長曲線のビジュアライゼーションにより、お子さまの身長が同年齢の中でどの位置にあるかを直感的に把握できます。さらに、18歳時点での予測身長も科学的に算出します。\n\n【主な機能】\n\n📈 成長曲線の可視化\n権威ある統計データをもとに、0〜18歳の各パーセンタイル成長曲線をリアルタイムでベクター描画。グラフのズームに対応し、実測身長を曲線に重ねて表示します。\n\n🌍 複数データソース対応\n• WHO：世界保健機関 グローバル小児成長基準\n• 日本厚生労働省：乳幼児身体発育調査データ\n• 中国権威機関：中国小児身長発育参考基準\nデータソースをいつでも切り替えて、曲線を比較できます。\n\n👶 身長記録の管理\n定期的に身長を記録し、個人の成長軌跡を自動生成。複数のお子さまを独立したプロフィールで管理し、18歳時点の予測身長範囲を表示します。\n\n🌐 多言語対応\n日本語・中文・English・Español・한국어に対応。",
+          "keywords": [
+            "身長", "成長曲線", "子ども", "赤ちゃん", "発育", "パーセンタイル", "WHO", "身長予測", "成長記録", "育児"
+          ],
+          "releaseNotes": "初回リリース",
+          "marketingUrl": "",
+          "supportUrl": "",
+          "privacyPolicyUrl": ""
+        },
+        "en": {
+          "title": "KidSprout",
+          "subtitle": "Child Height Growth Tracker",
+          "description": "KidSprout is a child height growth tracking and analysis app designed for parents.\n\nBy integrating authoritative statistical data from the WHO, Japan's Ministry of Health, and Chinese health authorities, KidSprout visualizes growth curves to help parents understand where their child's height stands among peers — and scientifically predict adult height at age 18.\n\n【Key Features】\n\n📈 Growth Curve Visualization\nReal-time vector rendering of 0–18 age percentile growth curves based on authoritative data. Supports chart zoom and overlays your child's measured heights directly on the curve.\n\n🌍 Multiple Data Sources\n• WHO: World Health Organization Global Child Growth Standards\n• Japan MHLW: Ministry of Health, Labour and Welfare growth data\n• China: National child height development reference standards\nSwitch data sources anytime to compare curves.\n\n👶 Height Record Management\nRegularly log your child's height to auto-generate a personal growth trajectory. Manage multiple children with separate profiles and view predicted adult height ranges.\n\n🌐 Multilingual Support\nAvailable in English, 中文, 日本語, Español, and 한국어.",
+          "keywords": [
+            "height", "growth chart", "child", "baby", "development", "percentile", "WHO", "height prediction", "growth tracker", "parenting"
+          ],
+          "releaseNotes": "Initial release",
+          "marketingUrl": "",
+          "supportUrl": "",
+          "privacyPolicyUrl": ""
+        },
+        "es": {
+          "title": "KidSprout",
+          "subtitle": "Registro de crecimiento infantil",
+          "description": "KidSprout es una aplicación de registro y análisis del crecimiento de estatura infantil diseñada para padres.\n\nIntegrando datos estadísticos oficiales de la OMS, el Ministerio de Salud de Japón e instituciones chinas autorizadas, KidSprout visualiza curvas de crecimiento para que los padres puedan entender la posición de la estatura de su hijo entre sus pares y predecir científicamente la estatura adulta a los 18 años.\n\n【Funciones principales】\n\n📈 Visualización de curvas de crecimiento\nRepresentación vectorial en tiempo real de curvas de percentiles de 0 a 18 años. Compatible con zoom y muestra la estatura medida de tu hijo sobre la curva.\n\n🌍 Múltiples fuentes de datos\n• OMS: Estándares globales de crecimiento infantil\n• Japón MHLW: Datos de desarrollo infantil de Japón\n• China: Estándares de referencia de desarrollo infantil chinos\nCambia de fuente en cualquier momento para comparar curvas.\n\n👶 Gestión de registros de estatura\nRegistra regularmente la estatura de tu hijo para generar automáticamente una trayectoria de crecimiento personal. Gestiona varios hijos con perfiles independientes.\n\n🌐 Soporte multilingüe\nDisponible en Español, English, 中文, 日本語 y 한국어.",
+          "keywords": [
+            "estatura", "curva de crecimiento", "niño", "bebé", "desarrollo", "percentil", "OMS", "predicción estatura", "registro crecimiento", "crianza"
+          ],
+          "releaseNotes": "Versión inicial",
+          "marketingUrl": "",
+          "supportUrl": "",
+          "privacyPolicyUrl": ""
+        },
+        "ko": {
+          "title": "KidSprout",
+          "subtitle": "아이 키 성장 기록 & 분석",
+          "description": "KidSprout은 부모를 위해 설계된 아동 키 성장 기록 및 분석 앱입니다.\n\nWHO, 일본 후생노동성, 중국 권위 기관 등 각국의 공식 통계 데이터를 통합하여 성장 곡선을 시각화함으로써, 부모가 자녀의 키가 또래 중 어느 위치에 있는지 직관적으로 파악하고 18세 성인 예측 키를 과학적으로 산출할 수 있습니다.\n\n【주요 기능】\n\n📈 성장 곡선 시각화\n공신력 있는 통계 데이터를 기반으로 0~18세 백분위 성장 곡선을 실시간 벡터로 렌더링합니다. 차트 확대/축소를 지원하며 실측 키를 곡선 위에 겹쳐 표시합니다.\n\n🌍 다중 데이터 소스 지원\n• WHO: 세계보건기구 글로벌 아동 성장 기준\n• 일본 후생노동성: 일본 아동 신체 발육 조사 데이터\n• 중국 권위 기관: 중국 아동 키 발육 참고 기준\n언제든지 데이터 소스를 전환하여 곡선을 비교할 수 있습니다.\n\n👶 키 기록 관리\n정기적으로 키를 기록하여 개인 성장 궤적을 자동 생성하고, 여러 자녀를 독립 프로필로 관리하며 18세 예측 키 범위를 확인할 수 있습니다.\n\n🌐 다국어 지원\n한국어, English, 中文, 日本語, Español을 지원합니다.",
+          "keywords": [
+            "키", "성장곡선", "아이", "아기", "발육", "백분위", "WHO", "키예측", "성장기록", "육아"
+          ],
+          "releaseNotes": "첫 번째 출시",
+          "marketingUrl": "",
+          "supportUrl": "",
+          "privacyPolicyUrl": ""
+        }
+      }
+    }
+  }
+}
