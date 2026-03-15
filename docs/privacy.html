@@ -1,193 +1,88 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>隐私政策 · 小芽成长 KidSprout</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --green: #4CAF82;
-      --green-light: #E8F8EF;
-      --text: #1A1A2E;
-      --sub: #555;
-      --muted: #888;
-      --bg: #F7F8FA;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-        "Hiragino Sans", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.8;
-    }
-    nav {
-      background: #fff;
-      border-bottom: 1px solid #eee;
-      padding: 0 24px;
-      height: 60px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-logo span:first-child { font-size: 24px; }
-    .nav-logo span:last-child { font-size: 16px; font-weight: 700; color: var(--text); }
-    nav a.back { font-size: 14px; color: var(--green); text-decoration: none; }
-
-    .container {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 60px 24px 80px;
-    }
-    .page-header {
-      background: var(--green);
-      color: #fff;
-      border-radius: 20px;
-      padding: 40px 36px;
-      margin-bottom: 40px;
-    }
-    .page-header .icon { font-size: 40px; margin-bottom: 12px; }
-    .page-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
-    .page-header p { opacity: .85; font-size: 14px; }
-
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 32px 28px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 12px rgba(0,0,0,.05);
-    }
-    .card h2 {
-      font-size: 18px; font-weight: 700;
-      margin-bottom: 16px;
-      display: flex; align-items: center; gap: 10px;
-      color: var(--text);
-    }
-    .card h2 .emoji { font-size: 22px; }
-    .card p { font-size: 15px; color: var(--sub); margin-bottom: 12px; }
-    .card p:last-child { margin-bottom: 0; }
-    .card ul {
-      list-style: none; padding: 0;
-    }
-    .card ul li {
-      font-size: 15px; color: var(--sub);
-      padding: 6px 0 6px 20px;
-      position: relative;
-    }
-    .card ul li::before {
-      content: "✓";
-      position: absolute; left: 0;
-      color: var(--green); font-weight: 700;
-    }
-    .highlight {
-      background: var(--green-light);
-      border-left: 4px solid var(--green);
-      border-radius: 0 10px 10px 0;
-      padding: 16px 20px;
-      margin: 16px 0;
-      font-size: 15px; color: var(--text); font-weight: 600;
-    }
-    .lang-section { margin-top: 8px; }
-    .lang-section h3 { font-size: 14px; font-weight: 700; color: var(--muted); margin: 20px 0 8px; }
-    footer {
-      text-align: center; font-size: 13px; color: var(--muted);
-      padding: 32px 24px;
-    }
-    footer a { color: var(--green); text-decoration: none; }
-  </style>
+  <title>Privacy Policy · KidSprout</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<nav>
+<nav class="inner-nav">
   <a class="nav-logo" href="index.html">
-    <span>🌱</span>
-    <span>小芽成长 · KidSprout</span>
+    <span class="emoji">🌱</span>
+    <span class="name">KidSprout</span>
   </a>
-  <a class="back" href="index.html">← 返回首页</a>
+  <div class="nav-right">
+    <div class="lang-switcher">
+      <a href="privacy.html" class="active">EN</a>
+      <a href="zh/privacy.html">中文</a>
+      <a href="ja/privacy.html">日本語</a>
+      <a href="es/privacy.html">ES</a>
+      <a href="ko/privacy.html">한국어</a>
+    </div>
+    <a class="nav-back" href="index.html">← Home</a>
+  </div>
 </nav>
 
 <div class="container">
-  <div class="page-header">
+  <div class="page-header page-header-green">
     <div class="icon">🔒</div>
-    <h1>隐私政策</h1>
-    <p>Privacy Policy · プライバシーポリシー · 개인정보 처리방침<br>最后更新：2026年3月</p>
+    <h1>Privacy Policy</h1>
+    <p>Last updated: March 2026</p>
   </div>
 
-  <!-- 核心承诺 -->
   <div class="card">
-    <h2><span class="emoji">💚</span> 核心承诺</h2>
-    <div class="highlight">小芽成长（KidSprout）不收集、不上传任何用户数据。所有数据仅存储在您的设备本地。</div>
-    <p>我们深知孩子的成长信息属于高度私密的家庭数据，因此本应用从设计之初便坚持"零数据收集"原则。</p>
+    <h2><span class="e">💚</span> Our Core Commitment</h2>
+    <div class="highlight">KidSprout does not collect, store, or transmit any personal data. All data is stored locally on your device only.</div>
+    <p>We understand that children's growth information is highly sensitive family data. KidSprout is built from the ground up on a zero data collection principle.</p>
   </div>
 
-  <!-- 数据存储 -->
   <div class="card">
-    <h2><span class="emoji">📱</span> 数据存储</h2>
+    <h2><span class="e">📱</span> Data Storage</h2>
     <ul>
-      <li>所有儿童档案（姓名、性别、出生日期）仅存储在您的设备本地</li>
-      <li>所有身高测量记录仅存储在您的设备本地</li>
-      <li>应用语言偏好设置仅存储在您的设备本地</li>
-      <li>卸载应用将永久删除所有本地数据</li>
+      <li>Children's profiles (name, sex, date of birth) are stored locally on your device only</li>
+      <li>All height measurement records are stored locally on your device only</li>
+      <li>Language preference is stored locally on your device only</li>
+      <li>Uninstalling the app permanently deletes all local data</li>
     </ul>
   </div>
 
-  <!-- 不收集的内容 -->
   <div class="card">
-    <h2><span class="emoji">🚫</span> 我们不收集的内容</h2>
+    <h2><span class="e">🚫</span> What We Do Not Collect</h2>
     <ul>
-      <li>不收集任何个人身份信息（姓名、邮箱、手机号等）</li>
-      <li>不收集位置信息</li>
-      <li>不收集设备标识符或广告 ID</li>
-      <li>不收集使用行为或统计数据</li>
-      <li>不接入任何第三方分析或广告 SDK</li>
+      <li>No personal identifiers (name, email, phone number, etc.)</li>
+      <li>No location data</li>
+      <li>No device identifiers or advertising IDs</li>
+      <li>No usage analytics or behavioral data</li>
+      <li>No third-party analytics or advertising SDKs</li>
     </ul>
   </div>
 
-  <!-- 网络请求 -->
   <div class="card">
-    <h2><span class="emoji">🌐</span> 网络请求</h2>
-    <p>本应用不发起任何网络请求。所有成长曲线数据（WHO / 日本厚生劳动省 / 中国标准）均以离线方式内置于应用中，无需联网即可完整使用。</p>
+    <h2><span class="e">🌐</span> Network Requests</h2>
+    <p>KidSprout makes no network requests. All growth curve data (WHO / Japan MHLW / China standards) is bundled offline within the app — full functionality is available without internet.</p>
   </div>
 
-  <!-- 应用内评价 -->
   <div class="card">
-    <h2><span class="emoji">⭐</span> 应用内评价</h2>
-    <p>应用包含「评价本应用」功能，该功能由 Apple App Store / Google Play 官方系统弹窗实现。评价行为由系统处理，本应用不接触任何评价数据。</p>
+    <h2><span class="e">⭐</span> App Review Feature</h2>
+    <p>The app includes a "Rate this app" feature powered by the official Apple App Store / Google Play native dialog. The review process is handled entirely by the platform. KidSprout does not access any review data.</p>
   </div>
 
-  <!-- 儿童隐私 -->
   <div class="card">
-    <h2><span class="emoji">👶</span> 儿童隐私保护</h2>
-    <p>本应用设计为由成人（家长/监护人）使用。应用不面向儿童直接收集数据，符合 COPPA（美国儿童在线隐私保护法）要求。</p>
+    <h2><span class="e">👶</span> Children's Privacy (COPPA)</h2>
+    <p>KidSprout is designed for use by adults (parents/guardians). The app does not directly collect data from children, in compliance with the Children's Online Privacy Protection Act (COPPA).</p>
   </div>
 
-  <!-- 联系方式 -->
   <div class="card">
-    <h2><span class="emoji">📬</span> 联系我们</h2>
-    <p>如您对本隐私政策有任何疑问，请通过以下方式联系我们：</p>
-    <p><a href="support.html" style="color:#4CAF82;font-weight:600">前往支持页面 →</a></p>
-  </div>
-
-  <!-- 多语言说明 -->
-  <div class="card lang-section">
-    <h2><span class="emoji">🌍</span> Multilingual Summary</h2>
-
-    <h3>English</h3>
-    <p>KidSprout does not collect, store, or transmit any personal data. All children's profiles and height records are stored locally on your device only. We have no access to your data.</p>
-
-    <h3>日本語</h3>
-    <p>成長ツリーは、いかなる個人データも収集・送信しません。すべての子どものプロフィールと身長記録はデバイスにのみ保存されます。</p>
-
-    <h3>Español</h3>
-    <p>KidSprout no recopila, almacena ni transmite ningún dato personal. Todos los perfiles de los niños y los registros de estatura se almacenan únicamente en su dispositivo local.</p>
-
-    <h3>한국어</h3>
-    <p>KidSprout은 어떠한 개인 데이터도 수집, 저장 또는 전송하지 않습니다. 모든 어린이 프로필 및 키 기록은 기기 로컬에만 저장됩니다.</p>
+    <h2><span class="e">📬</span> Contact</h2>
+    <p>If you have any questions about this Privacy Policy, please visit our <a href="support.html" style="color:#4CAF82;font-weight:600">Support page →</a></p>
   </div>
 </div>
 
-<footer>
-  © 2026 qiyan · <a href="index.html">小芽成長 KidSprout</a> · <a href="support.html">支持 Support</a>
-</footer>
+<div class="inner-footer">
+  © 2026 qiyan · <a href="index.html">KidSprout</a> · <a href="support.html">Support</a>
+</div>
 
 </body>
 </html>

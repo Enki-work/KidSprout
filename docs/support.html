@@ -1,217 +1,88 @@
 <!DOCTYPE html>
-<html lang="zh-Hans">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>支持 · 小芽成长 KidSprout</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --green: #4CAF82;
-      --green-dark: #3a9e6f;
-      --green-light: #E8F8EF;
-      --text: #1A1A2E;
-      --sub: #555;
-      --muted: #888;
-      --bg: #F7F8FA;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-        "Hiragino Sans", sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.8;
-    }
-    nav {
-      background: #fff;
-      border-bottom: 1px solid #eee;
-      padding: 0 24px;
-      height: 60px;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-logo span:first-child { font-size: 24px; }
-    .nav-logo span:last-child { font-size: 16px; font-weight: 700; color: var(--text); }
-    nav a.back { font-size: 14px; color: var(--green); text-decoration: none; }
-
-    .container {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 60px 24px 80px;
-    }
-    .page-header {
-      background: linear-gradient(135deg, var(--green) 0%, #3a9e6f 100%);
-      color: #fff;
-      border-radius: 20px;
-      padding: 40px 36px;
-      margin-bottom: 40px;
-    }
-    .page-header .icon { font-size: 40px; margin-bottom: 12px; }
-    .page-header h1 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
-    .page-header p { opacity: .85; font-size: 14px; }
-
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 32px 28px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 12px rgba(0,0,0,.05);
-    }
-    .card h2 {
-      font-size: 18px; font-weight: 700;
-      margin-bottom: 16px;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .card h2 .emoji { font-size: 22px; }
-    .card p { font-size: 15px; color: var(--sub); margin-bottom: 12px; }
-    .card p:last-child { margin-bottom: 0; }
-
-    .faq-item { margin-bottom: 24px; }
-    .faq-item:last-child { margin-bottom: 0; }
-    .faq-q {
-      font-size: 15px; font-weight: 700; color: var(--text);
-      margin-bottom: 6px;
-    }
-    .faq-a {
-      font-size: 14px; color: var(--sub);
-    }
-
-    .contact-btn {
-      display: inline-flex; align-items: center; gap: 8px;
-      background: var(--green);
-      color: #fff;
-      border-radius: 12px;
-      padding: 12px 24px;
-      font-size: 15px; font-weight: 700;
-      text-decoration: none;
-      transition: background .2s;
-      margin-top: 8px;
-    }
-    .contact-btn:hover { background: var(--green-dark); }
-
-    .github-link {
-      display: flex; align-items: center; gap: 12px;
-      background: var(--bg);
-      border-radius: 12px;
-      padding: 16px 20px;
-      text-decoration: none;
-      color: var(--text);
-      border: 1px solid #E5E5E5;
-      transition: border-color .2s, box-shadow .2s;
-      margin-top: 12px;
-    }
-    .github-link:hover {
-      border-color: var(--green);
-      box-shadow: 0 0 0 3px var(--green-light);
-    }
-    .github-link .gh-icon { font-size: 28px; }
-    .github-link .gh-text strong { display: block; font-size: 15px; }
-    .github-link .gh-text span { font-size: 13px; color: var(--muted); }
-
-    .version-badge {
-      display: inline-block;
-      background: var(--green-light);
-      color: var(--green);
-      font-size: 12px; font-weight: 700;
-      border-radius: 8px;
-      padding: 3px 10px;
-      margin-left: 8px;
-    }
-
-    footer {
-      text-align: center; font-size: 13px; color: var(--muted);
-      padding: 32px 24px;
-    }
-    footer a { color: var(--green); text-decoration: none; }
-  </style>
+  <title>Support · KidSprout</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<nav>
+<nav class="inner-nav">
   <a class="nav-logo" href="index.html">
-    <span>🌱</span>
-    <span>小芽成长 · KidSprout</span>
+    <span class="emoji">🌱</span>
+    <span class="name">KidSprout</span>
   </a>
-  <a class="back" href="index.html">← 返回首页</a>
+  <div class="nav-right">
+    <div class="lang-switcher">
+      <a href="support.html" class="active">EN</a>
+      <a href="zh/support.html">中文</a>
+      <a href="ja/support.html">日本語</a>
+      <a href="es/support.html">ES</a>
+      <a href="ko/support.html">한국어</a>
+    </div>
+    <a class="nav-back" href="index.html">← Home</a>
+  </div>
 </nav>
 
 <div class="container">
-  <div class="page-header">
+  <div class="page-header page-header-grad">
     <div class="icon">💬</div>
-    <h1>支持 · Support</h1>
-    <p>如有任何问题或建议，欢迎联系我们 · Feel free to reach out anytime</p>
+    <h1>Support</h1>
+    <p>We're here to help — feel free to reach out anytime</p>
   </div>
 
-  <!-- FAQ -->
   <div class="card">
-    <h2><span class="emoji">❓</span> 常见问题 FAQ</h2>
-
+    <h2><span class="e">❓</span> FAQ</h2>
     <div class="faq-item">
-      <div class="faq-q">Q：数据会上传到云端吗？</div>
-      <div class="faq-a">不会。所有数据仅存储在您的设备本地，卸载应用后数据将被清除。</div>
+      <div class="faq-q">Q: Is my data uploaded to the cloud?</div>
+      <div class="faq-a">No. All data is stored locally on your device only. Uninstalling the app will erase all data.</div>
     </div>
-
     <div class="faq-item">
-      <div class="faq-q">Q：支持哪些数据标准？</div>
-      <div class="faq-a">支持 WHO 全球标准、日本厚生劳动省标准、中国权威机构标准，可在设置中随时切换。</div>
+      <div class="faq-q">Q: Which growth standards are supported?</div>
+      <div class="faq-a">WHO Global, Japan MHLW, and China national standards. Switch anytime in Settings.</div>
     </div>
-
     <div class="faq-item">
-      <div class="faq-q">Q：可以添加几个孩子？</div>
-      <div class="faq-a">没有数量限制，可以为家庭中每位孩子创建独立档案。</div>
+      <div class="faq-q">Q: How many children can I add?</div>
+      <div class="faq-a">No limit. Create an independent profile for each child in your family.</div>
     </div>
-
     <div class="faq-item">
-      <div class="faq-q">Q：成长曲线的百分位是如何计算的？</div>
-      <div class="faq-a">采用国际通用的 LMS（Box-Cox 正态分布）算法，依据所选数据源的官方参数表进行精确计算。</div>
+      <div class="faq-q">Q: How is the percentile calculated?</div>
+      <div class="faq-a">Using the internationally recognized LMS (Box-Cox power normal) method, based on official LMS parameter tables from the selected data source.</div>
     </div>
-
     <div class="faq-item">
-      <div class="faq-q">Q：如何备份数据？</div>
-      <div class="faq-a">目前数据存储在设备本地。建议定期通过 iCloud / iTunes 备份您的设备以保留应用数据。云端备份功能在未来版本中考虑添加。</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q">Q: Is my child's data safe? (English)</div>
-      <div class="faq-a">Yes. All data is stored locally on your device only. We collect zero personal information and make no network requests.</div>
-    </div>
-
-    <div class="faq-item">
-      <div class="faq-q">Q：データはクラウドに保存されますか？（日本語）</div>
-      <div class="faq-a">いいえ。すべてのデータはお使いのデバイスのみに保存されます。クラウドへのアップロードは一切行いません。</div>
+      <div class="faq-q">Q: How do I back up my data?</div>
+      <div class="faq-a">Data is stored locally on your device. We recommend backing up your device regularly via iCloud or iTunes. Cloud backup is being considered for a future version.</div>
     </div>
   </div>
 
-  <!-- GitHub Issues -->
   <div class="card">
-    <h2><span class="emoji">🐛</span> 问题反馈 / Bug Report</h2>
-    <p>发现 bug 或有功能建议？欢迎在 GitHub 提交 Issue，我们会尽快跟进。</p>
-    <a class="github-link" href="https://github.com/qiyan/KidSprout/issues" target="_blank" rel="noopener">
+    <h2><span class="e">🐛</span> Bug Report / Feature Request</h2>
+    <p>Found a bug or have a suggestion? Submit an issue on GitHub — we'll follow up as soon as possible.</p>
+    <a class="gh-link" href="https://github.com/enki-work/KidSprout/issues" target="_blank" rel="noopener">
       <span class="gh-icon">🐙</span>
       <span class="gh-text">
         <strong>GitHub Issues</strong>
-        <span>github.com/qiyan/KidSprout/issues</span>
+        <span>github.com/enki-work/KidSprout/issues</span>
       </span>
     </a>
   </div>
 
-  <!-- 应用信息 -->
   <div class="card">
-    <h2><span class="emoji">📱</span> 应用信息</h2>
+    <h2><span class="e">📱</span> App Info</h2>
     <p>
-      <strong>应用名称：</strong>小芽成长 / KidSprout / 成長ツリー<br>
-      <strong>Bundle ID：</strong>com.qiyan.KidSprout<br>
-      <strong>平台：</strong>iOS / Android<br>
-      <strong>开发者：</strong>qiyan<br>
-      <strong>许可证：</strong>MIT License © 2026
+      <strong>App Name:</strong> KidSprout / 小芽成长 / 成長ツリー<br>
+      <strong>Bundle ID:</strong> com.qiyan.KidSprout<br>
+      <strong>Platform:</strong> iOS / Android<br>
+      <strong>Developer:</strong> qiyan<br>
+      <strong>License:</strong> MIT License © 2026
     </p>
   </div>
-
 </div>
 
-<footer>
-  © 2026 qiyan · <a href="index.html">小芽成長 KidSprout</a> · <a href="privacy.html">隐私政策 Privacy Policy</a>
-</footer>
+<div class="inner-footer">
+  © 2026 qiyan · <a href="index.html">KidSprout</a> · <a href="privacy.html">Privacy Policy</a>
+</div>
 
 </body>
 </html>
