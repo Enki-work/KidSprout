@@ -138,5 +138,15 @@
       "es": "Español",
       "ko": "한국어"
     }
+  },
+  "drawer": {
+    "language": "言語",
+    "about": "アプリについて"
+  },
+  "about": {
+    "title": "アプリについて",
+    "version": "バージョン",
+    "rate": "評価する ⭐",
+    "copyright": "© 2026 qiyan"
   }
 }

@@ -138,5 +138,15 @@
       "es": "Español",
       "ko": "한국어"
     }
+  },
+  "drawer": {
+    "language": "Idioma",
+    "about": "Acerca de"
+  },
+  "about": {
+    "title": "Acerca de KidSprout",
+    "version": "Versión",
+    "rate": "Califícanos ⭐",
+    "copyright": "© 2026 qiyan"
   }
 }

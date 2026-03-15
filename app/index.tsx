@@ -3,7 +3,7 @@ import { getAgeInMonths } from "@/services/growth/age";
 import { useChildStore } from "@/store/childStore";
 import { Child } from "@/types/child";
 import { Stack, useFocusEffect, useRouter } from "expo-router";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -15,6 +15,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFormatAge } from "@/hooks/useFormatAge";
 import { EmptyState } from "@/components/common/EmptyState";
+import { AppDrawer } from "@/components/common/AppDrawer";
 import { useAppRating } from "@/hooks/useAppRating";
 
 function ChildCard({ child, onPress }: { child: Child; onPress: () => void }) {
@@ -51,6 +52,7 @@ export default function HomeScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { children, isLoading, load } = useChildStore();
+  const [drawerOpen, setDrawerOpen] = useState(false);
   useAppRating();
 
   useFocusEffect(
@@ -64,21 +66,21 @@ export default function HomeScreen() {
       <Stack.Screen
         options={{
           title: t('app.title'),
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => setDrawerOpen(true)}
+              style={styles.hamburgerBtn}
+            >
+              <Text style={styles.hamburger}>☰</Text>
+            </TouchableOpacity>
+          ),
           headerRight: () => (
-            <View style={styles.headerRight}>
-              <TouchableOpacity
-                onPress={() => router.push("/settings" as never)}
-                style={styles.headerBtn}
-              >
-                <Text style={styles.headerBtnText}>⚙</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => router.push("/children/new" as never)}
-                style={styles.headerBtn}
-              >
-                <Text style={styles.addBtnText}>{t('home.new')}</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              onPress={() => router.push("/children/new" as never)}
+              style={styles.headerBtn}
+            >
+              <Text style={styles.addBtnText}>{t('home.new')}</Text>
+            </TouchableOpacity>
           ),
         }}
       />
@@ -107,15 +109,21 @@ export default function HomeScreen() {
         )}
       </SafeAreaView>
 
+      <AppDrawer visible={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#F7F8FA" },
-  headerRight: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   headerBtn: { paddingHorizontal: 6, paddingVertical: 6, alignSelf: 'center' },
-  headerBtnText: { color: "#888", fontSize: 18 },
+  hamburgerBtn: {
+    width: 36,
+    height: 36,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  hamburger: { fontSize: 24, color: "#555", lineHeight: 28 },
   addBtnText: { color: "#4CAF82", fontSize: 18, fontWeight: "600" },
 
   loader: { flex: 1 },
@@ -148,5 +156,4 @@ const styles = StyleSheet.create({
   childName: { fontSize: 17, fontWeight: "600", color: "#1A1A2E" },
   childMeta: { fontSize: 13, color: "#888", marginTop: 2 },
   chevron: { fontSize: 22, color: "#CCC" },
-
 });

@@ -1,0 +1,186 @@
+/**
+ * 左侧抽屉菜单
+ * 包含：语言切换入口、关于页面入口
+ */
+
+import { useTranslation } from 'react-i18next';
+import { useRouter } from 'expo-router';
+import { useEffect, useRef } from 'react';
+import {
+  Animated,
+  Dimensions,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
+const DRAWER_WIDTH = 280;
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
+type Props = {
+  visible: boolean;
+  onClose: () => void;
+};
+
+export function AppDrawer({ visible, onClose }: Props) {
+  const { t } = useTranslation();
+  const router = useRouter();
+  const insets = useSafeAreaInsets();
+  const slideAnim = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (visible) {
+      Animated.parallel([
+        Animated.spring(slideAnim, {
+          toValue: 0,
+          damping: 20,
+          stiffness: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      Animated.parallel([
+        Animated.timing(slideAnim, {
+          toValue: -DRAWER_WIDTH,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    }
+  }, [visible]);
+
+  function navigate(path: string) {
+    onClose();
+    // 等关闭动画完成后再跳转
+    setTimeout(() => router.push(path as never), 220);
+  }
+
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="none"
+      onRequestClose={onClose}
+    >
+      {/* 半透明遮罩 */}
+      <Animated.View style={[styles.backdrop, { opacity: fadeAnim }]}>
+        <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
+      </Animated.View>
+
+      {/* 抽屉面板 */}
+      <Animated.View
+        style={[
+          styles.drawer,
+          { transform: [{ translateX: slideAnim }], paddingTop: insets.top + 8 },
+        ]}
+      >
+        {/* 头部：图标 + 应用名 */}
+        <View style={styles.header}>
+          <View style={styles.iconWrap}>
+            <Text style={styles.iconEmoji}>🌱</Text>
+          </View>
+          <View>
+            <Text style={styles.appName}>{t('app.title')}</Text>
+            <Text style={styles.appSub}>KidSprout</Text>
+          </View>
+        </View>
+
+        <View style={styles.divider} />
+
+        {/* 菜单项 */}
+        <View style={styles.menu}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => navigate('/settings')}
+            activeOpacity={0.6}
+          >
+            <Text style={styles.menuIcon}>🌐</Text>
+            <Text style={styles.menuLabel}>{t('drawer.language')}</Text>
+            <Text style={styles.menuChevron}>›</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => navigate('/about')}
+            activeOpacity={0.6}
+          >
+            <Text style={styles.menuIcon}>ℹ️</Text>
+            <Text style={styles.menuLabel}>{t('drawer.about')}</Text>
+            <Text style={styles.menuChevron}>›</Text>
+          </TouchableOpacity>
+        </View>
+      </Animated.View>
+    </Modal>
+  );
+}
+
+const styles = StyleSheet.create({
+  backdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.35)',
+  },
+  drawer: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: DRAWER_WIDTH,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    shadowOffset: { width: 4, height: 0 },
+    elevation: 12,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  },
+  iconWrap: {
+    width: 52,
+    height: 52,
+    borderRadius: 14,
+    backgroundColor: '#E8F8EF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  iconEmoji: { fontSize: 28 },
+  appName: { fontSize: 17, fontWeight: '700', color: '#1A1A2E' },
+  appSub: { fontSize: 13, color: '#888', marginTop: 1 },
+  divider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: '#EFEFEF',
+    marginHorizontal: 16,
+    marginBottom: 8,
+  },
+  menu: { paddingHorizontal: 8 },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+  },
+  menuIcon: { fontSize: 20, width: 28, textAlign: 'center' },
+  menuLabel: { flex: 1, fontSize: 16, color: '#1A1A2E' },
+  menuChevron: { fontSize: 20, color: '#CCC' },
+});

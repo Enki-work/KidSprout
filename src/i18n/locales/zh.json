@@ -138,5 +138,15 @@
       "es": "Español",
       "ko": "한국어"
     }
+  },
+  "drawer": {
+    "language": "语言",
+    "about": "关于"
+  },
+  "about": {
+    "title": "关于小芽成长",
+    "version": "版本",
+    "rate": "给我们评分 ⭐",
+    "copyright": "© 2026 qiyan"
   }
 }
