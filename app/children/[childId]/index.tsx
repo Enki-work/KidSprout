@@ -164,7 +164,7 @@ export default function ChildDetailScreen() {
         options={{
           title: child.name,
           headerRight: () => (
-            <View style={styles.headerRight} pointerEvents="box-none">
+            <View style={styles.headerRight}>
               <DebugAddTestData childId={childId ?? ""} />
               <TouchableOpacity
                 style={styles.editBtn}
@@ -727,10 +727,7 @@ const styles = StyleSheet.create({
   headerRight: {
     flexDirection: "row",
     alignItems: "center",
-    alignSelf: "center",
-    height: 36,
-    maxHeight: 36,
-    overflow: "hidden",
+    gap: 4,
   },
   editBtn: { paddingHorizontal: 8, paddingVertical: 6, alignSelf: "center" },
   editBtnText: { color: "#4CAF82", fontSize: 18, fontWeight: "600" },
