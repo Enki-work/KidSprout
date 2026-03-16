@@ -46,15 +46,13 @@ function addMonths(date: Date, months: number): Date {
 
 function buildTestMeasurements(child: Child, existingMonths: Set<number>): Measurement[] {
   const birthDate = new Date(child.birthDate);
-  const today = new Date();
-  const maxMonths = Math.min(getAgeInMonths(birthDate, today), 216);
-  const step = Math.max(3, Math.floor(maxMonths / 15));
+  const maxMonths = 216; // 固定生成 0~18 岁全量数据
+  const step = 6; // 每 6 个月一条
   const result: Measurement[] = [];
 
   for (let m = 0; m <= maxMonths; m += step) {
     if (existingMonths.has(m)) continue;
     const measDate = addMonths(birthDate, m);
-    if (measDate > today) break;
     const noise = (Math.random() - 0.5) * 4;
     const heightCm = Math.round((lerpHeight(m) + noise) * 10) / 10;
     const now = new Date().toISOString();

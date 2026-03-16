@@ -1,6 +1,6 @@
 {
   "app": {
-    "title": "KidSprout"
+    "title": "成長ツリー"
   },
   "age": {
     "months": "{{count}}ヶ月",
