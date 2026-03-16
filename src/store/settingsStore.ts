@@ -7,29 +7,27 @@ type SettingsState = {
   setLanguage: (lang: SupportedLanguage) => void;
 };
 
-/** 从 SQLite 读取已保存的语言，若无则使用当前 i18n 检测结果 */
-function loadSavedLanguage(): SupportedLanguage {
-  try {
-    const saved = getSetting('language');
-    if (saved && SUPPORTED_LANGUAGES.includes(saved as SupportedLanguage)) {
-      return saved as SupportedLanguage;
-    }
-  } catch {
-    // DB 尚未初始化时静默降级
-  }
-  return i18n.language as SupportedLanguage;
-}
-
-const initialLang = loadSavedLanguage();
-if (initialLang !== i18n.language) {
-  i18n.changeLanguage(initialLang);
-}
-
 export const useSettingsStore = create<SettingsState>((set) => ({
-  language: initialLang,
+  language: i18n.language as SupportedLanguage,
   setLanguage: (lang) => {
     i18n.changeLanguage(lang);
     setSetting('language', lang);
     set({ language: lang });
   },
 }));
+
+/**
+ * 从 SQLite 读取已保存的语言并应用。
+ * 必须在 initDb() 之后调用，确保 settings 表已存在。
+ */
+export function initLanguage(): void {
+  try {
+    const saved = getSetting('language');
+    if (saved && SUPPORTED_LANGUAGES.includes(saved as SupportedLanguage)) {
+      i18n.changeLanguage(saved);
+      useSettingsStore.setState({ language: saved as SupportedLanguage });
+    }
+  } catch {
+    // DB 异常时保持当前语言
+  }
+}

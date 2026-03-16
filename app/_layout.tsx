@@ -6,13 +6,14 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
 import { initDb } from '@/db/sqlite';
 import { useChildStore } from '@/store/childStore';
+import { initLanguage } from '@/store/settingsStore';
 
 export default function RootLayout() {
   const loadChildren = useChildStore(s => s.load);
 
   useEffect(() => {
-    // 应用启动时初始化 DB，然后加载孩子列表
-    initDb();
+    initDb();        // 先建表
+    initLanguage();  // 再读取已保存的语言
     loadChildren();
   }, []);
 

@@ -150,6 +150,32 @@ eas build --platform ios
 eas build --platform android
 ```
 
+### 5. 提交到商店
+
+#### App Store（iOS）
+
+```bash
+# 提交最新构建到 App Store Connect
+eas submit --platform ios
+
+# 同步 store.config.json 中的元数据（标题、描述、关键词等）到 App Store Connect
+eas metadata:push
+```
+
+> **前提**：已在 App Store Connect 手动创建 App 记录，并完成隐私信息、年龄分级等必填项。
+
+#### Google Play（Android）
+
+```bash
+# 提交最新构建到 Google Play（Internal Testing）
+eas submit --platform android
+```
+
+> **前提**：
+> 1. 已在 Google Play Console 手动创建 App 记录并上传至少一个 AAB（首次需手动上传）
+> 2. 已配置 Google Play API Service Account 并授予发布权限
+> 3. Google Play 元数据（描述、关键词等）需在 Play Console 手动填写，`store.config.json` 不支持自动推送到 Google Play
+
 ---
 
 ## 数据来源
