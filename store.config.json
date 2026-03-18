@@ -18,6 +18,19 @@
         "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
         "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
       },
+      "zh-Hant": {
+        "title": "小芽成長",
+        "subtitle": "兒童身高成長記錄與分析",
+        "description": "小芽成長是一款專為家長設計的兒童身高成長記錄與分析應用。\n\n透過整合 WHO、日本厚生勞動省、中國權威機構等多國官方統計數據，以可視化成長曲線的方式，幫助家長直觀了解孩子在同齡人中的身高位置，並科學預測18歲成年後的預期身高。\n\n【核心功能】\n\n【成長曲線可視化】\n基於權威統計數據，即時向量繪製 0～18 歲各百分位成長曲線，支援圖表縮放，將孩子的實測身高疊加顯示在曲線圖上，一目了然。\n\n【多數據源支援】\n• WHO：世界衛生組織全球兒童生長標準\n• 日本厚生勞動省：日本兒童身高統計數據\n• 中國權威機構：中國兒童身高發育參考標準\n可隨時切換數據源，重新繪製成長曲線進行比較。\n\n【身高記錄管理】\n定期記錄孩子身高，自動生成個人成長軌跡，支援多個孩子的獨立檔案管理，預測18歲成年後的預期身高區間。\n\n【多語言支援】\n支援繁體中文、简体中文、日語、English、Español、한국어。",
+        "keywords": [
+          "身高", "成長曲線", "兒童", "寶寶", "發育", "百分位", "WHO", "身高預測", "成長記錄", "育兒",
+          "生長發育", "兒科", "寶寶身高", "成長檔案", "健康"
+        ],
+        "releaseNotes": "🌱 小芽成長正式上線啦！\n\n記錄寶貝的每一寸成長，用科學曲線見證孩子的發育歷程。支援 WHO 等權威數據，一鍵查看身高百分位，預測18歲預期身高。\n\n快來為孩子建立第一條成長記錄吧！",
+        "marketingUrl": "https://enki-work.github.io/KidSprout/",
+        "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
+        "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
+      },
       "ja": {
         "title": "成長ツリー",
         "subtitle": "子どもの身長成長記録と分析",
