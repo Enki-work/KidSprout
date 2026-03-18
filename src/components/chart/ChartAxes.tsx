@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Line, Text as SvgText } from 'react-native-svg';
 import { ChartBounds, sx, sy } from './chartUtils';
 
@@ -10,20 +11,22 @@ type Props = {
   yTicks: number[];
 };
 
-/** 月龄 → 显示文字 */
-function labelAge(months: number): string {
-  const y = Math.floor(months / 12);
-  const m = months % 12;
-  if (months === 0) return '0';
-  if (m === 0) return `${y}岁`;
-  return `${y}y${m}m`;
-}
-
 export function ChartAxes({ bounds, xTicks, yTicks }: Props) {
   const { padding, width, height } = bounds;
+  const { t } = useTranslation();
   const axisColor = '#CCCCCC';
   const textColor = '#999999';
   const fontSize = 9;
+
+  /** 月龄 → 显示文字 */
+  function labelAge(months: number): string {
+    const y = Math.floor(months / 12);
+    const m = months % 12;
+    if (months === 0) return '0';
+    if (m === 0) return t('age.years', { count: y });
+    // 非整年刻度：语言无关紧凑格式
+    return `${y}y${m}m`;
+  }
 
   return (
     <>

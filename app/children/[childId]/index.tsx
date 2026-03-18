@@ -1,7 +1,5 @@
-import { useTranslation } from 'react-i18next';
 import { GrowthChart, PredictionConfig } from "@/components/chart/GrowthChart";
 import { MeasurementPoint } from "@/components/chart/MeasurementSeries";
-import { DebugAddTestData } from "@/components/debug/DebugAddTestData";
 import { getStandardFile, StandardId } from "@/constants/standards";
 import { useComputedMeasurements } from "@/hooks/growth/useComputedMeasurements";
 import { useFormatAge } from "@/hooks/useFormatAge";
@@ -17,6 +15,7 @@ import {
   useRouter,
 } from "expo-router";
 import { useCallback, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   Alert,
@@ -36,10 +35,10 @@ const TABS: Tab[] = ["chart", "records", "analysis"];
 
 /** 年龄段曲线定义（月龄区间） */
 const AGE_SEGMENTS = [
-  { key: "infant",  xMin: 0,   xMax: 36  },
-  { key: "toddler", xMin: 36,  xMax: 72  },
-  { key: "school",  xMin: 72,  xMax: 144 },
-  { key: "teen",    xMin: 144, xMax: 216 },
+  { key: "infant", xMin: 0, xMax: 36 },
+  { key: "toddler", xMin: 36, xMax: 72 },
+  { key: "school", xMin: 72, xMax: 144 },
+  { key: "teen", xMin: 144, xMax: 216 },
 ] as const;
 
 /** 百分位显示颜色 */
@@ -108,7 +107,7 @@ export default function ChildDetailScreen() {
   if (!child || !standard) {
     return (
       <View style={styles.center}>
-        <Text style={styles.notFound}>{t('childDetail.notFound')}</Text>
+        <Text style={styles.notFound}>{t("childDetail.notFound")}</Text>
       </View>
     );
   }
@@ -148,7 +147,9 @@ export default function ChildDetailScreen() {
   const growth6m = growthIn(computed, 6);
   const growth12m = growthIn(computed, 12);
 
-  const sexSuffix = t(`sex.${child.sex === 'male' ? 'maleSuffix' : 'femaleSuffix'}`);
+  const sexSuffix = t(
+    `sex.${child.sex === "male" ? "maleSuffix" : "femaleSuffix"}`,
+  );
 
   function onTabPress(t: Tab) {
     const idx = TABS.indexOf(t);
@@ -168,14 +169,13 @@ export default function ChildDetailScreen() {
           title: child.name,
           headerRight: () => (
             <View style={styles.headerRight}>
-              <DebugAddTestData childId={childId ?? ""} />
               <TouchableOpacity
                 style={styles.editBtn}
                 onPress={() =>
                   router.push(`/children/${childId}/edit` as never)
                 }
               >
-                <Text style={styles.editBtnText}>{t('childDetail.edit')}</Text>
+                <Text style={styles.editBtnText}>{t("childDetail.edit")}</Text>
               </TouchableOpacity>
             </View>
           ),
@@ -185,8 +185,7 @@ export default function ChildDetailScreen() {
       {/* 顶部摘要 */}
       <View style={styles.summary}>
         <Text style={styles.childMeta}>
-          {t(`sex.${child.sex}`)} ·{" "}
-          {formatAge(ageMonths)}
+          {t(`sex.${child.sex}`)} · {formatAge(ageMonths)}
           {latestComputed ? ` · ${latestComputed.heightCm} cm` : ""}
         </Text>
         {latestComputed?.percentile !== undefined && (
@@ -213,7 +212,9 @@ export default function ChildDetailScreen() {
             style={[styles.tabBtn, tab === tabKey && styles.tabBtnActive]}
             onPress={() => onTabPress(tabKey)}
           >
-            <Text style={[styles.tabText, tab === tabKey && styles.tabTextActive]}>
+            <Text
+              style={[styles.tabText, tab === tabKey && styles.tabTextActive]}
+            >
               {t(`childDetail.tabs.${tabKey}`)}
             </Text>
           </TouchableOpacity>
@@ -241,10 +242,13 @@ export default function ChildDetailScreen() {
             <ActivityIndicator style={{ marginTop: 60 }} color="#4CAF82" />
           ) : (
             <>
-              {AGE_SEGMENTS.filter(seg =>
-                seg.xMin < standard.meta.ageMaxMonths &&
-                chartPoints.some(p => p.ageMonths >= seg.xMin && p.ageMonths < seg.xMax)
-              ).map(seg => (
+              {AGE_SEGMENTS.filter(
+                (seg) =>
+                  seg.xMin < standard.meta.ageMaxMonths &&
+                  chartPoints.some(
+                    (p) => p.ageMonths >= seg.xMin && p.ageMonths < seg.xMax,
+                  ),
+              ).map((seg) => (
                 <View key={seg.key}>
                   <View style={styles.sectionTitleRow}>
                     <Text style={styles.sectionTitle}>
@@ -258,7 +262,9 @@ export default function ChildDetailScreen() {
                         )
                       }
                     >
-                      <Text style={styles.expandBtnText}>{t('childDetail.expand')}</Text>
+                      <Text style={styles.expandBtnText}>
+                        {t("childDetail.expand")}
+                      </Text>
                     </TouchableOpacity>
                   </View>
                   <GrowthChart
@@ -276,7 +282,7 @@ export default function ChildDetailScreen() {
               {/* 全体曲线 */}
               <View style={styles.sectionTitleRow}>
                 <Text style={styles.sectionTitle}>
-                  {t('childDetail.allAges', { maxAge: maxAgeYears })}
+                  {t("childDetail.allAges", { maxAge: maxAgeYears })}
                 </Text>
                 <TouchableOpacity
                   style={styles.expandBtn}
@@ -286,7 +292,9 @@ export default function ChildDetailScreen() {
                     )
                   }
                 >
-                  <Text style={styles.expandBtnText}>{t('childDetail.expand')}</Text>
+                  <Text style={styles.expandBtnText}>
+                    {t("childDetail.expand")}
+                  </Text>
                 </TouchableOpacity>
               </View>
               <GrowthChart
@@ -311,11 +319,15 @@ export default function ChildDetailScreen() {
             <View style={styles.summaryCard}>
               <View style={styles.summaryCardRow}>
                 <View style={styles.summaryCardItem}>
-                  <Text style={styles.summaryCardLabel}>{t('childDetail.currentPercentile')}</Text>
+                  <Text style={styles.summaryCardLabel}>
+                    {t("childDetail.currentPercentile")}
+                  </Text>
                   <Text
                     style={[
                       styles.summaryCardValue,
-                      { color: percentileColor(latestComputed.percentile ?? 50) },
+                      {
+                        color: percentileColor(latestComputed.percentile ?? 50),
+                      },
                     ]}
                   >
                     P{Math.round(latestComputed.percentile ?? 50)}
@@ -323,7 +335,9 @@ export default function ChildDetailScreen() {
                 </View>
                 <View style={styles.summaryCardDivider} />
                 <View style={styles.summaryCardItem}>
-                  <Text style={styles.summaryCardLabel}>{t('childDetail.vsMedian')}</Text>
+                  <Text style={styles.summaryCardLabel}>
+                    {t("childDetail.vsMedian")}
+                  </Text>
                   <Text
                     style={[
                       styles.summaryCardValue,
@@ -341,7 +355,7 @@ export default function ChildDetailScreen() {
                 </View>
               </View>
               <Text style={styles.summaryCardDesc}>
-                {t('childDetail.higherThan', {
+                {t("childDetail.higherThan", {
                   p: Math.round(latestComputed.percentile ?? 50),
                   sex: sexSuffix,
                 })}
@@ -350,7 +364,7 @@ export default function ChildDetailScreen() {
           )}
           {computed.length === 0 ? (
             <View style={styles.emptyRecords}>
-              <Text style={styles.emptyText}>{t('childDetail.noRecords')}</Text>
+              <Text style={styles.emptyText}>{t("childDetail.noRecords")}</Text>
             </View>
           ) : (
             [...computed].reverse().map((m) => (
@@ -378,12 +392,15 @@ export default function ChildDetailScreen() {
                   style={styles.deleteBtn}
                   onPress={() =>
                     Alert.alert(
-                      t('childDetail.deleteRecord.title'),
-                      t('childDetail.deleteRecord.msg', { date: m.measuredAt }),
+                      t("childDetail.deleteRecord.title"),
+                      t("childDetail.deleteRecord.msg", { date: m.measuredAt }),
                       [
-                        { text: t('childDetail.deleteRecord.cancel'), style: "cancel" },
                         {
-                          text: t('childDetail.deleteRecord.confirm'),
+                          text: t("childDetail.deleteRecord.cancel"),
+                          style: "cancel",
+                        },
+                        {
+                          text: t("childDetail.deleteRecord.confirm"),
                           style: "destructive",
                           onPress: () => removeMeasurement(m.id, child.id),
                         },
@@ -405,20 +422,26 @@ export default function ChildDetailScreen() {
         >
           {!latestComputed ? (
             <View style={styles.emptyRecords}>
-              <Text style={styles.emptyText}>{t('childDetail.noRecords')}</Text>
+              <Text style={styles.emptyText}>{t("childDetail.noRecords")}</Text>
             </View>
           ) : (
             <>
               <View style={styles.analysisCard}>
-                <Text style={styles.analysisCardTitle}>{t('childDetail.analysis.currentStatus')}</Text>
+                <Text style={styles.analysisCardTitle}>
+                  {t("childDetail.analysis.currentStatus")}
+                </Text>
                 <View style={styles.analysisRow}>
-                  <Text style={styles.analysisLabel}>{t('childDetail.analysis.height')}</Text>
+                  <Text style={styles.analysisLabel}>
+                    {t("childDetail.analysis.height")}
+                  </Text>
                   <Text style={styles.analysisValue}>
                     {latestComputed.heightCm} cm
                   </Text>
                 </View>
                 <View style={styles.analysisRow}>
-                  <Text style={styles.analysisLabel}>{t('childDetail.analysis.percentile')}</Text>
+                  <Text style={styles.analysisLabel}>
+                    {t("childDetail.analysis.percentile")}
+                  </Text>
                   <Text
                     style={[
                       styles.analysisValue,
@@ -429,7 +452,9 @@ export default function ChildDetailScreen() {
                   </Text>
                 </View>
                 <View style={styles.analysisRow}>
-                  <Text style={styles.analysisLabel}>{t('childDetail.analysis.vsMedian')}</Text>
+                  <Text style={styles.analysisLabel}>
+                    {t("childDetail.analysis.vsMedian")}
+                  </Text>
                   <Text
                     style={[
                       styles.analysisValue,
@@ -446,7 +471,7 @@ export default function ChildDetailScreen() {
                   </Text>
                 </View>
                 <Text style={styles.analysisDesc}>
-                  {t('childDetail.analysis.higherThan', {
+                  {t("childDetail.analysis.higherThan", {
                     p: Math.round(currentPercentile),
                     sex: sexSuffix,
                   })}
@@ -454,22 +479,28 @@ export default function ChildDetailScreen() {
               </View>
 
               <View style={styles.analysisCard}>
-                <Text style={styles.analysisCardTitle}>{t('childDetail.analysis.growthRate')}</Text>
+                <Text style={styles.analysisCardTitle}>
+                  {t("childDetail.analysis.growthRate")}
+                </Text>
                 {growth6m !== null && (
                   <View style={styles.analysisRow}>
-                    <Text style={styles.analysisLabel}>{t('childDetail.analysis.last6m')}</Text>
+                    <Text style={styles.analysisLabel}>
+                      {t("childDetail.analysis.last6m")}
+                    </Text>
                     <Text style={styles.analysisValue}>+{growth6m} cm</Text>
                   </View>
                 )}
                 {growth12m !== null && (
                   <View style={styles.analysisRow}>
-                    <Text style={styles.analysisLabel}>{t('childDetail.analysis.last12m')}</Text>
+                    <Text style={styles.analysisLabel}>
+                      {t("childDetail.analysis.last12m")}
+                    </Text>
                     <Text style={styles.analysisValue}>+{growth12m} cm</Text>
                   </View>
                 )}
                 {growth6m === null && growth12m === null && (
                   <Text style={styles.analysisEmpty}>
-                    {t('childDetail.analysis.insufficientData')}
+                    {t("childDetail.analysis.insufficientData")}
                   </Text>
                 )}
               </View>
@@ -478,13 +509,17 @@ export default function ChildDetailScreen() {
                 latestComputed.ageMonths < maxAgeMonths && (
                   <View style={styles.analysisCard}>
                     <Text style={styles.analysisCardTitle}>
-                      {t('childDetail.analysis.prediction', { maxAge: maxAgeYears })}
+                      {t("childDetail.analysis.prediction", {
+                        maxAge: maxAgeYears,
+                      })}
                     </Text>
                     <Text style={styles.predictionHeight}>
-                      {t('childDetail.analysis.predictedHeight', { height: predictedHeight })}
+                      {t("childDetail.analysis.predictedHeight", {
+                        height: predictedHeight,
+                      })}
                     </Text>
                     <Text style={styles.predictionDisclaimer}>
-                      {t('childDetail.analysis.disclaimer')}
+                      {t("childDetail.analysis.disclaimer")}
                     </Text>
                   </View>
                 )}
@@ -500,7 +535,7 @@ export default function ChildDetailScreen() {
           router.push(`/children/${childId}/add-measurement` as never)
         }
       >
-        <Text style={styles.fabText}>{t('childDetail.addHeight')}</Text>
+        <Text style={styles.fabText}>{t("childDetail.addHeight")}</Text>
       </TouchableOpacity>
 
       {/* 百分位说明弹窗 */}
@@ -515,41 +550,55 @@ export default function ChildDetailScreen() {
           onPress={() => setShowPercentileInfo(false)}
         >
           <Pressable style={styles.modalCard} onPress={() => {}}>
-            <Text style={styles.modalTitle}>{t('childDetail.percentileModal.title')}</Text>
-            <Text style={styles.modalBody}>
-              {t('childDetail.percentileModal.body1')}
+            <Text style={styles.modalTitle}>
+              {t("childDetail.percentileModal.title")}
             </Text>
             <Text style={styles.modalBody}>
-              {t('childDetail.percentileModal.body2prefix')}{' '}
-              <Text style={styles.modalBold}>{t('childDetail.percentileModal.body2eg')}</Text>{' '}
-              {t('childDetail.percentileModal.body2')}
+              {t("childDetail.percentileModal.body1")}
+            </Text>
+            <Text style={styles.modalBody}>
+              {t("childDetail.percentileModal.body2prefix")}{" "}
+              <Text style={styles.modalBold}>
+                {t("childDetail.percentileModal.body2eg")}
+              </Text>{" "}
+              {t("childDetail.percentileModal.body2")}
             </Text>
             <View style={styles.modalLegend}>
               <View style={styles.modalLegendRow}>
-                <View style={[styles.modalDot, { backgroundColor: "#4CAF82" }]} />
-                <Text style={styles.modalLegendText}>{t('childDetail.percentileModal.normal')}</Text>
-              </View>
-              <View style={styles.modalLegendRow}>
-                <View style={[styles.modalDot, { backgroundColor: "#FF9500" }]} />
+                <View
+                  style={[styles.modalDot, { backgroundColor: "#4CAF82" }]}
+                />
                 <Text style={styles.modalLegendText}>
-                  {t('childDetail.percentileModal.attention')}
+                  {t("childDetail.percentileModal.normal")}
                 </Text>
               </View>
               <View style={styles.modalLegendRow}>
-                <View style={[styles.modalDot, { backgroundColor: "#FF3B30" }]} />
+                <View
+                  style={[styles.modalDot, { backgroundColor: "#FF9500" }]}
+                />
                 <Text style={styles.modalLegendText}>
-                  {t('childDetail.percentileModal.warning')}
+                  {t("childDetail.percentileModal.attention")}
+                </Text>
+              </View>
+              <View style={styles.modalLegendRow}>
+                <View
+                  style={[styles.modalDot, { backgroundColor: "#FF3B30" }]}
+                />
+                <Text style={styles.modalLegendText}>
+                  {t("childDetail.percentileModal.warning")}
                 </Text>
               </View>
             </View>
             <Text style={styles.modalDisclaimer}>
-              {t('childDetail.percentileModal.disclaimer')}
+              {t("childDetail.percentileModal.disclaimer")}
             </Text>
             <TouchableOpacity
               style={styles.modalCloseBtn}
               onPress={() => setShowPercentileInfo(false)}
             >
-              <Text style={styles.modalCloseBtnText}>{t('childDetail.percentileModal.close')}</Text>
+              <Text style={styles.modalCloseBtnText}>
+                {t("childDetail.percentileModal.close")}
+              </Text>
             </TouchableOpacity>
           </Pressable>
         </Pressable>

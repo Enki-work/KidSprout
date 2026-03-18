@@ -8,6 +8,7 @@ import { PercentileLines } from './PercentileLines';
 import { MeasurementSeries, MeasurementPoint } from './MeasurementSeries';
 import { PredictionLine } from './PredictionLine';
 import { interpolateGrowthRow } from '@/services/growth/interpolation';
+import { useFormatAge } from '@/hooks/useFormatAge';
 
 export type PredictionConfig = {
   startAgeMonths: number;
@@ -57,6 +58,7 @@ export function GrowthChart({
   viewBox,
 }: Props) {
   const [tooltip, setTooltip] = useState<MeasurementPoint | null>(null);
+  const formatAge = useFormatAge();
 
   // 范围内数据（用于 Y 轴计算）
   const filtered = rows.filter(r => r.ageMonths >= xMin && r.ageMonths <= xMax);
@@ -136,7 +138,7 @@ export function GrowthChart({
             <Text style={styles.tooltipDate}>{tooltip.date}</Text>
           )}
           <Text style={styles.tooltipText}>
-            {(tooltip.ageMonths / 12).toFixed(1)} 岁 · {tooltip.heightCm} cm
+            {formatAge(tooltip.ageMonths)} · {tooltip.heightCm} cm
             {tooltip.percentile !== undefined
               ? `  P${Math.round(tooltip.percentile)}`
               : ''}
