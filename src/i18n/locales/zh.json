@@ -112,7 +112,10 @@
       "warning": "P3 以下 或 P97 以上　需咨询医生",
       "disclaimer": "百分位仅供参考，单次数值不能说明问题，持续追踪趋势更重要。",
       "close": "我知道了"
-    }
+    },
+    "resetZoom": "复原",
+    "gestureHintZoomed": "单指拖拽移动 · 双指缩放",
+    "gestureHintNormal": "双指捏合放大"
   },
   "standards": {
     "japan": {

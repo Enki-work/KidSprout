@@ -112,7 +112,10 @@
       "warning": "Por debajo de P3 o por encima de P97  Consulta a un médico",
       "disclaimer": "El percentil es solo referencial. Es más importante seguir la tendencia a lo largo del tiempo.",
       "close": "Entendido"
-    }
+    },
+    "resetZoom": "Restablecer",
+    "gestureHintZoomed": "Arrastra para mover · Pellizca para zoom",
+    "gestureHintNormal": "Pellizca para ampliar"
   },
   "standards": {
     "japan": {

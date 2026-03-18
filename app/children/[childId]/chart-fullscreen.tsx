@@ -19,6 +19,7 @@ import {
   useRouter,
 } from "expo-router";
 import { useCallback, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   StyleSheet,
   Text,
@@ -54,6 +55,7 @@ export default function ChartFullscreenScreen() {
     xMin: string;
     xMax: string;
   }>();
+  const { t } = useTranslation();
   const router = useRouter();
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -258,14 +260,14 @@ export default function ChartFullscreenScreen() {
       <View style={styles.topBar}>
         {isZoomed ? (
           <TouchableOpacity style={styles.resetBtn} onPress={resetZoom}>
-            <Text style={styles.resetBtnText}>复原</Text>
+            <Text style={styles.resetBtnText}>{t('childDetail.resetZoom')}</Text>
           </TouchableOpacity>
         ) : (
           <View style={styles.topBarPlaceholder} />
         )}
 
         {isZoomed && (
-          <Text style={styles.topHint}>单指拖拽移动 · 双指缩放</Text>
+          <Text style={styles.topHint}>{t('childDetail.gestureHintZoomed')}</Text>
         )}
 
         <TouchableOpacity style={styles.closeBtn} onPress={() => router.back()}>
@@ -306,7 +308,7 @@ export default function ChartFullscreenScreen() {
       </PanGestureHandler>
 
       {/* 底部提示（未放大时） */}
-      {!isFullscreen && <Text style={styles.hint}>双指捏合放大</Text>}
+      {!isFullscreen && <Text style={styles.hint}>{t('childDetail.gestureHintNormal')}</Text>}
     </SafeAreaView>
   );
 }

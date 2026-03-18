@@ -112,7 +112,10 @@
       "warning": "Below P3 or above P97  Consult a doctor",
       "disclaimer": "Percentile is for reference only. Tracking trends over time matters more than a single reading.",
       "close": "Got it"
-    }
+    },
+    "resetZoom": "Reset",
+    "gestureHintZoomed": "Drag to pan · Pinch to zoom",
+    "gestureHintNormal": "Pinch to zoom in"
   },
   "standards": {
     "japan": {

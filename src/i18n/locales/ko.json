@@ -112,7 +112,10 @@
       "warning": "P3 미만 또는 P97 초과  의사 상담 권장",
       "disclaimer": "백분위는 참고용입니다. 한 번의 수치보다 지속적인 추적이 중요합니다.",
       "close": "알겠어요"
-    }
+    },
+    "resetZoom": "초기화",
+    "gestureHintZoomed": "드래그로 이동 · 핀치로 확대",
+    "gestureHintNormal": "핀치로 확대"
   },
   "standards": {
     "japan": {

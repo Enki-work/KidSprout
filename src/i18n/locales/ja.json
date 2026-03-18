@@ -112,7 +112,10 @@
       "warning": "P3 未満 または P97 以上　医師への相談を推奨",
       "disclaimer": "パーセンタイルはあくまで参考値です。継続的な追跡が重要です。",
       "close": "わかりました"
-    }
+    },
+    "resetZoom": "リセット",
+    "gestureHintZoomed": "1本指でドラッグ · 2本指でズーム",
+    "gestureHintNormal": "2本指でピンチして拡大"
   },
   "standards": {
     "japan": {
