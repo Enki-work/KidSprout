@@ -7,7 +7,8 @@ import { SUPPORTED_LANGUAGES, SupportedLanguage } from '@/i18n';
 
 /** 语言原生名称（始终用原文，不翻译） */
 const LANG_NATIVE: Record<SupportedLanguage, string> = {
-  zh: '中文',
+  zh: '中文（简体）',
+  'zh-Hant': '中文（繁體）',
   ja: '日本語',
   en: 'English',
   es: 'Español',

@@ -1,0 +1,156 @@
+{
+  "app": {
+    "title": "小芽成長"
+  },
+  "age": {
+    "months": "{{count}}個月",
+    "years": "{{count}}歲",
+    "yearsMonths": "{{years}}歲{{months}}個月"
+  },
+  "sex": {
+    "male": "男孩",
+    "female": "女孩",
+    "maleSuffix": "男",
+    "femaleSuffix": "女"
+  },
+  "home": {
+    "new": "新建",
+    "settings": "設定",
+    "empty": {
+      "title": "還沒有小寶貝的記錄呢",
+      "desc": "點右上角，開始記錄 TA 的第一次測量吧～"
+    }
+  },
+  "newChild": {
+    "title": "為寶寶建個檔案",
+    "labelName": "叫什麼名字？",
+    "namePlaceholder": "寶寶的名字",
+    "labelSex": "是男孩還是女孩？",
+    "labelBirthDate": "生日是哪天？",
+    "labelStandard": "參考哪個成長標準？",
+    "save": "好啦，出發！",
+    "alertTitle": "還差一步",
+    "alertNameRequired": "請填寫孩子的名字 😊"
+  },
+  "editChild": {
+    "title": "修改一下檔案",
+    "labelName": "叫什麼名字？",
+    "namePlaceholder": "寶寶的名字",
+    "labelSex": "是男孩還是女孩？",
+    "labelBirthDate": "生日是哪天？",
+    "labelStandard": "參考哪個成長標準？",
+    "save": "好，更新一下 ✓",
+    "delete": "不記錄了…",
+    "deleteAlertTitle": "刪除成長檔案",
+    "deleteAlertMsg": "「{{name}}」的所有記錄將被永久刪除，無法恢復。確定要繼續嗎？",
+    "cancel": "再想想",
+    "confirmDelete": "確認刪除",
+    "alertTitle": "還差一步",
+    "alertNameRequired": "請填寫孩子的名字 😊"
+  },
+  "addMeasurement": {
+    "title": "記錄今天的身高",
+    "labelDate": "今天幾號測的？",
+    "labelHeight": "量了多少？（cm）",
+    "heightPlaceholder": "例：98.5",
+    "labelNote": "有什麼想記下來的嗎？",
+    "notePlaceholder": "例：醫院體檢、家裡量的…",
+    "save": "記下來！",
+    "alertTitle": "好像哪裡不對～",
+    "alertHeightInvalid": "身高請填寫 30〜250 cm 之間的數值哦"
+  },
+  "childDetail": {
+    "notFound": "找不到孩子檔案",
+    "edit": "編輯",
+    "tabs": {
+      "chart": "曲線",
+      "records": "記錄",
+      "analysis": "分析"
+    },
+    "ageSegments": {
+      "infant": "嬰幼兒期（0〜3歲）",
+      "toddler": "幼兒期（3〜6歲）",
+      "school": "學齡期（6〜12歲）",
+      "teen": "青春期（12〜18歲）"
+    },
+    "allAges": "全體（0〜{{maxAge}}歲）",
+    "expand": "放大",
+    "currentPercentile": "當前百分位",
+    "vsMedian": "與中位數",
+    "higherThan": "高於 {{p}}% 的同齡{{sex}}孩",
+    "noRecords": "還沒有測量記錄",
+    "noRecordsDesc": "點下方按鈕，添加第一次身高測量",
+    "deleteRecord": {
+      "title": "刪除這條記錄？",
+      "msg": "{{date}} 的身高記錄將被永久刪除。",
+      "cancel": "再想想",
+      "confirm": "確認刪除"
+    },
+    "addHeight": "＋ 添加身高",
+    "analysis": {
+      "currentStatus": "當前狀況",
+      "height": "身高",
+      "percentile": "百分位",
+      "vsMedian": "與同齡中位數",
+      "higherThan": "高於同齡約 {{p}}% 的{{sex}}孩",
+      "growthRate": "增長速度",
+      "last6m": "最近 6 個月",
+      "last12m": "最近 12 個月",
+      "insufficientData": "記錄數量不足，無法計算",
+      "prediction": "{{maxAge}}歲身高估算",
+      "predictedHeight": "約 {{height}} cm",
+      "disclaimer": "僅供參考，青春期發育、遺傳、營養、睡眠與健康狀況都會影響最終身高。"
+    },
+    "percentileModal": {
+      "title": "什麼是百分位（Pxx）？",
+      "body1": "百分位表示孩子的身高在同齡、同性別兒童中所處的位置。",
+      "body2prefix": "例如",
+      "body2eg": "P68",
+      "body2": "表示孩子比同齡兒童中 68% 的孩子高，比剩餘 32% 的孩子矮。",
+      "normal": "P10 ~ P90　正常範圍",
+      "attention": "P3 ~ P10 或 P90 ~ P97　偏低/偏高，建議關注",
+      "warning": "P3 以下 或 P97 以上　需諮詢醫生",
+      "disclaimer": "百分位僅供參考，單次數值不能說明問題，持續追蹤趨勢更重要。",
+      "close": "我知道了"
+    },
+    "resetZoom": "復原",
+    "gestureHintZoomed": "單指拖曳移動 · 雙指縮放",
+    "gestureHintNormal": "雙指捏合放大"
+  },
+  "standards": {
+    "japan": {
+      "label": "日本標準",
+      "description": "根據日本政府統計資料（e-Stat）推算結果繪製曲線"
+    },
+    "who": {
+      "label": "WHO 標準",
+      "description": "根據 WHO 公布 Length/height-for-age 數據推算結果繪製曲線"
+    },
+    "china": {
+      "label": "中國標準",
+      "description": "根據中國國家衛生健康委員會發布的數據推算結果繪製曲線"
+    }
+  },
+  "settings": {
+    "title": "設定",
+    "language": "顯示語言",
+    "languages": {
+      "zh": "中文（簡體）",
+      "zh-Hant": "中文（繁體）",
+      "ja": "日本語",
+      "en": "English",
+      "es": "Español",
+      "ko": "한국어"
+    }
+  },
+  "drawer": {
+    "language": "語言",
+    "about": "關於"
+  },
+  "about": {
+    "title": "關於小芽成長",
+    "version": "版本",
+    "rate": "給我們評分 ⭐",
+    "copyright": "© 2026 qiyan"
+  }
+}
