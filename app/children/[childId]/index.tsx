@@ -1,5 +1,6 @@
 import { GrowthChart, PredictionConfig } from "@/components/chart/GrowthChart";
 import { MeasurementPoint } from "@/components/chart/MeasurementSeries";
+import { DebugAddTestData } from "@/components/debug/DebugAddTestData";
 import { getStandardFile, StandardId } from "@/constants/standards";
 import { useComputedMeasurements } from "@/hooks/growth/useComputedMeasurements";
 import { useFormatAge } from "@/hooks/useFormatAge";
@@ -169,6 +170,7 @@ export default function ChildDetailScreen() {
           title: child.name,
           headerRight: () => (
             <View style={styles.headerRight}>
+              <DebugAddTestData childId={childId ?? ""} />
               <TouchableOpacity
                 style={styles.editBtn}
                 onPress={() =>
