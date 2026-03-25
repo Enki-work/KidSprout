@@ -1,6 +1,6 @@
 # 小芽成长 · 开发计划书
 
-> 版本：v0.6 · 日期：2026-03-13
+> 版本：v0.7 · 日期：2026-03-25
 > 原则：**先能跑通，再逐步专业化**
 
 ---
@@ -8,16 +8,18 @@
 ## 目录
 
 1. [产品定位](#1-产品定位)
-2. [MVP 功能范围](#2-mvp-功能范围)
+2. [功能范围](#2-功能范围)
 3. [信息架构与页面结构](#3-信息架构与页面结构)
 4. [技术选型](#4-技术选型)
 5. [项目目录结构](#5-项目目录结构)
 6. [核心数据结构](#6-核心数据结构)
-7. [WHO 数据 JSON 格式规范](#7-who-数据-json-格式规范)
+7. [数据源规范](#7-数据源规范)
 8. [核心算法设计](#8-核心算法设计)
 9. [成长曲线 UI 设计规范](#9-成长曲线-ui-设计规范)
-10. [分阶段开发路线](#10-分阶段开发路线)
-11. [后续迭代规划](#11-后续迭代规划)
+10. [内购功能架构](#10-内购功能架构)
+11. [商店内购元数据配置](#11-商店内购元数据配置)
+12. [国际化规范](#12-国际化规范)
+13. [分阶段开发路线](#13-分阶段开发路线)
 
 ---
 
@@ -25,12 +27,12 @@
 
 ### 一句话定义
 
-> 把权威儿童身高标准，变成家长看得懂、能持续记录、能直观看趋势的成长工具。
+> 把权威儿童成长标准，变成家长看得懂、能持续记录、能直观看趋势的成长工具。
 
-### 核心任务（仅 3 个）
+### 核心任务
 
 1. **管理孩子档案** — 建立每个孩子的基本信息
-2. **记录身高** — 定期录入测量数据
+2. **记录身高 / 体重** — 定期录入测量数据
 3. **可视化成长曲线** — 在权威标准曲线上显示孩子位置与趋势
 
 ### 目标用户
@@ -40,281 +42,200 @@
 
 ---
 
-## 2. MVP 功能范围
+## 2. 功能范围
 
-### P0（必须上线）
+### P0（已上线）
 
-| 功能            | 说明                                     |
-| --------------- | ---------------------------------------- |
-| 新建孩子档案    | 姓名、性别、出生日期                     |
-| 录入身高记录    | 日期 + 身高 cm                           |
-| 成长曲线展示    | WHO 标准 5 条 percentile 线 + 用户测量点 |
-| Percentile 计算 | 基于百分位插值估算                       |
-| 18 岁身高估算   | 沿当前 percentile 延伸到 18 岁           |
+| 功能            | 说明                                          | 状态 |
+| --------------- | --------------------------------------------- | ---- |
+| 新建孩子档案    | 姓名、性别、出生日期                          | ✅   |
+| 录入身高记录    | 日期 + 身高 cm                                | ✅   |
+| 成长曲线展示    | 5 条 percentile 线 + 用户测量点               | ✅   |
+| Percentile 计算 | 基于百分位插值估算                            | ✅   |
+| 18 岁身高估算   | 沿当前 percentile 延伸                        | ✅   |
+| 多孩子管理      | 支持家庭多个孩子独立档案                      | ✅   |
+| 数据源切换      | WHO / 日本 / 中国 标准                        | ✅   |
+| 多语言          | 中文 / 繁中 / 日語 / English / Español / 한국어 | ✅ |
 
-### P1（第二版迭代）
+### P1（当前迭代 · v0.7）
 
-| 功能            | 说明                                           |
-| --------------- | ---------------------------------------------- |
-| 编辑 / 删除记录 | 修正录入错误                                   |
-| 多孩子管理      | 支持家庭多个孩子独立档案                       |
-| 数据源切换      | ~~WHO / 日本标准切换已在 MVP 实现~~ → 提前完成 |
-| 数据导出        | CSV / PDF 报告                                 |
+| 功能             | 说明                                                         | 状态      |
+| ---------------- | ------------------------------------------------------------ | --------- |
+| 首页 BottomSheet | 点击儿童卡片弹出选择面板（身高 / 体重）                      | 🔨 进行中 |
+| 体重曲线功能     | 全套体重记录 + 成长曲线可视化（WHO / 日本 / 中国标准）       | 🔨 进行中 |
+| 买断制内购       | 体重功能需购买解锁，未购买时显示 💎 锁定状态                 | 🔨 进行中 |
 
 ### P2（长期规划）
 
-| 功能     | 说明               |
-| -------- | ------------------ |
-| 云同步   | 多设备同步数据     |
-| 家庭共享 | 父母共用同一份数据 |
-| 定期提醒 | 到期测量提醒通知   |
-| 医生报告 | 专业报告格式导出   |
-| 体重曲线 | 扩展 BMI、体重指标 |
+| 功能     | 说明                           |
+| -------- | ------------------------------ |
+| 云同步   | 多设备同步数据                 |
+| 家庭共享 | 父母共用同一份数据             |
+| 定期提醒 | 到期测量提醒通知               |
+| 医生报告 | 专业报告格式导出               |
+| BMI 曲线 | 基于身高+体重自动计算 BMI 百分位 |
 
 ---
 
 ## 3. 信息架构与页面结构
 
-### 3.1 页面流转
+### 3.1 页面流转（v0.7 更新）
 
 ```
 首页（孩子列表）
+  ├─ 点击孩子卡片 → BottomSheet 弹出
+  │    ├─ 📏 身高 → 孩子身高详情页（现有）
+  │    └─ ⚖️ 体重（💎 锁定 / 已解锁）→ 孩子体重详情页（新建）
   ├─ 新建孩子档案
-  └─ 孩子详情
-       ├─ 曲线页（默认）
-       ├─ 记录页
-       │    ├─ 新增记录
-       │    └─ 编辑记录
-       └─ 分析页
+  └─ 侧边抽屉（设置 / 关于）
+
+孩子身高详情页（已有）
+  ├─ 曲线标签
+  ├─ 记录标签
+  ├─ 分析标签
+  └─ FAB → 添加身高记录
+
+孩子体重详情页（新建）
+  ├─ 曲线标签
+  ├─ 记录标签
+  ├─ 分析标签（无 18 岁预测）
+  └─ FAB → 添加体重记录
 ```
 
-### 3.2 各页面详细说明
+### 3.2 BottomSheet 设计
 
-#### A. 首页 / 孩子列表
+**触发：** 首页点击任意儿童卡片
 
-**内容**
-
-- 孩子卡片：姓名 / 当前年龄 / 最近身高 / 当前 percentile / 最近测量日期
-- 右下角 FAB 按钮：新建孩子
-
-**交互**
-
-- 点击卡片 → 进入孩子详情页
-
----
-
-#### B. 新建 / 编辑孩子档案
-
-**MVP 字段**
-
-- 姓名（必填）
-- 性别：女孩 / 男孩（必填）
-- 出生日期（必填）
-- 数据标准（默认 WHO，可选）
-
-**P1 扩展字段**
-
-- 父亲身高（可选）
-- 母亲身高（可选）
-- 备注（可选）
-
----
-
-#### C. 孩子详情页（顶部摘要 + Tab）
-
-**顶部摘要区**
-
-- 孩子姓名
-- 当前年龄
-- 最近身高
-- 当前 percentile（如 P68）
-- 预测成年身高（如 约 163 cm）
-
-**Tab 页**
-
-- 曲线（默认选中）
-- 记录
-- 分析
-
----
-
-#### D. 曲线页（核心页）
-
-**图表内容**
-
-- 背景标准曲线：P3 / P15 / P50 / P85 / P97
-- 孩子历史测量点（实心圆点）
-- 测量点连线（实线）
-- 当前最新点高亮显示
-- 预测延伸线（虚线）
-
-**Tooltip（点击任意点弹出）**
+**UI 结构：**
 
 ```
-2025-11-05
-4岁3个月
-104.6 cm
-P62 · 比中位数高 2.1 cm
+╔══════════════════════════════╗
+║  ▬▬▬（拖拽条装饰）           ║
+║  小明                        ║  ← 儿童姓名
+╠══════════════════════════════╣
+║  📏  身高                    ║  ← 绿色 #4CAF82，可点击
+║  ⚖️  体重          💎        ║  ← 未购买：文字灰 #CCC，💎 黄 #F5C518
+╚══════════════════════════════╝
 ```
 
-**页面底部摘要卡**
+**行为：**
 
-```
-当前位于：P72
-接近曲线：P85
-高于同龄儿童约 72%
-```
+- 点击身高 → 关闭 Sheet → 跳转 `/children/{id}`（现有页面）
+- 点击体重（已购买）→ 关闭 Sheet → 跳转 `/children/{id}/weight`
+- 点击体重（未购买）→ 显示 Alert 引导购买
+- 点击遮罩 → 关闭
 
-**空状态**
+**实现方案：** Modal + Animated（与 AppDrawer 同款，无需额外依赖）
 
-- 显示标准成长曲线背景
-- 中间提示：「还没有身高记录，先添加第一次测量吧」
-- 按钮：「添加记录」
+### 3.3 体重详情页（新建）
 
----
+与身高详情页对称，主要区别：
 
-#### E. 记录页
-
-**列表（时间倒序）**
-
-| 日期       | 年龄   | 身高     | 百分位 | 备注 |
-| ---------- | ------ | -------- | ------ | ---- |
-| 2025-11-05 | 4岁3月 | 104.6 cm | P62    | —    |
-
-**交互**
-
-- 顶部按钮「新增记录」
-- 长按行 → 编辑 / 删除
-
----
-
-#### F. 分析页
-
-**展示内容**
-
-- 当前身高 & percentile
-- 高于同龄儿童百分比
-- 比同龄中位数高/低多少 cm
-- 最近 6 个月增长
-- 最近 12 个月增长速度
-- 18 岁身高估算（保守文案）
-
-**示例**
-
-```
-当前身高：128.4 cm  ·  P68
-高于同龄儿童约 68%
-比中位数高：2.1 cm
-
-最近 6 个月增长：2.8 cm
-最近 12 个月增长：5.6 cm
-
-按当前成长轨迹估算，18 岁预期身高约 163.8 cm
-（仅供参考，受遗传、营养、睡眠等多种因素影响）
-```
+| 项目       | 身高页                 | 体重页                          |
+| ---------- | ---------------------- | ------------------------------- |
+| 标题       | `小明 身高`            | `小明 体重`                     |
+| 数值单位   | cm                     | kg                              |
+| 分析·预测卡 | 显示 18 岁预测         | **不显示**（无可靠体重预测）    |
+| LMS 数据源 | `getStandardFile()`    | `getWeightStandardFile()`       |
+| FAB        | ＋ 添加身高            | ＋ 添加体重                     |
 
 ---
 
 ## 4. 技术选型
 
-| 层级     | 技术                                             | 理由                           |
-| -------- | ------------------------------------------------ | ------------------------------ |
-| 框架     | Expo SDK 54 + React Native 0.81.5 + React 19.1.0 | 跨平台，开发效率高             |
-| 路由     | Expo Router v6                                   | 文件路由，结构清晰             |
-| 语言     | TypeScript ~5.9.2                                | 类型安全，降低 bug             |
-| 图表     | react-native-svg 15.12.1                         | 矢量绘制，完全可控             |
-| 手势     | react-native-gesture-handler ~2.28.0             | 手势支持（缩放留待 P1）        |
-| 状态管理 | Zustand                                          | 轻量，易学，适合本地记录型 app |
-| 本地存储 | expo-sqlite ~16.0.10                             | 结构化数据，可靠持久化         |
-| 日期计算 | date-fns                                         | 轻量，API 友好                 |
-| 多语言   | react-i18next                                    | 成熟方案，支持五语言           |
-| 数据验证 | Zod                                              | 类型与验证统一                 |
+| 层级     | 技术                                              | 理由                           |
+| -------- | ------------------------------------------------- | ------------------------------ |
+| 框架     | Expo SDK 54 + React Native 0.81.5 + React 19.1.0  | 跨平台，开发效率高             |
+| 路由     | Expo Router v6                                    | 文件路由，结构清晰             |
+| 语言     | TypeScript ~5.9.2                                 | 类型安全，降低 bug             |
+| 图表     | react-native-svg 15.12.1                          | 矢量绘制，完全可控             |
+| 手势     | react-native-gesture-handler ~2.28.0              | 手势支持                       |
+| 状态管理 | Zustand                                           | 轻量，易学，适合本地记录型 app |
+| 本地存储 | expo-sqlite ~16.0.10                              | 结构化数据，可靠持久化         |
+| 日期计算 | date-fns                                          | 轻量，API 友好                 |
+| 多语言   | react-i18next                                     | 成熟方案，支持六语言           |
+| 数据验证 | Zod                                               | 类型与验证统一                 |
+| **内购** | **expo-in-app-purchases**（待接入）               | Expo 原生支持，兼容 iOS/Android |
 
-> **注意：** react-native-reanimated 4.x 与 Expo SDK 54 存在兼容问题，已移除。图表缩放（P1 阶段）优先用 SVG viewBox 重绘方案实现，无需动画库。
+> **注意：** react-native-reanimated 4.x 与 Expo SDK 54 存在兼容问题，已移除。BottomSheet 使用 React Native 内置 `Modal` + `Animated` 实现（与 AppDrawer 同款方案）。
 
 ---
 
 ## 5. 项目目录结构
 
-> ✅ 已创建的文件用 `✅` 标注，待创建用 `○` 标注。
+> ✅ 已完成　🔨 本次新增
 
 ```
 KidSprout/
-├─ app/                          # Expo Router 路由页面（仅编排，不放重逻辑）
-│  ├─ _layout.tsx          ✅    # DB初始化、全局 Stack 配置（headerBackButtonDisplayMode等）
-│  ├─ index.tsx            ✅    # 首页孩子列表
-│  └─ children/            ✅
-│     ├─ new.tsx           ✅    # 新建孩子档案
+├─ app/
+│  ├─ _layout.tsx                  ✅
+│  ├─ index.tsx                    ✅  首页（v0.7 新增 BottomSheet 状态）
+│  └─ children/
+│     ├─ new.tsx                   ✅
 │     └─ [childId]/
-│        ├─ index.tsx      ✅    # 孩子详情（曲线 + 记录 Tab）
-│        ├─ edit.tsx       ✅    # 编辑 / 删除孩子档案
-│        └─ add-measurement.tsx ✅  # 添加身高记录
+│        ├─ index.tsx              ✅  身高详情页
+│        ├─ edit.tsx               ✅
+│        ├─ add-measurement.tsx    ✅  添加身高
+│        ├─ chart-fullscreen.tsx   ✅
+│        ├─ weight.tsx             🔨  体重详情页（新建）
+│        ├─ add-weight-measurement.tsx  🔨  添加体重（新建）
+│        └─ weight-chart-fullscreen.tsx 🔨  体重全屏图表（新建）
 │
 ├─ src/
 │  ├─ components/
-│  │  ├─ chart/            ✅    # 图表组件
-│  │  │  ├─ GrowthChart.tsx      ✅  # 主图表（含 Tooltip）
-│  │  │  ├─ ChartAxes.tsx        ✅  # 坐标轴 + 网格线
-│  │  │  ├─ PercentileLines.tsx  ✅  # 标准百分位曲线
-│  │  │  ├─ MeasurementSeries.tsx✅  # 用户测量点 + 连线
-│  │  │  ├─ chartUtils.ts        ✅  # 坐标映射工具函数
-│  │  │  └─ PredictionLine.tsx   ✅  # 预测虚线（延伸至数据源上限年龄）
-│  │  ├─ debug/            ✅
-│  │  │  └─ DebugAddTestData.tsx ✅  # [DEV] 批量生成测试数据按钮
-│  │  ○ common/
-│  │     ○ AppButton.tsx
-│  │     ○ AppInput.tsx
-│  │     └─ ○ AppCard.tsx
+│  │  ├─ chart/                    ✅
+│  │  ├─ debug/                    ✅
+│  │  └─ common/
+│  │     ├─ AppDrawer.tsx          ✅
+│  │     ├─ EmptyState.tsx         ✅
+│  │     └─ ChildActionBottomSheet.tsx  🔨  选择面板（新建）
 │  │
 │  ├─ data/
 │  │  └─ standards/
-│  │     ├─ japan.ts       ✅    # 日本データ（0-69m 幼児調査 + 72-204m 学校統計）
-│  │     ├─ who.ts         ✅    # WHO データ（0-228m，WHO2006 + WHO2007）
-│  │     └─ china.ts       ✅    # 中国データ（WS/T 423—2022 + WS/T 612—2018，0-216m）
+│  │     ├─ japan.ts               ✅  日本身高
+│  │     ├─ who.ts                 ✅  WHO 身高
+│  │     ├─ china.ts               ✅  中国身高
+│  │     ├─ japan_weight.ts        🔨  日本体重（新建）
+│  │     ├─ who_weight.ts          🔨  WHO 体重（新建）
+│  │     └─ china_weight.ts        🔨  中国体重（新建）
 │  │
-│  ├─ db/                   ✅    # 本地数据库层
-│  │  ├─ sqlite.ts          ✅    # getDb() 单例 + initDb()
-│  │  ├─ child.repo.ts      ✅    # getAllChildren / insert / update / delete
-│  │  └─ measurement.repo.ts✅   # getMeasurementsByChild / insert / update / delete
+│  ├─ db/
+│  │  ├─ sqlite.ts                 ✅  新增 weight_kg 列幂等迁移
+│  │  ├─ child.repo.ts             ✅
+│  │  ├─ measurement.repo.ts       ✅  新增 weightKg 字段支持
+│  │  └─ settings.repo.ts          ✅
 │  │
-│  ├─ hooks/                ✅    # 自定义 Hook
-│  │  └─ growth/            ✅
-│  │     └─ useComputedMeasurements.ts ✅  # 测量记录 → 百分位/月龄/中位数差计算视图
+│  ├─ hooks/
+│  │  ├─ growth/
+│  │  │  └─ useComputedMeasurements.ts  ✅
+│  │  ├─ useFormatAge.ts           ✅
+│  │  ├─ useAppRating.ts           ✅
+│  │  └─ usePurchase.ts            🔨  内购 Hook（新建）
 │  │
-│  ├─ services/
-│  │  └─ growth/           ✅
-│  │     ├─ age.ts               ✅  # 月龄计算
-│  │     ├─ interpolation.ts     ✅  # 线性插值
-│  │     ├─ percentile.ts        ✅  # 百分位估算（插值法）
-│  │     ├─ prediction.ts        ✅  # 18 岁身高估算（骨架）
-│  │     └─ ○ zscore.ts              # LMS z-score 计算（阶段二）
+│  ├─ store/
+│  │  ├─ childStore.ts             ✅
+│  │  ├─ measurementStore.ts       ✅
+│  │  ├─ settingsStore.ts          ✅
+│  │  └─ purchaseStore.ts          🔨  内购状态（新建）
 │  │
-│  ├─ store/                ✅    # Zustand 全局状态
-│  │  ├─ childStore.ts      ✅    # children[] + load/add/update/remove
-│  │  ├─ measurementStore.ts✅   # byChild{} + loadForChild/add/update/remove
-│  │  └─ ○ settingsStore.ts
+│  ├─ types/
+│  │  ├─ child.ts                  ✅
+│  │  ├─ growth.ts                 ✅  indicator 扩展 weight-for-age
+│  │  └─ measurement.ts            ✅  新增 weightKg?: number
 │  │
-│  ├─ types/               ✅
-│  │  ├─ child.ts          ✅
-│  │  ├─ growth.ts         ✅
-│  │  └─ measurement.ts    ✅
+│  ├─ constants/
+│  │  ├─ colors.ts                 ✅
+│  │  ├─ chart.ts                  ✅
+│  │  └─ standards.ts              ✅  新增 getWeightStandardFile()
 │  │
-│  ├─ constants/           ✅
-│  │  ├─ colors.ts         ✅    # 主题色 #4CAF82
-│  │  ├─ chart.ts          ✅    # 图表常量（padding 等）
-│  │  └─ standards.ts      ✅    # 数据源注册表 + getStandardFile()
-│  │
-│  └─ ○ utils/
-│     ○ date.ts
-│     ○ number.ts
-│     └─ ○ format.ts
-│
-├─ assets/
-├─ doc/                    ✅
-├─ CLAUDE.md               ✅
-├─ README.md               ✅
-├─ package.json            ✅
-└─ tsconfig.json           ✅
+│  └─ i18n/
+│     └─ locales/
+│        ├─ zh.json                ✅  新增 weight / purchase key
+│        ├─ zh-Hant.json           ✅  同步
+│        ├─ ja.json                ✅  同步
+│        ├─ en.json                ✅  同步
+│        ├─ es.json                ✅  同步
+│        └─ ko.json                ✅  同步
 ```
 
 ---
@@ -324,15 +245,14 @@ KidSprout/
 ### 6.1 业务类型
 
 ```ts
-// src/types/child.ts
+// src/types/child.ts（无变化）
 export type Sex = "female" | "male";
-
 export type Child = {
   id: string;
   name: string;
   sex: Sex;
-  birthDate: string; // ISO date: "2021-08-15"
-  standardId: string; // 使用的数据源 ID
+  birthDate: string;
+  standardId: string;
   fatherHeightCm?: number;
   motherHeightCm?: number;
   createdAt: string;
@@ -341,12 +261,13 @@ export type Child = {
 ```
 
 ```ts
-// src/types/measurement.ts
+// src/types/measurement.ts（v0.7 新增 weightKg）
 export type Measurement = {
   id: string;
   childId: string;
-  measuredAt: string; // ISO date: "2025-11-05"
+  measuredAt: string;   // ISO date: "2025-11-05"
   heightCm: number;
+  weightKg?: number;    // 🔨 新增：体重（可选，向后兼容）
   note?: string;
   createdAt: string;
   updatedAt: string;
@@ -362,85 +283,78 @@ export type ComputedMeasurement = Measurement & {
 ```
 
 ```ts
-// src/types/growth.ts  ✅ 已实现
+// src/types/growth.ts（v0.7 扩展 indicator 和 unit）
 export type GrowthMeta = {
   id: string;
-  source: "WHO" | "JAPAN" | "CHINA";
+  source: 'WHO' | 'JAPAN' | 'CHINA';
   version: string;
-  indicator: "height-for-age";
+  indicator: 'height-for-age' | 'weight-for-age';  // 🔨 扩展
   sex: Sex;
   ageMinMonths: number;
   ageMaxMonths: number;
-  unit: "cm";
-  method: "percentile" | "lms" | "hybrid";
+  unit: 'cm' | 'kg';   // 🔨 扩展
+  method: 'percentile' | 'lms' | 'hybrid';
 };
 
-export type GrowthRow = {
-  ageMonths: number;
-  p3?: number;
-  p10?: number; // 日本データで使用
-  p15?: number; // WHO データ用（予約）
-  p25?: number; // 日本データで使用
-  p50: number; // 必須
-  p75?: number; // 日本データで使用
-  p85?: number; // WHO データ用（予約）
-  p90?: number; // 日本データで使用
-  p97?: number;
-  l?: number;
-  m?: number;
-  s?: number;
-};
+// GrowthRow / GrowthStandardFile 无变化
+```
 
-export type GrowthStandardFile = {
-  meta: GrowthMeta;
-  rows: GrowthRow[];
-};
+### 6.2 数据库结构
+
+```sql
+-- v0.7 迁移：measurements 表新增 weight_kg 列
+-- 采用 PRAGMA table_info 检测，幂等执行（已有列则跳过）
+ALTER TABLE measurements ADD COLUMN weight_kg REAL;
+
+-- settings 表新增内购状态持久化
+-- key: 'purchase_weight', value: '1'（购买成功后写入）
 ```
 
 ---
 
-## 7. データソース規範
+## 7. 数据源规范
 
-### 7.1 日本データ（✅ 実装済み）
+### 7.1 身高数据（已实现）
 
-`src/data/standards/japan.ts` に TypeScript 定数として格納。
+| 文件 | 数据来源 | 月龄范围 |
+|------|---------|---------|
+| `japan.ts` | 厚生労働省乳幼児発育調査 + 文部科学省学校保健統計 | 0～204m |
+| `who.ts` | WHO 2006 + WHO 2007 | 0～228m |
+| `china.ts` | 中国 WS/T 423—2022 + WS/T 612—2018 | 0～216m |
 
-**データ構成：**
+### 7.2 体重数据（v0.7 新增）
 
-- **0〜69ヶ月**：厚生労働省 令和5年（2023年）乳幼児身体発育調査（表02）
-  区間中央値を `ageMonths` として使用（0, 1, 1.5, 2.5 ... 69）
-- **72〜204ヶ月**：文部科学省 令和7年（2025年）学校保健統計調査
-  各学年 4月時点の月齢（72, 84, 96 ... 204）
+与身高数据格式相同，`indicator: 'weight-for-age'`，`unit: 'kg'`。
 
-**接続方針：**
+| 文件 | 数据来源 | 月龄范围 | 百分位 |
+|------|---------|---------|--------|
+| `who_weight.ts` | WHO Child Growth Standards 2006 (0-60m) + WHO Reference 2007 (61-120m) | 0～120m | P3/P15/P50/P85/P97 |
+| `japan_weight.ts` | 厚生労働省乳幼児発育調査 + 文部科学省学校保健統計 | 0～204m | P3/P10/P25/P50/P75/P90/P97 |
+| `china_weight.ts` | 中国国家卫生健康委员会 WS/T 423 | 0～216m | P3/P15/P50/P85/P97 |
 
-- 69ヶ月（幼児調査）→ 72ヶ月（学校統計）でデータソースを切替
-- 60ヶ月・75ヶ月の重複エントリは削除済み（カーブのジャンプを回避）
-- 利用百分位：P3 / P10 / P25 / P50 / P75 / P90 / P97
+> 注：体重数据上限月龄通常低于身高（WHO 体重仅到 120m = 10 岁），页面显示以数据上限为准。
 
-### 7.2 WHO データ（✅ 実装済み）
-
-`src/data/standards/who.ts` に TypeScript 定数として格納（514行）。
-
-**データ構成：**
-
-- **0〜60ヶ月**：WHO Child Growth Standards 2006（元データ日単位 → 月齢換算）
-- **61〜228ヶ月**：WHO Reference 2007（月単位）
-
-百分位フィールド：P3 / P10 / P25 / P50 / P75 / P90 / P97（各3桁有効小数）
-
-### 7.3 hybrid フォーマット（阶段二 LMS 実装時）
+### 7.3 hybrid 格式（阶段二 LMS 实装时）
 
 ```ts
-// LMS + percentile 両方を持つ行（精密計算用）
+// LMS + percentile 两者并存（精密计算用）
 {
   ageMonths: 61,
-  l: 1.0, m: 109.6, s: 0.0400,  // LMS: z-score 計算用
+  l: 1.0, m: 109.6, s: 0.0400,  // LMS：z-score 计算用
   p3: 100.6, p15: 104.7, p50: 109.6, p85: 114.6, p97: 118.8  // 描画用
 }
 ```
 
-> 描画には percentile フィールドを使用、精密計算には LMS を使用。両者共存で動的反推不要。
+### 7.4 数据源注册（`src/constants/standards.ts`）
+
+```ts
+// 现有：getStandardFile(standardId, sex) → 身高数据
+// 新增：getWeightStandardFile(standardId, sex) → 体重数据
+export function getWeightStandardFile(
+  standardId: StandardId,
+  sex: Sex,
+): GrowthStandardFile { ... }
+```
 
 ---
 
@@ -449,10 +363,6 @@ export type GrowthStandardFile = {
 ### 8.1 月龄计算（`services/growth/age.ts`）
 
 ```ts
-/**
- * 计算月龄（小数）
- * 内部统一使用月龄作为时间基准
- */
 export function getAgeInMonths(birthDate: Date, measuredAt: Date): number {
   const ms = measuredAt.getTime() - birthDate.getTime();
   const days = ms / (1000 * 60 * 60 * 24);
@@ -463,361 +373,319 @@ export function getAgeInMonths(birthDate: Date, measuredAt: Date): number {
 ### 8.2 线性插值（`services/growth/interpolation.ts`）
 
 ```ts
-/** 通用线性插值 */
 export function lerp(a: number, b: number, t: number): number {
   return a + (b - a) * t;
 }
 
-/** 按月龄插值出对应行数据 */
 export function interpolateGrowthRow(
   ageMonths: number,
   rows: GrowthRow[],
-): GrowthRow {
-  const sorted = [...rows].sort((a, b) => a.ageMonths - b.ageMonths);
-  const lower = [...sorted].reverse().find((r) => r.ageMonths <= ageMonths);
-  const upper = sorted.find((r) => r.ageMonths > ageMonths);
-
-  if (!lower) return upper!;
-  if (!upper) return lower;
-
-  const t = (ageMonths - lower.ageMonths) / (upper.ageMonths - lower.ageMonths);
-
-  return {
-    ageMonths,
-    p3:
-      lower.p3 !== undefined
-        ? lerp(lower.p3, upper.p3 ?? lower.p3, t)
-        : undefined,
-    p15:
-      lower.p15 !== undefined
-        ? lerp(lower.p15, upper.p15 ?? lower.p15, t)
-        : undefined,
-    p50: lerp(lower.p50, upper.p50, t),
-    p85:
-      lower.p85 !== undefined
-        ? lerp(lower.p85, upper.p85 ?? lower.p85, t)
-        : undefined,
-    p97:
-      lower.p97 !== undefined
-        ? lerp(lower.p97, upper.p97 ?? lower.p97, t)
-        : undefined,
-    l: lower.l !== undefined ? lerp(lower.l, upper.l ?? lower.l, t) : undefined,
-    m: lower.m !== undefined ? lerp(lower.m, upper.m ?? lower.m, t) : undefined,
-    s: lower.s !== undefined ? lerp(lower.s, upper.s ?? lower.s, t) : undefined,
-  };
-}
+): GrowthRow { ... }
 ```
 
-### 8.3 百分位估算 — MVP 插值法（`services/growth/percentile.ts`）
-
-**原理：** 找到身高所在的 percentile 区间，线性插值。
+### 8.3 百分位估算（`services/growth/percentile.ts`）
 
 ```ts
-type Band = { percentile: number; value: number };
-
 export function estimatePercentileFromBands(
   heightCm: number,
   bands: Band[],
-): number {
-  const sorted = [...bands].sort((a, b) => a.percentile - b.percentile);
+): number { ... }
 
-  if (heightCm <= sorted[0].value) return sorted[0].percentile;
-  if (heightCm >= sorted.at(-1)!.value) return sorted.at(-1)!.percentile;
-
-  for (let i = 0; i < sorted.length - 1; i++) {
-    const lo = sorted[i];
-    const hi = sorted[i + 1];
-    if (heightCm >= lo.value && heightCm <= hi.value) {
-      const t = (heightCm - lo.value) / (hi.value - lo.value);
-      return lo.percentile + t * (hi.percentile - lo.percentile);
-    }
-  }
-
-  return sorted[0].percentile;
-}
-
-/** 从 GrowthRow 构建 Band 数组 */
-export function rowToBands(row: GrowthRow): Band[] {
-  return [
-    { percentile: 3, value: row.p3! },
-    { percentile: 15, value: row.p15! },
-    { percentile: 50, value: row.p50 },
-    { percentile: 85, value: row.p85! },
-    { percentile: 97, value: row.p97! },
-  ].filter((b) => b.value !== undefined);
-}
+export function rowToBands(row: GrowthRow): Band[] { ... }
 ```
 
-### 8.4 百分位计算 — 第二阶段 LMS 法（`services/growth/zscore.ts`）
+### 8.4 体重百分位计算
 
-```ts
-/** LMS 法计算 z-score */
-export function calcZScore(x: number, l: number, m: number, s: number): number {
-  if (Math.abs(l) < 1e-6) {
-    return Math.log(x / m) / s;
-  }
-  return (Math.pow(x / m, l) - 1) / (l * s);
-}
+体重百分位**完全复用**身高的计算链路：
 
-/** z-score → percentile（0-100） */
-export function zScoreToPercentile(z: number): number {
-  return normalCDF(z) * 100;
-}
-
-function normalCDF(z: number): number {
-  const t = 1 / (1 + 0.2316419 * Math.abs(z));
-  const d = 0.3989423 * Math.exp((-z * z) / 2);
-  const p =
-    d *
-    t *
-    (0.3193815 +
-      t * (-0.3565638 + t * (1.7814779 + t * (-1.821256 + t * 1.3302744))));
-  return z > 0 ? 1 - p : p;
-}
 ```
+weightKg → interpolateGrowthRow() → rowToBands() → estimatePercentileFromBands()
+```
+
+`useComputedMeasurements` hook 接口已是通用设计（接受任意 LMS/percentile 行数组），体重页只需传入体重 LMS 数据即可，无需修改 hook 本身。
 
 ### 8.5 成年身高估算（`services/growth/prediction.ts`）
 
-**原理：** 假设孩子沿当前 percentile 继续成长，取数据源上限月龄对应该 percentile 的身高。
-各标准上限：WHO = 228 月（19岁）/ 中国 = 216 月（18岁）/ 日本 = 204 月（17岁）。
+沿当前 percentile 延伸至数据源上限月龄，读取对应身高。
+**体重页不提供此功能。**
+
+### 8.6 百分位 Z-score（阶段二 · `services/growth/zscore.ts`）
 
 ```ts
-/**
- * 估算成年身高
- * @param currentPercentile 当前百分位（0-100）
- * @param rows              标准数据行
- * @param targetAgeMonths   数据源上限月龄（standard.meta.ageMaxMonths）
- */
-export function predictAdultHeight(
-  currentPercentile: number,
-  rows: GrowthRow[],
-  targetAgeMonths = 216,
-): number {
-  const adultRow = interpolateGrowthRow(targetAgeMonths, rows);
-  const bands = rowToBands(adultRow);
-  // percentile → 对应身高（反向插值）
-  const sorted = [...bands].sort((a, b) => a.percentile - b.percentile);
-
-  if (currentPercentile <= sorted[0].percentile) return sorted[0].value;
-  if (currentPercentile >= sorted.at(-1)!.percentile)
-    return sorted.at(-1)!.value;
-
-  for (let i = 0; i < sorted.length - 1; i++) {
-    const lo = sorted[i];
-    const hi = sorted[i + 1];
-    if (
-      currentPercentile >= lo.percentile &&
-      currentPercentile <= hi.percentile
-    ) {
-      const t =
-        (currentPercentile - lo.percentile) / (hi.percentile - lo.percentile);
-      return lo.value + t * (hi.value - lo.value);
-    }
-  }
-
-  return sorted[0].value;
+export function calcZScore(x: number, l: number, m: number, s: number): number {
+  if (Math.abs(l) < 1e-6) return Math.log(x / m) / s;
+  return (Math.pow(x / m, l) - 1) / (l * s);
 }
 ```
-
-> **文案要求（强制）：** 预测结果页面必须包含以下免责说明：
-> _「仅供参考，青春期发育、遗传、营养、睡眠与健康状况都会影响最终身高。」_
 
 ---
 
 ## 9. 成长曲线 UI 设计规范
 
-### 9.1 颜色方案
+### 9.1 通用规范
 
-| 元素      | 颜色      | 说明           |
-| --------- | --------- | -------------- |
-| 主色      | `#4CAF82` | 绿芽色         |
-| P3 / P97  | `#C8C8D0` | 浅灰           |
-| P15 / P85 | `#A0C4E8` | 浅蓝           |
-| P50       | `#3A7EC4` | 深蓝（中位数） |
-| 用户点线  | `#4CAF82` | 主色绿         |
-| 预测虚线  | `#F5A623` | 橙色虚线       |
-| 背景      | `#FFFFFF` | 白色           |
-| 次背景    | `#F7F8FA` | 极浅灰         |
+- 背景标准曲线：P3 / P15 / P50 / P85 / P97
+- 用户测量点：实心圆点 + 连线
+- 最新点高亮
+- 预测延伸线（虚线，仅身高页显示）
+- 百分位颜色：`#4CAF82`（P10~P90）/ `#FF9500`（P3~P10 或 P90~P97）/ `#FF3B30`（P3以下或P97以上）
 
-### 9.2 曲线页布局
+### 9.2 体重图表扩展
 
-```
-┌─────────────────────────────────┐
-│  孩子信息卡片                     │
-│  姓名 · 年龄 · 最近身高 · P68     │
-├─────────────────────────────────┤
-│  时间范围：[0-5岁] [5-10岁] [全部] │
-├─────────────────────────────────┐
-│                                 │
-│     成 长 曲 线 图 表              │
-│  Y轴: 身高cm                     │
-│  X轴: 年龄                       │
-│                                 │
-│  背景: P3/P15/P50/P85/P97        │
-│  前景: 用户测量点 + 连线 + 预测    │
-│                                 │
-├─────────────────────────────────┤
-│  图例: P3 P15 P50 P85 P97 ● 我   │
-├─────────────────────────────────┤
-│  当前 P72 · 高于同龄约 72%        │
-│  比中位数高 2.1cm · 估算成年 165cm │
-└─────────────────────────────────┘
-```
+- Y 轴单位：kg
+- 图表组件 `GrowthChart` 已通用，传入体重 LMS rows 即可
+- 百分位颜色规则与身高相同
+- **不显示预测线**（`prediction` prop 传 `undefined`）
 
-### 9.3 坐标轴规范
+---
 
-**X 轴（时间）**
+## 10. 内购功能架构
 
-- 内部统一使用月龄（整数）
-- 显示转换：`61月 → 5岁1个月` / 整年处理显示为 `5岁`
-- 间隔：0-24m 按 3 月，24m 以后按 12 月
+### 10.1 产品 ID
 
-**Y 轴（身高）**
+| 平台 | Product ID |
+|------|-----------|
+| App Store | `com.qiyan.KidSprout.weight_feature` |
+| Google Play | `weight_feature` |
 
-- 自动计算范围：`min(P3) - 5cm` ～ `max(P97) + 5cm`
-- 刻度间隔：10 cm
+产品类型：**Non-Consumable（一次性买断）**
 
-### 9.4 交互
+### 10.2 状态管理（`src/store/purchaseStore.ts`）
 
-| 操作           | 响应                                            |
-| -------------- | ----------------------------------------------- |
-| 点击测量点     | 显示 Tooltip（日期 / 年龄 / 身高 / percentile） |
-| 长按图表空白处 | 显示十字准星，读取当前坐标对应数值              |
-| 双指缩放       | P1 阶段实现，MVP 暂不支持                       |
-
-### 9.5 实线 vs 虚线区分
-
-```
-历史实测：实线 + 实心圆点 ●────●────●
-预测未来：虚线 + 空心圆点 ○- - -○- - -○
+```ts
+type PurchaseStore = {
+  hasPurchasedWeightFeature: boolean;
+  isLoading: boolean;
+  setPurchased: (value: boolean) => void;
+};
 ```
 
----
+**持久化：** SQLite settings 表
+- 购买成功：`setSetting('purchase_weight', '1')`
+- App 启动：读取 settings 还原状态（`_layout.tsx` 中 `initDb()` 后调用）
 
-## 10. 分阶段开发路线
+### 10.3 usePurchase Hook（`src/hooks/usePurchase.ts`）
 
-### 阶段一：图表骨架 ✅ 已完成
+```ts
+export function usePurchase() {
+  return {
+    hasPurchased: boolean,
+    isLoading: boolean,
+    purchase: () => Promise<void>,   // 触发内购
+    restore: () => Promise<void>,    // 恢复购买
+  };
+}
+```
 
-- [x] Expo SDK 54 项目初始化，配置 TypeScript + Expo Router
-- [x] 建立 `src/` 目录结构
-- [x] 整合日本真实数据（令和5年幼児 + 令和7年学校統計）
-- [x] 实现 `GrowthChart.tsx`（含 Tooltip）
-- [x] 绘制 7 条 percentile 曲线（P3/P10/P25/P50/P75/P90/P97）
-- [x] 显示示例用户测量点 + 连线
-- [x] 修复两数据源衔接处的曲线跳动问题
+**本期：** 本地状态实现，`purchase()` 直接写入成功状态（UI 流程验证）。
+**下期：** 接入 `expo-in-app-purchases`，接口不变。
 
-**验收：** ✅ 图表在模拟器正常显示，曲线平滑
+### 10.4 UI 呈现
 
----
+**BottomSheet 体重行（未购买）：**
+- 文字颜色 `#CCC`（灰色）
+- 右侧 💎 颜色 `#F5C518`（金黄）
+- 点击触发 Alert
 
-### 阶段二：数据层完善 ✅ 已完成
-
-- [x] 实现 `src/data/standards/who.ts`（WHO 标准数据，0-228月）
-- [x] 实现 `src/constants/standards.ts`（数据源注册表 + `getStandardFile()`）
-- [x] 图表支持日本 / WHO 数据源切换（性别 + 标准源切换按钮）
-- [ ] ~~实现 `zscore.ts` LMS 精确百分位计算~~ → 推迟至 v1.2（MVP 插值法已足够）
-
-**验收：** ✅ 切换数据源 / 性别后曲线即时重绘
-
----
-
-### 阶段三：孩子档案 + 记录 ✅ 已完成
-
-- [x] 配置 expo-sqlite，建表（children / measurements，CASCADE 删除）
-- [x] 实现 `child.repo.ts` / `measurement.repo.ts`
-- [x] 首页孩子列表（ChildCard，空状态居中）
-- [x] 新建孩子档案（姓名、性别、出生日期 DatePicker、成长标准）
-- [x] 编辑 / 删除孩子档案（编辑页含确认 Alert）
-- [x] 孩子详情页（曲线 + 记录 Tab）
-- [x] 添加身高记录（DatePicker 日期范围限制：出生日→今天）
-- [x] 删除测量记录（swipe + 确认 Alert）
-- [x] Zustand store：childStore / measurementStore
-- [x] iOS 26 液态玻璃 header 兼容（无背景色按钮、alignSelf、contentStyle、headerBackButtonDisplayMode）
-- [x] `[DEV]` DebugAddTestData 组件（批量生成 0~18 岁测试数据）
-
-**验收：** ✅ 可新建/编辑/删除孩子，录入/删除身高，曲线图与记录列表均正常显示
+**Alert：**
+```
+标题：体重曲线（高级功能）
+内容：解锁体重成长曲线，记录孩子体重变化，与同龄儿童对比百分位。
+按钮：[立即解锁]  [取消]
+```
 
 ---
 
-### 阶段四：百分位计算 + 图表整合 ✅ 已完成
+## 11. 商店内购元数据配置
 
-- [x] `getPercentile()` 对接真实用户数据（月龄插值 + 跨百分位线性估算）
-- [x] `useComputedMeasurements` hook（percentile / ageMonths / medianDeltaCm）
-- [x] 详情页顶部摘要显示当前 percentile（彩色徽章，绿/橙/红）
-- [x] Tooltip 显示：日期 / 月龄 / 身高 / 百分位（P68）
-- [x] 记录列表每行显示百分位（颜色随高低变化）
-- [x] 摘要卡片（当前 percentile / 与中位数差距 / 文字描述）
-- [x] 修复 `rowToBands` 只识别 p15/p85（现兼容所有数据源字段）
-- [x] 中国标准数据（WS/T 423—2022 + WS/T 612—2018，56行/性别）
-- [x] 修复中国数据 1岁→2岁 / 6岁→7岁 曲线不平滑问题（删除 23m / 75m / 78m / 81m 行）
+### 11.1 App Store Connect 配置步骤
 
-**验收：** ✅ 录入身高后百分位实时显示，Tooltip 内容完整，摘要卡片数据正确
+1. 登录 [App Store Connect](https://appstoreconnect.apple.com/)
+2. 进入 **小芽成长** → **功能** → **App 内购买项目** → **「+」**
+3. 选择类型：**Non-Consumable（非消耗型）**
+4. 填写基本信息：
 
----
+   | 字段 | 值 |
+   |------|---|
+   | 参考名称 | Weight Curve Feature |
+   | 产品 ID | `com.qiyan.KidSprout.weight_feature` |
+   | 定价档位 | 建议 Tier 3（约 ¥18 / $2.99） |
 
-### 阶段五：分析页 + 预测 ✅ 已完成
+5. **本地化（每种语言）：**
 
-- [x] `predictAdultHeight()` 与真实孩子档案对接，使用 `standard.meta.ageMaxMonths` 作为目标月龄
-- [x] 分析页数据统计展示（当前百分位 / 与中位数差 / 高于同龄百分比）
-- [x] 增长速度计算（最近 6m / 12m，`growthIn()` 函数）
-- [x] 预测虚线 `PredictionLine.tsx`（橙色虚线延伸至数据源上限年龄）
-- [x] 详情页 Tab 支持手势滑动翻页（`ScrollView pagingEnabled`）
-- [x] 成长标准选择时显示数据源说明文字（新建/编辑档案页）
-- [x] 修复 iOS 26 header 按钮在页面切换时偶发拉伸问题
+   | 语言 | 显示名称 | 描述 |
+   |------|---------|------|
+   | 简体中文 | 体重曲线功能 | 解锁体重成长曲线，记录孩子体重变化，查看在同龄儿童中的百分位位置。 |
+   | 繁体中文 | 體重曲線功能 | 解鎖體重成長曲線，記錄孩子體重變化，查看在同齡兒童中的百分位位置。 |
+   | 日本語 | 体重成長曲線機能 | 体重成長曲線をアンロックし、お子さまの体重変化を記録、同年齢の子どもと比較できます。 |
+   | English | Weight Curve Feature | Unlock weight growth charts to track your child's weight and compare with age-matched percentiles. |
+   | Español | Función de curva de peso | Desbloquea las curvas de crecimiento de peso para registrar el peso de tu hijo y compararlo con percentiles. |
+   | 한국어 | 체중 성장곡선 기능 | 체중 성장곡선을 잠금 해제하여 아이의 체중 변화를 기록하고 같은 연령대와 백분위를 비교하세요. |
 
-**验收：** ✅ 分析页所有数据展示完整，预测有免责说明，虚线延伸到各标准实际上限年龄
+6. 上传截图（至少 1 张展示体重曲线的截图）
+7. 审核备注：`This is a one-time purchase to unlock the weight growth curve feature.`
+8. 状态设为 **Ready to Submit**，随 App 版本提交审核
 
----
+### 11.2 Google Play Console 配置步骤
 
-### 阶段六：打磨 & 多语言（当前阶段）
+1. 登录 [Google Play Console](https://play.google.com/console/)
+2. 进入 **小芽成长** → **创收** → **应用内商品** → **受管理的产品** → **「创建产品」**
+3. 填写基本信息：
 
-- [x] 配置 react-i18next，支持中 / 日 / 英 / 西 / 韩
-  - `src/i18n/index.ts`：自动检测设备语言，fallback 到中文
-  - `src/i18n/locales/{zh,ja,en,es,ko}.json`：完整翻译文件
-  - `app/settings/index.tsx`：语言切换设置页（⚙ 按钮进入）
-  - `src/store/settingsStore.ts`：语言状态管理
-  - `src/hooks/useFormatAge.ts`：语言感知的月龄格式化 hook
-  - 所有页面已替换硬编码字符串为 `t()` 调用
-- [x] 空状态设计（EmptyState 通用组件）
-  - `src/components/common/EmptyState.tsx`：icon + 标题 + 描述 + 可选按钮
-  - 首页空状态使用 EmptyState 组件
-- [x] Loading 状态（childStore.isLoading / measurementStore.loadingByChild + ActivityIndicator）
-- [x] 错误处理（try/catch + childStore.error 字段）
-- [x] 应用评分引导（expo-store-review，满 10 次启动触发，30 天冷却）
-- [ ] iOS / Android 真机测试
+   | 字段 | 值 |
+   |------|---|
+   | 产品 ID | `weight_feature` |
+   | 名称（默认语言） | Weight Curve Feature |
+   | 说明 | Unlock weight growth charts |
+   | 状态 | 活跃 |
+   | 定价 | 参考 App Store 档位（建议 ¥18 / ₩3,900） |
 
-**验收：** 语言切换正常，真机体验流畅
+4. **翻译（每种语言）：**
 
----
+   | 语言 | 标题 | 说明 |
+   |------|------|------|
+   | zh-CN | 体重曲线功能 | 解锁体重成长曲线，记录孩子体重变化，查看百分位。 |
+   | zh-TW | 體重曲線功能 | 解鎖體重成長曲線，記錄孩子體重變化，查看百分位。 |
+   | ja | 体重成長曲線機能 | 体重曲線をアンロックし、体重変化を記録・比較できます。 |
+   | en | Weight Curve Feature | Unlock weight growth charts to track and compare your child's weight. |
+   | es | Función de curva de peso | Desbloquea curvas de peso para registrar y comparar. |
+   | ko | 체중 성장곡선 기능 | 체중 성장곡선을 잠금 해제하여 체중 변화를 기록하고 비교하세요. |
 
-## 11. 后续迭代规划
+5. 保存并发布
 
-### v1.1
+### 11.3 测试配置
 
-- ~~多孩子管理~~ → 已在 MVP 实现
-- ~~编辑 / 删除记录~~ → 已在 MVP 实现
-- ~~中国标准数据（`china.ts`）~~ → 已在阶段四实现
-
-### v1.2
-
-- LMS 精确 percentile 计算（`zscore.ts`）
-- 双指缩放图表（SVG viewBox 方案）
-
-### v1.3
-
-- 数据导出（CSV）
-- 提醒通知
-- 图表导出
-- 数据导入
-
-### v2.0
-
-- 云同步
-- 家庭共享
-- 体重 / BMI 曲线
-- 医生报告导出
-- macOS（Electron）发布
+| 平台 | 测试方式 |
+|------|---------|
+| iOS | App Store Connect 创建 Sandbox 测试账号 → 设备设置中登录沙盒账号 |
+| Android | Google Play Console **许可测试** 中添加测试人员邮箱，使用 Internal testing track |
 
 ---
 
-_文档维护：随开发进度更新，重要决策变更需同步至此文档。_
+## 12. 国际化规范
+
+### 12.1 现有结构（保持不变）
+
+文件路径：`src/i18n/locales/[lang].json`，扁平 JSON，嵌套不超过 3 层。
+参见现有 `zh.json` 结构作为标准。
+
+### 12.2 v0.7 新增 key
+
+在所有 6 个语言文件（zh / zh-Hant / ja / en / es / ko）中同步添加：
+
+```jsonc
+// 在现有 "childDetail" 对象内补充
+"childDetail": {
+  // ...现有 key 不变...
+  "addWeight": "＋ 添加体重",
+  "deleteWeightRecord": {
+    "title": "删除这条记录？",
+    "msg": "{{date}} 的体重记录将被永久删除。",
+    "cancel": "再想想",
+    "confirm": "确认删除"
+  },
+  "analysis": {
+    // ...现有 key 不变...
+    "weight": "体重",
+    "weightUnit": "kg"
+  }
+},
+
+// 在现有 "home" 对象内补充
+"home": {
+  // ...现有 key 不变...
+  "selectMetric": {
+    "height": "身高",
+    "weight": "体重"
+  }
+},
+
+// 新增顶级 "purchase" 对象
+"purchase": {
+  "weightFeature": {
+    "alertTitle": "体重曲线（高级功能）",
+    "alertMessage": "解锁体重成长曲线，记录孩子体重变化，与同龄儿童对比百分位。",
+    "buy": "立即解锁",
+    "cancel": "取消",
+    "restoreSuccess": "已恢复购买",
+    "restoreFail": "未找到购买记录"
+  }
+},
+
+// 新增顶级 "addWeightMeasurement" 对象（与 addMeasurement 对称）
+"addWeightMeasurement": {
+  "title": "记录今天的体重",
+  "labelDate": "今天几号测的？",
+  "labelWeight": "量了多少？（kg）",
+  "weightPlaceholder": "例：18.5",
+  "labelNote": "有什么想记下来的吗？",
+  "notePlaceholder": "例：医院体检、家里量的…",
+  "save": "记下来！",
+  "alertTitle": "好像哪里不对～",
+  "alertWeightInvalid": "体重请填写 1〜200 kg 之间的数值哦"
+}
+```
+
+**各语言 key 对照：**
+
+| key | zh | zh-Hant | ja | en | es | ko |
+|-----|----|---------|----|----|----|-----|
+| `childDetail.analysis.weight` | 体重 | 體重 | 体重 | Weight | Peso | 체중 |
+| `childDetail.addWeight` | ＋ 添加体重 | ＋ 添加體重 | ＋ 体重を追加 | ＋ Add Weight | ＋ Agregar peso | ＋ 체중 추가 |
+| `home.selectMetric.height` | 身高 | 身高 | 身長 | Height | Altura | 키 |
+| `home.selectMetric.weight` | 体重 | 體重 | 体重 | Weight | Peso | 체중 |
+| `purchase.weightFeature.alertTitle` | 体重曲线（高级功能） | 體重曲線（進階功能） | 体重曲線（プレミアム） | Weight Charts (Premium) | Curva de peso (Premium) | 체중 곡선 (프리미엄) |
+| `purchase.weightFeature.buy` | 立即解锁 | 立即解鎖 | アンロック | Unlock Now | Desbloquear | 잠금 해제 |
+| `addWeightMeasurement.title` | 记录今天的体重 | 記錄今天的體重 | 今日の体重を記録 | Record Today's Weight | Registrar el peso de hoy | 오늘 체중 기록 |
+
+---
+
+## 13. 分阶段开发路线
+
+### Phase A：数据层（约 2h）
+
+1. `src/types/growth.ts` — indicator 扩展 `'weight-for-age'`，unit 扩展 `'kg'`
+2. `src/types/measurement.ts` — 添加 `weightKg?: number`
+3. `src/db/sqlite.ts` — 幂等 ALTER TABLE 添加 `weight_kg` 列
+4. `src/db/measurement.repo.ts` — CRUD 全部加入 `weightKg`
+5. `src/data/standards/who_weight.ts` — WHO 体重数据（新建）
+6. `src/data/standards/japan_weight.ts` — 日本体重数据（新建）
+7. `src/data/standards/china_weight.ts` — 中国体重数据（新建）
+8. `src/constants/standards.ts` — 添加 `getWeightStandardFile()`
+
+### Phase B：内购状态（约 0.5h）
+
+1. `src/store/purchaseStore.ts` — Zustand store + SQLite 持久化（新建）
+2. `src/hooks/usePurchase.ts` — 封装 hook，本期本地实现（新建）
+3. `app/_layout.tsx` — 启动时初始化 purchaseStore
+
+### Phase C：BottomSheet（约 1.5h）
+
+1. `src/components/common/ChildActionBottomSheet.tsx` — 新建（Modal + Animated）
+2. `app/index.tsx` — 集成 BottomSheet，替换直接导航逻辑
+
+### Phase D：体重曲线页（约 3h）
+
+1. `app/children/[childId]/weight.tsx` — 体重详情页（新建，独立实现）
+2. `app/children/[childId]/add-weight-measurement.tsx` — 录入体重（新建）
+3. `app/children/[childId]/weight-chart-fullscreen.tsx` — 全屏图表（新建）
+
+### Phase E：国际化（约 1h）
+
+6 个语言文件同步添加第 12 节中的所有新 key。
+
+---
+
+## 验证清单
+
+| 场景 | 预期结果 |
+|------|---------|
+| 首页点击孩子卡片 | BottomSheet 从底部弹出，显示姓名 + 身高/体重两个选项 |
+| 点击身高（任何状态） | 进入身高详情页，标题显示「小明 身高」 |
+| 点击体重（未购买） | 体重行灰色 + 💎，点击弹出购买 Alert |
+| 点击 Alert「立即解锁」 | 购买状态写入，体重行变为正常可点击 |
+| 点击体重（已购买） | 进入体重详情页，标题显示「小明 体重」 |
+| 体重页添加记录 | 保存后列表出现记录，图表绘制测量点 |
+| 退出重启 App | 体重记录和购买状态均保留 |
+| 旧数据迁移 | 已有 measurements 行正常读写，weight_kg 列为 NULL |
+| 切换语言为日語 | BottomSheet、体重页、购买 Alert 均正确日文显示 |
