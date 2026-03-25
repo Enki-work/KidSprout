@@ -3,6 +3,7 @@ export type Measurement = {
   childId: string;
   measuredAt: string;  // ISO date: "2025-11-05"
   heightCm: number;
+  weightKg?: number;  // 体重（可选，向后兼容）
   note?: string;
   createdAt: string;
   updatedAt: string;

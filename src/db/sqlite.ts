@@ -45,6 +45,15 @@ export function getDb(): SQLite.SQLiteDatabase {
       );
     `);
   }
+  // v0.7 迁移：幂等添加 weight_kg 列
+  const cols = _db.getAllSync<{ name: string }>(
+    `PRAGMA table_info(measurements)`,
+  );
+  const hasWeightKg = cols.some((c) => c.name === 'weight_kg');
+  if (!hasWeightKg) {
+    _db.execSync(`ALTER TABLE measurements ADD COLUMN weight_kg REAL;`);
+  }
+
   return _db;
 }
 

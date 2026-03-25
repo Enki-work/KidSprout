@@ -4,11 +4,11 @@ export type GrowthMeta = {
   id: string;
   source: 'WHO' | 'JAPAN' | 'CHINA';
   version: string;
-  indicator: 'height-for-age';
+  indicator: 'height-for-age' | 'weight-for-age';
   sex: Sex;
   ageMinMonths: number;
   ageMaxMonths: number;
-  unit: 'cm';
+  unit: 'cm' | 'kg';
   method: 'percentile' | 'lms' | 'hybrid';
 };
 

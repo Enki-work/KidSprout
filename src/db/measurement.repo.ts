@@ -11,6 +11,7 @@ function rowToMeasurement(row: Record<string, unknown>): Measurement {
     childId:     row.child_id as string,
     measuredAt:  row.measured_at as string,
     heightCm:    row.height_cm as number,
+    weightKg:    row.weight_kg != null ? (row.weight_kg as number) : undefined,
     note:        row.note as string | undefined,
     createdAt:   row.created_at as string,
     updatedAt:   row.updated_at as string,
@@ -29,10 +30,10 @@ export function getMeasurementsByChild(childId: string): Measurement[] {
 export function insertMeasurement(m: Measurement): void {
   const db = getDb();
   db.runSync(
-    `INSERT INTO measurements (id, child_id, measured_at, height_cm, note, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO measurements (id, child_id, measured_at, height_cm, weight_kg, note, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     [m.id, m.childId, m.measuredAt, m.heightCm,
-     m.note ?? null, m.createdAt, m.updatedAt]
+     m.weightKg ?? null, m.note ?? null, m.createdAt, m.updatedAt]
   );
 }
 
@@ -40,9 +41,9 @@ export function updateMeasurement(m: Measurement): void {
   const db = getDb();
   db.runSync(
     `UPDATE measurements
-     SET measured_at=?, height_cm=?, note=?, updated_at=?
+     SET measured_at=?, height_cm=?, weight_kg=?, note=?, updated_at=?
      WHERE id=?`,
-    [m.measuredAt, m.heightCm, m.note ?? null, m.updatedAt, m.id]
+    [m.measuredAt, m.heightCm, m.weightKg ?? null, m.note ?? null, m.updatedAt, m.id]
   );
 }
 
