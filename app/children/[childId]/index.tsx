@@ -167,7 +167,7 @@ export default function ChildDetailScreen() {
     <SafeAreaView style={styles.container} edges={["bottom"]}>
       <Stack.Screen
         options={{
-          title: child.name,
+          title: `${child.name} ${t("childDetail.analysis.height")}`,
           headerRight: () => (
             <View style={styles.headerRight}>
               <DebugAddTestData childId={childId ?? ""} />
