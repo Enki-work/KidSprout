@@ -150,7 +150,8 @@
       "buy": "Desbloquear",
       "cancel": "Cancelar",
       "restoreSuccess": "Compra restaurada",
-      "restoreFail": "No se encontró registro de compra"
+      "restoreFail": "No se encontró registro de compra",
+      "locked": "Bloqueado"
     }
   },
   "standards": {

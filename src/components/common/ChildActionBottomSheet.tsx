@@ -1,11 +1,14 @@
 /**
- * 儿童操作选择底部弹出面板
- * 点击首页儿童卡片后弹出，让用户选择查看身高或体重曲线
- * 使用 React Native 内置 Modal + Animated，零原生依赖
+ * 儿童操作选择面板 — 自定义底部弹出 Sheet
+ * 使用 Modal + Animated，不依赖系统 ActionSheet，兼容 iOS 26 Liquid Glass 及所有平台
+ * 通过 ref.show(child) 命令式调用
  */
 
-import { useTranslation } from 'react-i18next';
-import { useEffect, useRef } from 'react';
+import { usePurchase } from "@/hooks/usePurchase";
+import { usePurchaseStore } from "@/store/purchaseStore";
+import { Child } from "@/types/child";
+import { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Animated,
   Modal,
@@ -14,88 +17,104 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Child } from '@/types/child';
-import { usePurchase } from '@/hooks/usePurchase';
-import { usePurchaseStore } from '@/store/purchaseStore';
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+export type ChildActionBottomSheetRef = {
+  show: (child: Child) => void;
+};
 
 type Props = {
-  visible: boolean;
-  child: Child | null;
-  onClose: () => void;
   onSelectHeight: (childId: string) => void;
   onSelectWeight: (childId: string) => void;
 };
 
-export function ChildActionBottomSheet({
-  visible,
-  child,
-  onClose,
-  onSelectHeight,
-  onSelectWeight,
-}: Props) {
+export const ChildActionBottomSheet = forwardRef<
+  ChildActionBottomSheetRef,
+  Props
+>(function ChildActionBottomSheet({ onSelectHeight, onSelectWeight }, ref) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { hasPurchased, purchase } = usePurchase();
 
+  const [visible, setVisible] = useState(false);
+  const [child, setChild] = useState<Child | null>(null);
+
+  // 动画：从底部滑入
   const translateY = useRef(new Animated.Value(300)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 
-  useEffect(() => {
-    if (visible) {
-      Animated.parallel([
-        Animated.spring(translateY, {
-          toValue: 0,
-          damping: 24,
-          stiffness: 240,
-          mass: 0.8,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity, {
-          toValue: 1,
-          duration: 180,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    } else {
-      Animated.parallel([
-        Animated.timing(translateY, {
-          toValue: 300,
-          duration: 200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacity, {
-          toValue: 0,
-          duration: 180,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }
-  }, [visible]);
-
-  function handleSelectHeight() {
-    onClose();
-    if (child) {
-      setTimeout(() => onSelectHeight(child.id), 210);
-    }
+  function animateIn() {
+    Animated.parallel([
+      Animated.spring(translateY, {
+        toValue: 0,
+        damping: 24,
+        stiffness: 260,
+        mass: 0.8,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 160,
+        useNativeDriver: true,
+      }),
+    ]).start();
   }
 
-  async function handleSelectWeight() {
+  function animateOut(callback?: () => void) {
+    Animated.parallel([
+      Animated.timing(translateY, {
+        toValue: 300,
+        duration: 200,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: 180,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      setVisible(false);
+      setChild(null);
+      callback?.();
+    });
+  }
+
+  useImperativeHandle(ref, () => ({
+    show(c: Child) {
+      setChild(c);
+      translateY.setValue(300);
+      opacity.setValue(0);
+      setVisible(true);
+      // 等 Modal 渲染完再触发动画
+      requestAnimationFrame(() => animateIn());
+    },
+  }));
+
+  async function handleWeightPress() {
     if (!child) return;
     if (hasPurchased) {
-      onClose();
-      setTimeout(() => onSelectWeight(child.id), 210);
+      animateOut(() => setTimeout(() => onSelectWeight(child.id), 10));
     } else {
-      // 弹出购买 Alert，购买成功后检查 store 状态并跳转
-      await purchase();
-      const purchased = usePurchaseStore.getState().hasPurchasedWeightFeature;
-      if (purchased) {
-        onClose();
-        setTimeout(() => onSelectWeight(child.id), 210);
-      }
+      animateOut(async () => {
+        await purchase();
+        if (usePurchaseStore.getState().hasPurchasedWeightFeature) {
+          setTimeout(() => onSelectWeight(child.id), 10);
+        }
+      });
     }
   }
+
+  function handleHeightPress() {
+    if (!child) return;
+    animateOut(() => setTimeout(() => onSelectHeight(child.id), 10));
+  }
+
+  function handleClose() {
+    animateOut();
+  }
+
+  if (!visible) return null;
 
   return (
     <Modal
@@ -103,132 +122,134 @@ export function ChildActionBottomSheet({
       transparent
       animationType="none"
       statusBarTranslucent
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
     >
       {/* 遮罩 */}
       <Animated.View style={[styles.backdrop, { opacity }]}>
-        <Pressable style={StyleSheet.absoluteFill} onPress={onClose} />
+        <Pressable style={StyleSheet.absoluteFill} onPress={handleClose} />
       </Animated.View>
 
-      {/* 面板 */}
+      {/* Sheet 面板 */}
       <Animated.View
         style={[
-          styles.sheet,
-          {
-            paddingBottom: insets.bottom + 16,
-            transform: [{ translateY }],
-          },
+          styles.sheetWrapper,
+          { paddingBottom: insets.bottom + 8, transform: [{ translateY }] },
         ]}
       >
-        {/* 拖拽条 */}
-        <View style={styles.handle} />
+        {/* 主卡片：标题 + 选项 */}
+        <View style={styles.card}>
+          {/* 标题 */}
+          <View style={styles.titleRow}>
+            <Text style={styles.title}>{child?.name}</Text>
+          </View>
 
-        {/* 儿童姓名 */}
-        {child && (
-          <Text style={styles.childName}>{child.name}</Text>
-        )}
+          <View style={styles.divider} />
 
-        <View style={styles.divider} />
+          {/* 身高选项 */}
+          <TouchableOpacity
+            style={styles.option}
+            onPress={handleHeightPress}
+            activeOpacity={0.6}
+          >
+            <Text style={styles.optionText}>
+              {"  "}
+              {t("home.selectMetric.height")}
+            </Text>
+          </TouchableOpacity>
 
-        {/* 身高选项 */}
+          <View style={styles.divider} />
+
+          {/* 体重选项 */}
+          <TouchableOpacity
+            style={styles.option}
+            onPress={handleWeightPress}
+            activeOpacity={hasPurchased ? 0.6 : 0.9}
+          >
+            <Text
+              style={[styles.optionText, !hasPurchased && styles.optionLocked]}
+            >
+              {"  "}
+              {t("home.selectMetric.weight")}
+              {!hasPurchased && (
+                <Text style={styles.lockedBadge}>
+                  {"  "}{t("purchase.weightFeature.locked")}
+                </Text>
+              )}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* 取消按钮（单独卡片） */}
         <TouchableOpacity
-          style={styles.option}
-          onPress={handleSelectHeight}
+          style={[styles.card, styles.cancelCard]}
+          onPress={handleClose}
           activeOpacity={0.6}
         >
-          <Text style={styles.optionIcon}>📏</Text>
-          <Text style={styles.optionLabel}>{t('home.selectMetric.height')}</Text>
+          <Text style={styles.cancelText}>
+            {t("purchase.weightFeature.cancel")}
+          </Text>
         </TouchableOpacity>
-
-        {/* 体重选项 */}
-        <WeightOption
-          hasPurchased={hasPurchased}
-          label={t('home.selectMetric.weight')}
-          onPress={handleSelectWeight}
-        />
       </Animated.View>
     </Modal>
   );
-}
-
-/** 体重选项行 — 未购买时显示锁定样式 */
-function WeightOption({
-  hasPurchased,
-  label,
-  onPress,
-}: {
-  hasPurchased: boolean;
-  label: string;
-  onPress: () => void;
-}) {
-  return (
-    <TouchableOpacity
-      style={styles.option}
-      onPress={onPress}
-      activeOpacity={0.6}
-    >
-      <Text style={styles.optionIcon}>⚖️</Text>
-      <Text style={[styles.optionLabel, !hasPurchased && styles.optionLabelLocked]}>
-        {label}
-      </Text>
-      {!hasPurchased && (
-        <Text style={styles.lockIcon}>💎</Text>
-      )}
-    </TouchableOpacity>
-  );
-}
+});
 
 const styles = StyleSheet.create({
   backdrop: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.38)',
+    backgroundColor: "rgba(0,0,0,0.35)",
   },
-  sheet: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
+  sheetWrapper: {
+    position: "absolute",
+    left: 10,
+    right: 10,
     bottom: 0,
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.15,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: -4 },
-    elevation: 16,
-    paddingTop: 12,
+    gap: 8,
   },
-  handle: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: '#DDD',
-    alignSelf: 'center',
-    marginBottom: 12,
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 14,
+    overflow: "hidden",
   },
-  childName: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#1A1A2E',
-    textAlign: 'center',
-    paddingHorizontal: 20,
-    paddingBottom: 12,
+  titleRow: {
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 13,
+    color: "#888",
+    fontWeight: "500",
   },
   divider: {
     height: StyleSheet.hairlineWidth,
-    backgroundColor: '#EFEFEF',
-    marginHorizontal: 16,
-    marginBottom: 4,
+    backgroundColor: "#E0E0E0",
   },
   option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    paddingVertical: 16,
-    paddingHorizontal: 24,
+    paddingVertical: 17,
+    paddingHorizontal: 16,
+    alignItems: "center",
   },
-  optionIcon: { fontSize: 22, width: 30, textAlign: 'center' },
-  optionLabel: { flex: 1, fontSize: 17, color: '#4CAF82', fontWeight: '600' },
-  optionLabelLocked: { color: '#CCC' },
-  lockIcon: { fontSize: 18, color: '#F5C518' },
+  optionText: {
+    fontSize: 18,
+    color: "#4CAF82",
+    fontWeight: "500",
+  },
+  optionLocked: {
+    color: "#AAAAAA",
+  },
+  lockedBadge: {
+    fontSize: 13,
+    color: "#AAAAAA",
+  },
+  cancelCard: {
+    marginTop: 0,
+  },
+  cancelText: {
+    fontSize: 18,
+    color: "#FF3B30",
+    fontWeight: "600",
+    textAlign: "center",
+    paddingVertical: 17,
+  },
 });

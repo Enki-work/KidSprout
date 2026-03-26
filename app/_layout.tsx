@@ -4,6 +4,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
+import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { initDb } from '@/db/sqlite';
 import { useChildStore } from '@/store/childStore';
 import { initLanguage } from '@/store/settingsStore';
@@ -22,14 +23,16 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={styles.container}>
       <StatusBar style="auto" />
-      <Stack
-        screenOptions={{
-          headerTintColor: '#4CAF82',
-          headerTitleStyle: { fontWeight: 'bold' },
-          contentStyle: { backgroundColor: '#F7F8FA' },
-          headerBackButtonDisplayMode: 'minimal',
-        }}
-      />
+      <ActionSheetProvider>
+        <Stack
+          screenOptions={{
+            headerTintColor: '#4CAF82',
+            headerTitleStyle: { fontWeight: 'bold' },
+            contentStyle: { backgroundColor: '#F7F8FA' },
+            headerBackButtonDisplayMode: 'minimal',
+          }}
+        />
+      </ActionSheetProvider>
     </GestureHandlerRootView>
   );
 }

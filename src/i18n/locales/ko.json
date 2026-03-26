@@ -150,7 +150,8 @@
       "buy": "잠금 해제",
       "cancel": "취소",
       "restoreSuccess": "구매가 복원되었습니다",
-      "restoreFail": "구매 기록을 찾을 수 없습니다"
+      "restoreFail": "구매 기록을 찾을 수 없습니다",
+      "locked": "잠금"
     }
   },
   "standards": {

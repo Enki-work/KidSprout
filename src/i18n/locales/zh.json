@@ -150,7 +150,8 @@
       "buy": "立即解锁",
       "cancel": "取消",
       "restoreSuccess": "已恢复购买",
-      "restoreFail": "未找到购买记录"
+      "restoreFail": "未找到购买记录",
+      "locked": "未解锁"
     }
   },
   "standards": {

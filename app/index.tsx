@@ -3,7 +3,7 @@ import { getAgeInMonths } from "@/services/growth/age";
 import { useChildStore } from "@/store/childStore";
 import { Child } from "@/types/child";
 import { Stack, useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -16,7 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useFormatAge } from "@/hooks/useFormatAge";
 import { EmptyState } from "@/components/common/EmptyState";
 import { AppDrawer } from "@/components/common/AppDrawer";
-import { ChildActionBottomSheet } from "@/components/common/ChildActionBottomSheet";
+import { ChildActionBottomSheet, ChildActionBottomSheetRef } from "@/components/common/ChildActionBottomSheet";
 import { useAppRating } from "@/hooks/useAppRating";
 
 function ChildCard({ child, onPress }: { child: Child; onPress: () => void }) {
@@ -54,7 +54,7 @@ export default function HomeScreen() {
   const router = useRouter();
   const { children, isLoading, load } = useChildStore();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [sheetChild, setSheetChild] = useState<Child | null>(null);
+  const sheetRef = useRef<ChildActionBottomSheetRef>(null);
   useAppRating();
 
   useFocusEffect(
@@ -64,7 +64,7 @@ export default function HomeScreen() {
   );
 
   function handleCardPress(child: Child) {
-    setSheetChild(child);
+    sheetRef.current?.show(child);
   }
 
   function handleSelectHeight(childId: string) {
@@ -126,9 +126,7 @@ export default function HomeScreen() {
       <AppDrawer visible={drawerOpen} onClose={() => setDrawerOpen(false)} />
 
       <ChildActionBottomSheet
-        visible={sheetChild !== null}
-        child={sheetChild}
-        onClose={() => setSheetChild(null)}
+        ref={sheetRef}
         onSelectHeight={handleSelectHeight}
         onSelectWeight={handleSelectWeight}
       />

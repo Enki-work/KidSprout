@@ -150,7 +150,8 @@
       "buy": "アンロック",
       "cancel": "キャンセル",
       "restoreSuccess": "購入を復元しました",
-      "restoreFail": "購入記録が見つかりません"
+      "restoreFail": "購入記録が見つかりません",
+      "locked": "ロック中"
     }
   },
   "standards": {

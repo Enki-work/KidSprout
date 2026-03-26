@@ -150,7 +150,8 @@
       "buy": "Unlock Now",
       "cancel": "Cancel",
       "restoreSuccess": "Purchase restored",
-      "restoreFail": "No purchase record found"
+      "restoreFail": "No purchase record found",
+      "locked": "Locked"
     }
   },
   "standards": {
