@@ -1,23 +1,22 @@
-import { useTranslation } from 'react-i18next';
-import { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  Alert,
-  Platform,
-} from "react-native";
+import { StandardId, STANDARDS } from "@/constants/standards";
+import { useChildStore } from "@/store/childStore";
+import { Child, Sex } from "@/types/child";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
-import { useRouter, Stack } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useChildStore } from "@/store/childStore";
-import { Child, Sex } from "@/types/child";
-import { StandardId, STANDARDS } from "@/constants/standards";
+import { Stack, useRouter } from "expo-router";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  Alert,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 function genId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
@@ -52,7 +51,7 @@ export default function NewChildScreen() {
 
   function handleSave() {
     if (!name.trim()) {
-      Alert.alert(t('newChild.alertTitle'), t('newChild.alertNameRequired'));
+      Alert.alert(t("newChild.alertTitle"), t("newChild.alertNameRequired"));
       return;
     }
     const now = new Date().toISOString();
@@ -70,24 +69,25 @@ export default function NewChildScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={["bottom"]}>
-      <Stack.Screen options={{ title: t('newChild.title') }} />
+    <View style={styles.container}>
+      <Stack.Screen options={{ title: t("newChild.title") }} />
       <ScrollView
         contentContainerStyle={styles.content}
+        contentInsetAdjustmentBehavior="automatic"
         keyboardShouldPersistTaps="handled"
       >
         {/* 姓名 */}
-        <Text style={styles.label}>{t('newChild.labelName')}</Text>
+        <Text style={styles.label}>{t("newChild.labelName")}</Text>
         <TextInput
           style={styles.input}
-          placeholder={t('newChild.namePlaceholder')}
+          placeholder={t("newChild.namePlaceholder")}
           value={name}
           onChangeText={setName}
           maxLength={20}
         />
 
         {/* 性别 */}
-        <Text style={styles.label}>{t('newChild.labelSex')}</Text>
+        <Text style={styles.label}>{t("newChild.labelSex")}</Text>
         <View style={styles.row}>
           {(["male", "female"] as Sex[]).map((s) => (
             <TouchableOpacity
@@ -105,7 +105,7 @@ export default function NewChildScreen() {
         </View>
 
         {/* 出生日期 */}
-        <Text style={styles.label}>{t('newChild.labelBirthDate')}</Text>
+        <Text style={styles.label}>{t("newChild.labelBirthDate")}</Text>
         {Platform.OS === "ios" ? (
           <DateTimePicker
             value={birthDate}
@@ -138,7 +138,7 @@ export default function NewChildScreen() {
         )}
 
         {/* 成长标准 */}
-        <Text style={styles.label}>{t('newChild.labelStandard')}</Text>
+        <Text style={styles.label}>{t("newChild.labelStandard")}</Text>
         <View style={styles.row}>
           {STANDARDS.map((std) => (
             <TouchableOpacity
@@ -163,10 +163,10 @@ export default function NewChildScreen() {
 
         {/* 保存按钮 */}
         <TouchableOpacity style={styles.saveBtn} onPress={handleSave}>
-          <Text style={styles.saveBtnText}>{t('newChild.save')}</Text>
+          <Text style={styles.saveBtnText}>{t("newChild.save")}</Text>
         </TouchableOpacity>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
