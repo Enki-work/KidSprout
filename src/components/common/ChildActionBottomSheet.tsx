@@ -4,11 +4,11 @@
  * 通过 ref.show(child) 命令式调用
  */
 
-import { usePurchase } from "@/hooks/usePurchase";
 import { usePurchaseStore } from "@/store/purchaseStore";
 import { Child } from "@/types/child";
 import { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useRouter } from "expo-router";
 import {
   Animated,
   Modal,
@@ -35,7 +35,8 @@ export const ChildActionBottomSheet = forwardRef<
 >(function ChildActionBottomSheet({ onSelectHeight, onSelectWeight }, ref) {
   const { t } = useTranslation();
   const insets = useSafeAreaInsets();
-  const { hasPurchased, purchase } = usePurchase();
+  const router = useRouter();
+  const hasPurchased = usePurchaseStore(s => s.hasPurchasedWeightFeature);
 
   const [visible, setVisible] = useState(false);
   const [child, setChild] = useState<Child | null>(null);
@@ -91,16 +92,15 @@ export const ChildActionBottomSheet = forwardRef<
     },
   }));
 
-  async function handleWeightPress() {
+  function handleWeightPress() {
     if (!child) return;
     if (hasPurchased) {
+      // 已购买：直接跳转体重详情页
       animateOut(() => setTimeout(() => onSelectWeight(child.id), 10));
     } else {
-      animateOut(async () => {
-        await purchase();
-        if (usePurchaseStore.getState().hasPurchasedWeightFeature) {
-          setTimeout(() => onSelectWeight(child.id), 10);
-        }
+      // 未购买：关闭 Sheet 后跳转购买页（modal）
+      animateOut(() => {
+        setTimeout(() => router.push('/purchase/weight-feature' as never), 50);
       });
     }
   }

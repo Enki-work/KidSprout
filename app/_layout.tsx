@@ -31,7 +31,16 @@ export default function RootLayout() {
             contentStyle: { backgroundColor: '#F7F8FA' },
             headerBackButtonDisplayMode: 'minimal',
           }}
-        />
+        >
+          {/* 体重功能购买页：modal 弹出，无 header */}
+          <Stack.Screen
+            name="purchase/weight-feature"
+            options={{
+              presentation: 'modal',
+              headerShown: false,
+            }}
+          />
+        </Stack>
       </ActionSheetProvider>
     </GestureHandlerRootView>
   );

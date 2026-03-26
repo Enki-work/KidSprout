@@ -152,6 +152,25 @@
       "restoreSuccess": "Purchase restored",
       "restoreFail": "No purchase record found",
       "locked": "Locked"
+    },
+    "weightPage": {
+      "title": "Weight Curve",
+      "badge": "Premium Feature",
+      "subtitle": "One-time purchase · Unlock forever",
+      "sectionLabel": "What you'll unlock",
+      "features": [
+        "Record your child's weight & plot full growth curves",
+        "Compare percentiles with WHO, Japan & China standards",
+        "Analyze recent weight growth trends",
+        "Track multiple children independently",
+        "One-time purchase — no subscription"
+      ],
+      "buyButton": "Unlock Now",
+      "restoreButton": "Restore Purchase",
+      "legalText": "Tapping \"Unlock Now\" will charge your Apple ID account. This is a one-time, non-consumable purchase with no subscription fees. Available on all devices signed in with the same Apple ID.",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Use",
+      "close": "Close"
     }
   },
   "standards": {

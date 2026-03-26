@@ -152,6 +152,25 @@
       "restoreSuccess": "已恢復購買",
       "restoreFail": "未找到購買記錄",
       "locked": "未解鎖"
+    },
+    "weightPage": {
+      "title": "體重曲線",
+      "badge": "進階功能",
+      "subtitle": "一次購買，永久解鎖",
+      "sectionLabel": "解鎖後您將獲得",
+      "features": [
+        "記錄孩子體重，繪製完整成長曲線",
+        "與 WHO、日本、中國標準對比百分位",
+        "分析近期體重增長趨勢",
+        "支援多個孩子獨立記錄",
+        "一次性買斷，無訂閱費用"
+      ],
+      "buyButton": "立即解鎖",
+      "restoreButton": "恢復購買",
+      "legalText": "點擊「立即解鎖」，將向您的 Apple ID 帳戶收取費用。此購買為一次性買斷，無任何訂閱費用。購買完成後可在所有使用同一 Apple ID 的裝置上使用。",
+      "privacy": "隱私權政策",
+      "terms": "使用條款",
+      "close": "關閉"
     }
   },
   "standards": {

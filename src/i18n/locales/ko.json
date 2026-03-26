@@ -152,6 +152,25 @@
       "restoreSuccess": "구매가 복원되었습니다",
       "restoreFail": "구매 기록을 찾을 수 없습니다",
       "locked": "잠금"
+    },
+    "weightPage": {
+      "title": "체중 곡선",
+      "badge": "프리미엄 기능",
+      "subtitle": "일회 구매 · 영구 잠금 해제",
+      "sectionLabel": "잠금 해제 후 이용 가능",
+      "features": [
+        "아이의 체중을 기록하고 성장 곡선 그리기",
+        "WHO, 일본, 중국 기준 백분위 비교",
+        "최근 체중 증가 추세 분석",
+        "여러 자녀 개별 기록 지원",
+        "일회 구매 · 구독 없음"
+      ],
+      "buyButton": "지금 잠금 해제",
+      "restoreButton": "구매 복원",
+      "legalText": "「지금 잠금 해제」를 탭하면 Apple ID 계정에 요금이 청구됩니다. 이 구매는 일회성 구매로 구독 요금이 없습니다. 동일한 Apple ID로 로그인된 모든 기기에서 사용 가능합니다.",
+      "privacy": "개인정보 처리방침",
+      "terms": "이용 약관",
+      "close": "닫기"
     }
   },
   "standards": {

@@ -152,6 +152,25 @@
       "restoreSuccess": "Compra restaurada",
       "restoreFail": "No se encontró registro de compra",
       "locked": "Bloqueado"
+    },
+    "weightPage": {
+      "title": "Curva de Peso",
+      "badge": "Función Premium",
+      "subtitle": "Compra única · Desbloqueo permanente",
+      "sectionLabel": "Qué desbloquearás",
+      "features": [
+        "Registra el peso de tu hijo y visualiza su curva de crecimiento",
+        "Compara percentiles con estándares de la OMS, Japón y China",
+        "Analiza las tendencias recientes de aumento de peso",
+        "Registra varios hijos de forma independiente",
+        "Compra única — sin suscripción"
+      ],
+      "buyButton": "Desbloquear ahora",
+      "restoreButton": "Restaurar compra",
+      "legalText": "Al pulsar «Desbloquear ahora», se cargará el importe en tu cuenta de Apple ID. Se trata de una compra única sin cuotas de suscripción. Disponible en todos los dispositivos con la misma Apple ID.",
+      "privacy": "Política de privacidad",
+      "terms": "Condiciones de uso",
+      "close": "Cerrar"
     }
   },
   "standards": {
