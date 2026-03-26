@@ -107,15 +107,17 @@ export default function NewChildScreen() {
         {/* 出生日期 */}
         <Text style={styles.label}>{t("newChild.labelBirthDate")}</Text>
         {Platform.OS === "ios" ? (
-          <DateTimePicker
-            value={birthDate}
-            mode="date"
-            display="spinner"
-            onChange={onDateChange}
-            minimumDate={minBirthDate}
-            maximumDate={today}
-            style={styles.iosPicker}
-          />
+          <View style={styles.iosPickerWrapper}>
+            <DateTimePicker
+              value={birthDate}
+              mode="date"
+              display="spinner"
+              onChange={onDateChange}
+              minimumDate={minBirthDate}
+              maximumDate={today}
+              style={styles.iosPicker}
+            />
+          </View>
         ) : (
           <>
             <TouchableOpacity
@@ -186,7 +188,8 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  iosPicker: { marginTop: 4, marginLeft: -8 },
+  iosPickerWrapper: { height: 160, overflow: "hidden", marginTop: 4 },
+  iosPicker: { marginLeft: -8 },
 
   dateBtn: {
     borderWidth: 1,

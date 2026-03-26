@@ -82,15 +82,17 @@ export default function AddWeightMeasurementScreen() {
         <Text style={styles.label}>{t('addWeightMeasurement.labelDate')}</Text>
 
         {Platform.OS === 'ios' ? (
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="spinner"
-            onChange={onDateChange}
-            minimumDate={minMeasureDate}
-            maximumDate={today}
-            style={styles.iosPicker}
-          />
+          <View style={styles.iosPickerWrapper}>
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="spinner"
+              onChange={onDateChange}
+              minimumDate={minMeasureDate}
+              maximumDate={today}
+              style={styles.iosPicker}
+            />
+          </View>
         ) : (
           <>
             <TouchableOpacity
@@ -153,7 +155,8 @@ const styles = StyleSheet.create({
     fontSize: 16, color: '#1A1A2E', marginTop: 4,
   },
 
-  iosPicker:   { marginTop: 4, marginLeft: -8 },
+  iosPickerWrapper: { height: 160, overflow: 'hidden', marginTop: 4 },
+  iosPicker:   { marginLeft: -8 },
   dateBtn: {
     borderWidth: 1, borderColor: '#DDD', borderRadius: 10,
     paddingHorizontal: 14, paddingVertical: 12, marginTop: 4,
