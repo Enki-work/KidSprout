@@ -21,6 +21,7 @@
     },
     "android": {
       "package": "com.qiyan.KidSprout",
+      "permissions": ["com.android.vending.BILLING"],
       "adaptiveIcon": {
         "backgroundColor": "#4CAF82",
         "foregroundImage": "./assets/android-icon-foreground.png",
