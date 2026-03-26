@@ -19,6 +19,10 @@
     "empty": {
       "title": "还没有小宝贝的记录呢",
       "desc": "点右上角，开始记录 TA 的第一次测量吧～"
+    },
+    "selectMetric": {
+      "height": "身高",
+      "weight": "体重"
     }
   },
   "newChild": {
@@ -87,6 +91,15 @@
       "confirm": "确认删除"
     },
     "addHeight": "＋ 添加身高",
+    "addWeight": "＋ 添加体重",
+    "deleteWeightRecord": {
+      "title": "删除这条记录？",
+      "msg": "{{date}} 的体重记录将被永久删除。",
+      "cancel": "再想想",
+      "confirm": "确认删除"
+    },
+    "noWeightRecords": "还没有体重记录",
+    "noWeightRecordsDesc": "点下方按钮，添加第一次体重测量",
     "analysis": {
       "currentStatus": "当前状况",
       "height": "身高",
@@ -99,7 +112,9 @@
       "insufficientData": "记录数量不足，无法计算",
       "prediction": "{{maxAge}}岁身高估算",
       "predictedHeight": "约 {{height}} cm",
-      "disclaimer": "仅供参考，青春期发育、遗传、营养、睡眠与健康状况都会影响最终身高。"
+      "disclaimer": "仅供参考，青春期发育、遗传、营养、睡眠与健康状况都会影响最终身高。",
+      "weight": "体重",
+      "weightUnit": "kg"
     },
     "percentileModal": {
       "title": "什么是百分位（Pxx）？",
@@ -116,6 +131,27 @@
     "resetZoom": "复原",
     "gestureHintZoomed": "单指拖拽移动 · 双指缩放",
     "gestureHintNormal": "双指捏合放大"
+  },
+  "addWeightMeasurement": {
+    "title": "记录今天的体重",
+    "labelDate": "今天几号测的？",
+    "labelWeight": "量了多少？（kg）",
+    "weightPlaceholder": "例：18.5",
+    "labelNote": "有什么想记下来的吗？",
+    "notePlaceholder": "例：医院体检、家里量的…",
+    "save": "记下来！",
+    "alertTitle": "好像哪里不对～",
+    "alertWeightInvalid": "体重请填写 1〜200 kg 之间的数值哦"
+  },
+  "purchase": {
+    "weightFeature": {
+      "alertTitle": "体重曲线（高级功能）",
+      "alertMessage": "解锁体重成长曲线，记录孩子体重变化，与同龄儿童对比百分位。",
+      "buy": "立即解锁",
+      "cancel": "取消",
+      "restoreSuccess": "已恢复购买",
+      "restoreFail": "未找到购买记录"
+    }
   },
   "standards": {
     "japan": {

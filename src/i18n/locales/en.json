@@ -19,6 +19,10 @@
     "empty": {
       "title": "No children yet",
       "desc": "Tap the button in the top right to start tracking!"
+    },
+    "selectMetric": {
+      "height": "Height",
+      "weight": "Weight"
     }
   },
   "newChild": {
@@ -87,6 +91,15 @@
       "confirm": "Delete"
     },
     "addHeight": "＋ Add Height",
+    "addWeight": "＋ Add Weight",
+    "deleteWeightRecord": {
+      "title": "Delete this record?",
+      "msg": "The weight record from {{date}} will be permanently deleted.",
+      "cancel": "Cancel",
+      "confirm": "Delete"
+    },
+    "noWeightRecords": "No weight measurements yet",
+    "noWeightRecordsDesc": "Tap the button below to add the first weight measurement",
     "analysis": {
       "currentStatus": "Current Status",
       "height": "Height",
@@ -99,7 +112,9 @@
       "insufficientData": "Not enough records to calculate",
       "prediction": "Predicted Height at {{maxAge}} yrs",
       "predictedHeight": "~{{height}} cm",
-      "disclaimer": "For reference only. Final height depends on puberty, genetics, nutrition, sleep, and overall health."
+      "disclaimer": "For reference only. Final height depends on puberty, genetics, nutrition, sleep, and overall health.",
+      "weight": "Weight",
+      "weightUnit": "kg"
     },
     "percentileModal": {
       "title": "What is Percentile (Pxx)?",
@@ -116,6 +131,27 @@
     "resetZoom": "Reset",
     "gestureHintZoomed": "Drag to pan · Pinch to zoom",
     "gestureHintNormal": "Pinch to zoom in"
+  },
+  "addWeightMeasurement": {
+    "title": "Record Weight",
+    "labelDate": "When was it measured?",
+    "labelWeight": "Weight (kg)",
+    "weightPlaceholder": "e.g. 18.5",
+    "labelNote": "Any notes?",
+    "notePlaceholder": "e.g. Checkup, measured at home…",
+    "save": "Save!",
+    "alertTitle": "Invalid input",
+    "alertWeightInvalid": "Please enter a weight between 1 and 200 kg"
+  },
+  "purchase": {
+    "weightFeature": {
+      "alertTitle": "Weight Charts (Premium)",
+      "alertMessage": "Unlock weight growth charts to track your child's weight and compare with age-matched percentiles.",
+      "buy": "Unlock Now",
+      "cancel": "Cancel",
+      "restoreSuccess": "Purchase restored",
+      "restoreFail": "No purchase record found"
+    }
   },
   "standards": {
     "japan": {

@@ -19,6 +19,10 @@
     "empty": {
       "title": "Aún no hay registros",
       "desc": "Toca el botón de arriba a la derecha para empezar a registrar"
+    },
+    "selectMetric": {
+      "height": "Altura",
+      "weight": "Peso"
     }
   },
   "newChild": {
@@ -87,6 +91,15 @@
       "confirm": "Eliminar"
     },
     "addHeight": "＋ Añadir altura",
+    "addWeight": "＋ Agregar peso",
+    "deleteWeightRecord": {
+      "title": "¿Eliminar este registro?",
+      "msg": "El registro de peso del {{date}} se eliminará permanentemente.",
+      "cancel": "Cancelar",
+      "confirm": "Eliminar"
+    },
+    "noWeightRecords": "Aún no hay mediciones de peso",
+    "noWeightRecordsDesc": "Toca el botón de abajo para añadir la primera medición de peso",
     "analysis": {
       "currentStatus": "Estado actual",
       "height": "Altura",
@@ -99,7 +112,9 @@
       "insufficientData": "Registros insuficientes para calcular",
       "prediction": "Altura estimada a los {{maxAge}} años",
       "predictedHeight": "~{{height}} cm",
-      "disclaimer": "Solo como referencia. La altura final depende de la pubertad, genética, nutrición, sueño y salud general."
+      "disclaimer": "Solo como referencia. La altura final depende de la pubertad, genética, nutrición, sueño y salud general.",
+      "weight": "Peso",
+      "weightUnit": "kg"
     },
     "percentileModal": {
       "title": "¿Qué es el Percentil (Pxx)?",
@@ -116,6 +131,27 @@
     "resetZoom": "Restablecer",
     "gestureHintZoomed": "Arrastra para mover · Pellizca para zoom",
     "gestureHintNormal": "Pellizca para ampliar"
+  },
+  "addWeightMeasurement": {
+    "title": "Registrar peso",
+    "labelDate": "¿Cuándo fue medido/a?",
+    "labelWeight": "Peso (kg)",
+    "weightPlaceholder": "Ej.: 18.5",
+    "labelNote": "¿Alguna nota?",
+    "notePlaceholder": "Ej.: Revisión médica, medido en casa…",
+    "save": "¡Guardar!",
+    "alertTitle": "Entrada inválida",
+    "alertWeightInvalid": "Por favor ingresa un peso entre 1 y 200 kg"
+  },
+  "purchase": {
+    "weightFeature": {
+      "alertTitle": "Curva de peso (Premium)",
+      "alertMessage": "Desbloquea las curvas de crecimiento de peso para registrar el peso de tu hijo/a y compararlo con percentiles.",
+      "buy": "Desbloquear",
+      "cancel": "Cancelar",
+      "restoreSuccess": "Compra restaurada",
+      "restoreFail": "No se encontró registro de compra"
+    }
   },
   "standards": {
     "japan": {

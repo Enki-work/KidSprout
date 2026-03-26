@@ -7,13 +7,15 @@ import { StyleSheet } from 'react-native';
 import { initDb } from '@/db/sqlite';
 import { useChildStore } from '@/store/childStore';
 import { initLanguage } from '@/store/settingsStore';
+import { initPurchaseState } from '@/store/purchaseStore';
 
 export default function RootLayout() {
   const loadChildren = useChildStore(s => s.load);
 
   useEffect(() => {
-    initDb();        // 先建表
-    initLanguage();  // 再读取已保存的语言
+    initDb();             // 先建表
+    initLanguage();       // 再读取已保存的语言
+    initPurchaseState();  // 读取内购状态
     loadChildren();
   }, []);
 

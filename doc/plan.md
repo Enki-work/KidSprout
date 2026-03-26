@@ -1,6 +1,6 @@
 # 小芽成长 · 开发计划书
 
-> 版本：v0.7 · 日期：2026-03-25
+> 版本：v0.7 · 日期：2026-03-26（已完成）
 > 原则：**先能跑通，再逐步专业化**
 
 ---
@@ -61,9 +61,9 @@
 
 | 功能             | 说明                                                         | 状态      |
 | ---------------- | ------------------------------------------------------------ | --------- |
-| 首页 BottomSheet | 点击儿童卡片弹出选择面板（身高 / 体重）                      | 🔨 进行中 |
-| 体重曲线功能     | 全套体重记录 + 成长曲线可视化（WHO / 日本 / 中国标准）       | 🔨 进行中 |
-| 买断制内购       | 体重功能需购买解锁，未购买时显示 💎 锁定状态                 | 🔨 进行中 |
+| 首页 BottomSheet | 点击儿童卡片弹出选择面板（身高 / 体重）                      | ✅        |
+| 体重曲线功能     | 全套体重记录 + 成长曲线可视化（WHO / 日本 / 中国标准）       | ✅        |
+| 买断制内购       | 体重功能需购买解锁，未购买时显示 💎 锁定状态                 | ✅        |
 
 ### P2（长期规划）
 
@@ -163,7 +163,7 @@
 
 ## 5. 项目目录结构
 
-> ✅ 已完成　🔨 本次新增
+> ✅ 已完成（v0.7 所有新增文件均已完成）
 
 ```
 KidSprout/
@@ -177,9 +177,9 @@ KidSprout/
 │        ├─ edit.tsx               ✅
 │        ├─ add-measurement.tsx    ✅  添加身高
 │        ├─ chart-fullscreen.tsx   ✅
-│        ├─ weight.tsx             🔨  体重详情页（新建）
-│        ├─ add-weight-measurement.tsx  🔨  添加体重（新建）
-│        └─ weight-chart-fullscreen.tsx 🔨  体重全屏图表（新建）
+│        ├─ weight.tsx             ✅  体重详情页
+│        ├─ add-weight-measurement.tsx  ✅  添加体重
+│        └─ weight-chart-fullscreen.tsx ✅  体重全屏图表
 │
 ├─ src/
 │  ├─ components/
@@ -188,16 +188,16 @@ KidSprout/
 │  │  └─ common/
 │  │     ├─ AppDrawer.tsx          ✅
 │  │     ├─ EmptyState.tsx         ✅
-│  │     └─ ChildActionBottomSheet.tsx  🔨  选择面板（新建）
+│  │     └─ ChildActionBottomSheet.tsx  ✅  选择面板
 │  │
 │  ├─ data/
 │  │  └─ standards/
 │  │     ├─ japan.ts               ✅  日本身高
 │  │     ├─ who.ts                 ✅  WHO 身高
 │  │     ├─ china.ts               ✅  中国身高
-│  │     ├─ japan_weight.ts        🔨  日本体重（新建）
-│  │     ├─ who_weight.ts          🔨  WHO 体重（新建）
-│  │     └─ china_weight.ts        🔨  中国体重（新建）
+│  │     ├─ japan_weight.ts        ✅  日本体重
+│  │     ├─ who_weight.ts          ✅  WHO 体重
+│  │     └─ china_weight.ts        ✅  中国体重
 │  │
 │  ├─ db/
 │  │  ├─ sqlite.ts                 ✅  新增 weight_kg 列幂等迁移
@@ -210,13 +210,13 @@ KidSprout/
 │  │  │  └─ useComputedMeasurements.ts  ✅
 │  │  ├─ useFormatAge.ts           ✅
 │  │  ├─ useAppRating.ts           ✅
-│  │  └─ usePurchase.ts            🔨  内购 Hook（新建）
+│  │  └─ usePurchase.ts            ✅  内购 Hook
 │  │
 │  ├─ store/
 │  │  ├─ childStore.ts             ✅
 │  │  ├─ measurementStore.ts       ✅
 │  │  ├─ settingsStore.ts          ✅
-│  │  └─ purchaseStore.ts          🔨  内购状态（新建）
+│  │  └─ purchaseStore.ts          ✅  内购状态
 │  │
 │  ├─ types/
 │  │  ├─ child.ts                  ✅

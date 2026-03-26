@@ -172,6 +172,7 @@ eas submit --platform android
 ```
 
 > **前提**：
+>
 > 1. 已在 Google Play Console 手动创建 App 记录并上传至少一个 AAB（首次需手动上传）
 > 2. 已配置 Google Play API Service Account 并授予发布权限
 > 3. Google Play 元数据（描述、关键词等）需在 Play Console 手动填写，`store.config.json` 不支持自动推送到 Google Play
@@ -183,6 +184,11 @@ eas submit --platform android
 - [WHO Child Growth Standards](https://www.who.int/tools/child-growth-standards)
 - [日本厚生劳働省 乳幼児身体発育調査](https://www.mhlw.go.jp/)
 - 中华人民共和国卫生健康委员会儿童生长发育标准
+  - https://www.nhc.gov.cn/wjw/pqt/201807/a5269d062966455ea55d90a02c690311/files/1739781199549_21835.pdf
+  - https://www.nhc.gov.cn/wjw/c100311/202211/923e7646561d4b88b72da9097d4da4d5.shtml
+- https://mapp.api.weibo.cn/fx/8310c5049465e16487e481d0632e8ccc.html
+- https://caod.oriprobe.com/articles/16246428/Height_and_weight_standardized_growth_charts_for_C.htm
+- http://cjchc.xjtu.edu.cn/CN/article/advancedSearchResult.do
 
 ---
 

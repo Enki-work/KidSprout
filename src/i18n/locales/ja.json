@@ -19,6 +19,10 @@
     "empty": {
       "title": "まだ記録がありません",
       "desc": "右上のボタンから、最初の身長を記録しよう！"
+    },
+    "selectMetric": {
+      "height": "身長",
+      "weight": "体重"
     }
   },
   "newChild": {
@@ -87,6 +91,15 @@
       "confirm": "削除する"
     },
     "addHeight": "＋ 身長を追加",
+    "addWeight": "＋ 体重を追加",
+    "deleteWeightRecord": {
+      "title": "この記録を削除しますか？",
+      "msg": "{{date}} の体重記録が完全に削除されます。",
+      "cancel": "キャンセル",
+      "confirm": "削除する"
+    },
+    "noWeightRecords": "まだ体重の記録がありません",
+    "noWeightRecordsDesc": "下のボタンから最初の体重を追加しよう",
     "analysis": {
       "currentStatus": "現在の状況",
       "height": "身長",
@@ -99,7 +112,9 @@
       "insufficientData": "記録が不足しています",
       "prediction": "{{maxAge}}歳時の身長予測",
       "predictedHeight": "約 {{height}} cm",
-      "disclaimer": "参考値です。思春期の発育・遺伝・栄養・睡眠・健康状態により最終身長は異なります。"
+      "disclaimer": "参考値です。思春期の発育・遺伝・栄養・睡眠・健康状態により最終身長は異なります。",
+      "weight": "体重",
+      "weightUnit": "kg"
     },
     "percentileModal": {
       "title": "パーセンタイルとは？",
@@ -116,6 +131,27 @@
     "resetZoom": "リセット",
     "gestureHintZoomed": "1本指でドラッグ · 2本指でズーム",
     "gestureHintNormal": "2本指でピンチして拡大"
+  },
+  "addWeightMeasurement": {
+    "title": "体重を記録する",
+    "labelDate": "測定日は？",
+    "labelWeight": "何 kg？",
+    "weightPlaceholder": "例：18.5",
+    "labelNote": "メモはありますか？",
+    "notePlaceholder": "例：健康診断、自宅で計測…",
+    "save": "記録する！",
+    "alertTitle": "入力が正しくありません",
+    "alertWeightInvalid": "体重は 1〜200 kg の範囲で入力してください"
+  },
+  "purchase": {
+    "weightFeature": {
+      "alertTitle": "体重曲線（プレミアム機能）",
+      "alertMessage": "体重成長曲線をアンロックして、お子さまの体重変化を記録し、同年齢の子どもと百分位を比較できます。",
+      "buy": "アンロック",
+      "cancel": "キャンセル",
+      "restoreSuccess": "購入を復元しました",
+      "restoreFail": "購入記録が見つかりません"
+    }
   },
   "standards": {
     "japan": {

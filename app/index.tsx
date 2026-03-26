@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useFormatAge } from "@/hooks/useFormatAge";
 import { EmptyState } from "@/components/common/EmptyState";
 import { AppDrawer } from "@/components/common/AppDrawer";
+import { ChildActionBottomSheet } from "@/components/common/ChildActionBottomSheet";
 import { useAppRating } from "@/hooks/useAppRating";
 
 function ChildCard({ child, onPress }: { child: Child; onPress: () => void }) {
@@ -53,6 +54,7 @@ export default function HomeScreen() {
   const router = useRouter();
   const { children, isLoading, load } = useChildStore();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [sheetChild, setSheetChild] = useState<Child | null>(null);
   useAppRating();
 
   useFocusEffect(
@@ -60,6 +62,18 @@ export default function HomeScreen() {
       load();
     }, []),
   );
+
+  function handleCardPress(child: Child) {
+    setSheetChild(child);
+  }
+
+  function handleSelectHeight(childId: string) {
+    router.push(`/children/${childId}` as never);
+  }
+
+  function handleSelectWeight(childId: string) {
+    router.push(`/children/${childId}/weight` as never);
+  }
 
   return (
     <>
@@ -102,7 +116,7 @@ export default function HomeScreen() {
             renderItem={({ item }) => (
               <ChildCard
                 child={item}
-                onPress={() => router.push(`/children/${item.id}` as never)}
+                onPress={() => handleCardPress(item)}
               />
             )}
           />
@@ -110,6 +124,14 @@ export default function HomeScreen() {
       </SafeAreaView>
 
       <AppDrawer visible={drawerOpen} onClose={() => setDrawerOpen(false)} />
+
+      <ChildActionBottomSheet
+        visible={sheetChild !== null}
+        child={sheetChild}
+        onClose={() => setSheetChild(null)}
+        onSelectHeight={handleSelectHeight}
+        onSelectWeight={handleSelectWeight}
+      />
     </>
   );
 }
