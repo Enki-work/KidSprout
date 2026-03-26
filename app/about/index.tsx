@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as StoreReview from 'expo-store-review';
 import Constants from 'expo-constants';
+import { markUserRated } from '@/hooks/useAppRating';
 
 const version = Constants.expoConfig?.version ?? '1.0.0';
 
@@ -23,6 +24,9 @@ export default function AboutScreen() {
   const { t } = useTranslation();
 
   async function handleRate() {
+    // 用户主动点击，标记为已评价，之后不再自动弹窗
+    markUserRated();
+
     // 优先使用原生评价弹窗（仅在生产包中可用）
     if (await StoreReview.isAvailableAsync()) {
       await StoreReview.requestReview();
