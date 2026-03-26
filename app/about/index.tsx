@@ -2,6 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { Stack } from 'expo-router';
 import {
   Image,
+  Linking,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,13 +15,22 @@ import Constants from 'expo-constants';
 
 const version = Constants.expoConfig?.version ?? '1.0.0';
 
+// 替换为实际的 App Store / Google Play 链接
+const APP_STORE_URL = 'https://apps.apple.com/app/idXXXXXXXXX';
+const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.qiyan.KidSprout';
+
 export default function AboutScreen() {
   const { t } = useTranslation();
 
   async function handleRate() {
+    // 优先使用原生评价弹窗（仅在生产包中可用）
     if (await StoreReview.isAvailableAsync()) {
-      StoreReview.requestReview();
+      await StoreReview.requestReview();
+      return;
     }
+    // 降级：直接打开商店页面
+    const url = Platform.OS === 'android' ? PLAY_STORE_URL : APP_STORE_URL;
+    Linking.openURL(url);
   }
 
   return (
