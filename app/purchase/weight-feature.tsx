@@ -13,9 +13,10 @@
 
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Linking,
   ScrollView,
   StyleSheet,
@@ -24,7 +25,7 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { usePurchaseStore } from '@/store/purchaseStore';
+import { usePurchase } from '@/hooks/usePurchase';
 
 // 隐私政策 URL（来自 store.config.json）
 const PRIVACY_URL = 'https://enki-work.github.io/KidSprout/privacy.html';
@@ -46,37 +47,39 @@ export default function WeightFeaturePurchasePage() {
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const setPurchased = usePurchaseStore(s => s.setPurchased);
+  const { hasPurchased, isLoading, displayPrice, purchase, restore } = usePurchase();
 
   const [buying, setBuying] = useState(false);
   const [restoring, setRestoring] = useState(false);
 
   const features: string[] = t('purchase.weightPage.features', { returnObjects: true }) as string[];
 
-  /** 购买（本期模拟成功，接入 expo-in-app-purchases 后替换此处逻辑） */
+  // 购买成功后自动关闭页面
+  useEffect(() => {
+    if (hasPurchased) router.back();
+  }, [hasPurchased, router]);
+
+  /** 发起购买 */
   async function handleBuy() {
     setBuying(true);
     try {
-      // TODO: 接入 StoreKit
-      // const { responseCode } = await InAppPurchases.purchaseItemAsync('com.qiyan.KidSprout.weight_feature');
-      // if (responseCode === IAPResponseCode.OK) { setPurchased(true); router.back(); }
-      await new Promise(r => setTimeout(r, 800)); // 模拟网络延迟
-      setPurchased(true);
-      router.back();
+      await purchase();
+      // 购买结果通过 purchaseUpdatedListener 异步处理，成功后 hasPurchased 变为 true
+    } catch {
+      // 原生模块不可用（Expo Go / 模拟器）时静默忽略
     } finally {
       setBuying(false);
     }
   }
 
-  /** 恢复购买（本期模拟，接入后替换） */
+  /** 恢复购买 */
   async function handleRestore() {
     setRestoring(true);
     try {
-      // TODO: 接入 StoreKit
-      // await InAppPurchases.connectAsync();
-      // const { responseCode, results } = await InAppPurchases.getPurchaseHistoryAsync();
-      await new Promise(r => setTimeout(r, 800));
-      // 本期：仅模拟，不修改状态
+      const found = await restore();
+      if (!found) {
+        Alert.alert('', t('purchase.weightFeature.restoreFail'));
+      }
     } finally {
       setRestoring(false);
     }
@@ -131,16 +134,18 @@ export default function WeightFeaturePurchasePage() {
 
         {/* ── 购买按钮 ── */}
         <TouchableOpacity
-          style={[styles.buyBtn, buying && styles.buyBtnDisabled]}
+          style={[styles.buyBtn, (buying || isLoading) && styles.buyBtnDisabled]}
           onPress={handleBuy}
           activeOpacity={0.8}
-          disabled={buying || restoring}
+          disabled={buying || restoring || isLoading}
         >
-          {buying ? (
+          {buying || isLoading ? (
             <ActivityIndicator color="#fff" />
           ) : (
             <Text style={styles.buyBtnText}>
-              {t('purchase.weightPage.buyButton')}
+              {displayPrice
+                ? `${t('purchase.weightPage.buyButton')} ${displayPrice}`
+                : t('purchase.weightPage.buyButton')}
             </Text>
           )}
         </TouchableOpacity>
