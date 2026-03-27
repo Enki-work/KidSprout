@@ -200,7 +200,12 @@
   },
   "drawer": {
     "language": "语言",
-    "about": "关于"
+    "about": "关于",
+    "manage": "编辑档案"
+  },
+  "manageChildren": {
+    "title": "儿童档案",
+    "edit": "编辑"
   },
   "about": {
     "title": "关于小芽成长",

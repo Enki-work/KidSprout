@@ -110,6 +110,16 @@ export function AppDrawer({ visible, onClose }: Props) {
         <View style={styles.menu}>
           <TouchableOpacity
             style={styles.menuItem}
+            onPress={() => navigate('/manage')}
+            activeOpacity={0.6}
+          >
+            <Ionicons name="people-outline" size={22} color="#4CAF82" style={styles.menuIcon} />
+            <Text style={styles.menuLabel}>{t('drawer.manage')}</Text>
+            <Ionicons name="chevron-forward" size={18} color="#CCC" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuItem}
             onPress={() => navigate('/settings')}
             activeOpacity={0.6}
           >

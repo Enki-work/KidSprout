@@ -201,7 +201,12 @@
   },
   "drawer": {
     "language": "語言",
-    "about": "關於"
+    "about": "關於",
+    "manage": "編輯檔案"
+  },
+  "manageChildren": {
+    "title": "兒童檔案",
+    "edit": "編輯"
   },
   "about": {
     "title": "關於小芽成長",

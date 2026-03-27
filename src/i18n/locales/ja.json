@@ -200,7 +200,12 @@
   },
   "drawer": {
     "language": "言語",
-    "about": "アプリについて"
+    "about": "アプリについて",
+    "manage": "プロフィール編集"
+  },
+  "manageChildren": {
+    "title": "子どものプロフィール",
+    "edit": "編集"
   },
   "about": {
     "title": "アプリについて",

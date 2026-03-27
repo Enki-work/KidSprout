@@ -200,7 +200,12 @@
   },
   "drawer": {
     "language": "Language",
-    "about": "About"
+    "about": "About",
+    "manage": "Edit Profiles"
+  },
+  "manageChildren": {
+    "title": "Children",
+    "edit": "Edit"
   },
   "about": {
     "title": "About KidSprout",

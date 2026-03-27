@@ -171,14 +171,6 @@ export default function ChildDetailScreen() {
           headerRight: () => (
             <View style={styles.headerRight}>
               <DebugAddTestData childId={childId ?? ""} />
-              <TouchableOpacity
-                style={styles.editBtn}
-                onPress={() =>
-                  router.push(`/children/${childId}/edit` as never)
-                }
-              >
-                <Text style={styles.editBtnText}>{t("childDetail.edit")}</Text>
-              </TouchableOpacity>
             </View>
           ),
         }}

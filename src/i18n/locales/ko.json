@@ -200,7 +200,12 @@
   },
   "drawer": {
     "language": "언어",
-    "about": "앱 정보"
+    "about": "앱 정보",
+    "manage": "프로필 편집"
+  },
+  "manageChildren": {
+    "title": "어린이 프로필",
+    "edit": "편집"
   },
   "about": {
     "title": "KidSprout 정보",
