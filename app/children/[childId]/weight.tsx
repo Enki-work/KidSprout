@@ -1,5 +1,6 @@
 import { GrowthChart } from "@/components/chart/GrowthChart";
 import { MeasurementPoint } from "@/components/chart/MeasurementSeries";
+import { DebugAddWeightTestData } from "@/components/debug/DebugAddWeightTestData";
 import { getWeightStandardFile, StandardId } from "@/constants/standards";
 import { useFormatAge } from "@/hooks/useFormatAge";
 import { getAgeInMonths } from "@/services/growth/age";
@@ -17,7 +18,6 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
-  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -76,7 +76,6 @@ export default function WeightDetailScreen() {
     byChild,
     loadingByChild,
     loadForChild,
-    remove: removeMeasurement,
   } = useMeasurementStore();
   const allMeasurements = byChild[childId ?? ""] ?? [];
   const isMeasurementsLoading = loadingByChild[childId ?? ""] ?? false;
@@ -169,6 +168,7 @@ export default function WeightDetailScreen() {
       <Stack.Screen
         options={{
           title: `${child.name} ${t("childDetail.analysis.weight")}`,
+          headerRight: () => <DebugAddWeightTestData childId={childId ?? ""} />,
         }}
       />
 
@@ -330,7 +330,16 @@ export default function WeightDetailScreen() {
             </View>
           ) : (
             [...computed].reverse().map((m) => (
-              <View key={m.id} style={styles.recordRow}>
+              <TouchableOpacity
+                key={m.id}
+                style={styles.recordRow}
+                activeOpacity={0.7}
+                onPress={() =>
+                  router.push(
+                    `/children/${childId}/edit-weight-measurement?id=${m.id}` as never,
+                  )
+                }
+              >
                 <View style={styles.recordMain}>
                   <Text style={styles.recordDate}>{m.measuredAt}</Text>
                   <View style={styles.recordSubRow}>
@@ -350,31 +359,7 @@ export default function WeightDetailScreen() {
                   </View>
                 </View>
                 <Text style={styles.recordWeight}>{m.weightKg} kg</Text>
-                <TouchableOpacity
-                  style={styles.deleteBtn}
-                  onPress={() =>
-                    Alert.alert(
-                      t("childDetail.deleteWeightRecord.title"),
-                      t("childDetail.deleteWeightRecord.msg", {
-                        date: m.measuredAt,
-                      }),
-                      [
-                        {
-                          text: t("childDetail.deleteWeightRecord.cancel"),
-                          style: "cancel",
-                        },
-                        {
-                          text: t("childDetail.deleteWeightRecord.confirm"),
-                          style: "destructive",
-                          onPress: () => removeMeasurement(m.id, child.id),
-                        },
-                      ],
-                    )
-                  }
-                >
-                  <Text style={styles.deleteBtnText}>×</Text>
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             ))
           )}
         </ScrollView>

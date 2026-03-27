@@ -143,6 +143,16 @@
     "alertTitle": "好像哪里不对～",
     "alertWeightInvalid": "体重请填写 1〜200 kg 之间的数值哦"
   },
+  "editMeasurement": {
+    "title": "修改身高记录",
+    "save": "保存修改",
+    "delete": "删除这条记录"
+  },
+  "editWeightMeasurement": {
+    "title": "修改体重记录",
+    "save": "保存修改",
+    "delete": "删除这条记录"
+  },
   "purchase": {
     "weightFeature": {
       "alertTitle": "体重曲线（高级功能）",

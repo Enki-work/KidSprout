@@ -143,6 +143,16 @@
     "alertTitle": "Invalid input",
     "alertWeightInvalid": "Please enter a weight between 1 and 200 kg"
   },
+  "editMeasurement": {
+    "title": "Edit Height Record",
+    "save": "Save Changes",
+    "delete": "Delete This Record"
+  },
+  "editWeightMeasurement": {
+    "title": "Edit Weight Record",
+    "save": "Save Changes",
+    "delete": "Delete This Record"
+  },
   "purchase": {
     "weightFeature": {
       "alertTitle": "Weight Charts (Premium)",

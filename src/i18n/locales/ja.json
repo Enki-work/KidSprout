@@ -143,6 +143,16 @@
     "alertTitle": "入力が正しくありません",
     "alertWeightInvalid": "体重は 1〜200 kg の範囲で入力してください"
   },
+  "editMeasurement": {
+    "title": "身長記録を編集",
+    "save": "変更を保存",
+    "delete": "この記録を削除"
+  },
+  "editWeightMeasurement": {
+    "title": "体重記録を編集",
+    "save": "変更を保存",
+    "delete": "この記録を削除"
+  },
   "purchase": {
     "weightFeature": {
       "alertTitle": "体重曲線（プレミアム機能）",

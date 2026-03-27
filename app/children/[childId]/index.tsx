@@ -19,7 +19,6 @@ import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
-  Alert,
   Modal,
   Pressable,
   ScrollView,
@@ -81,7 +80,6 @@ export default function ChildDetailScreen() {
     byChild,
     loadingByChild,
     loadForChild,
-    remove: removeMeasurement,
   } = useMeasurementStore();
   const measurements = byChild[childId ?? ""] ?? [];
   const isMeasurementsLoading = loadingByChild[childId ?? ""] ?? false;
@@ -362,7 +360,16 @@ export default function ChildDetailScreen() {
             </View>
           ) : (
             [...computed].reverse().map((m) => (
-              <View key={m.id} style={styles.recordRow}>
+              <TouchableOpacity
+                key={m.id}
+                style={styles.recordRow}
+                activeOpacity={0.7}
+                onPress={() =>
+                  router.push(
+                    `/children/${childId}/edit-measurement?id=${m.id}` as never,
+                  )
+                }
+              >
                 <View style={styles.recordMain}>
                   <Text style={styles.recordDate}>{m.measuredAt}</Text>
                   <View style={styles.recordSubRow}>
@@ -382,29 +389,7 @@ export default function ChildDetailScreen() {
                   </View>
                 </View>
                 <Text style={styles.recordHeight}>{m.heightCm} cm</Text>
-                <TouchableOpacity
-                  style={styles.deleteBtn}
-                  onPress={() =>
-                    Alert.alert(
-                      t("childDetail.deleteRecord.title"),
-                      t("childDetail.deleteRecord.msg", { date: m.measuredAt }),
-                      [
-                        {
-                          text: t("childDetail.deleteRecord.cancel"),
-                          style: "cancel",
-                        },
-                        {
-                          text: t("childDetail.deleteRecord.confirm"),
-                          style: "destructive",
-                          onPress: () => removeMeasurement(m.id, child.id),
-                        },
-                      ],
-                    )
-                  }
-                >
-                  <Text style={styles.deleteBtnText}>×</Text>
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             ))
           )}
         </ScrollView>

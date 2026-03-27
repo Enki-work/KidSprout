@@ -143,6 +143,16 @@
     "alertTitle": "입력 오류",
     "alertWeightInvalid": "체중은 1~200 kg 사이로 입력해 주세요"
   },
+  "editMeasurement": {
+    "title": "신장 기록 편집",
+    "save": "변경 저장",
+    "delete": "이 기록 삭제"
+  },
+  "editWeightMeasurement": {
+    "title": "체중 기록 편집",
+    "save": "변경 저장",
+    "delete": "이 기록 삭제"
+  },
   "purchase": {
     "weightFeature": {
       "alertTitle": "체중 곡선 (프리미엄)",

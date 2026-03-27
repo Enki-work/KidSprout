@@ -143,6 +143,16 @@
     "alertTitle": "Entrada inválida",
     "alertWeightInvalid": "Por favor ingresa un peso entre 1 y 200 kg"
   },
+  "editMeasurement": {
+    "title": "Editar registro de talla",
+    "save": "Guardar cambios",
+    "delete": "Eliminar este registro"
+  },
+  "editWeightMeasurement": {
+    "title": "Editar registro de peso",
+    "save": "Guardar cambios",
+    "delete": "Eliminar este registro"
+  },
   "purchase": {
     "weightFeature": {
       "alertTitle": "Curva de peso (Premium)",
