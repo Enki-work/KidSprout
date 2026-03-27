@@ -238,9 +238,23 @@ export default function WeightDetailScreen() {
                   ),
               ).map((seg) => (
                 <View key={seg.key}>
-                  <Text style={styles.sectionTitle}>
-                    {t(`childDetail.ageSegments.${seg.key}`)}
-                  </Text>
+                  <View style={styles.sectionTitleRow}>
+                    <Text style={styles.sectionTitle}>
+                      {t(`childDetail.ageSegments.${seg.key}`)}
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.expandBtn}
+                      onPress={() =>
+                        router.push(
+                          `/children/${childId}/chart-fullscreen?mode=weight&xMin=${seg.xMin}&xMax=${Math.min(seg.xMax, maxAgeMonths)}` as never,
+                        )
+                      }
+                    >
+                      <Text style={styles.expandBtnText}>
+                        {t("childDetail.expand")}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                   <GrowthChart
                     rows={standard.rows}
                     measurements={chartPoints}
@@ -253,9 +267,23 @@ export default function WeightDetailScreen() {
               ))}
 
               {/* 全体曲线 */}
-              <Text style={styles.sectionTitle}>
-                {t("childDetail.allAges", { maxAge: maxAgeYears })}
-              </Text>
+              <View style={styles.sectionTitleRow}>
+                <Text style={styles.sectionTitle}>
+                  {t("childDetail.allAges", { maxAge: maxAgeYears })}
+                </Text>
+                <TouchableOpacity
+                  style={styles.expandBtn}
+                  onPress={() =>
+                    router.push(
+                      `/children/${childId}/chart-fullscreen?mode=weight&xMin=0&xMax=${maxAgeMonths}` as never,
+                    )
+                  }
+                >
+                  <Text style={styles.expandBtnText}>
+                    {t("childDetail.expand")}
+                  </Text>
+                </TouchableOpacity>
+              </View>
               <GrowthChart
                 rows={standard.rows}
                 measurements={chartPoints}
@@ -520,10 +548,24 @@ const styles = StyleSheet.create({
   pager: { flex: 1 },
 
   chartContent: { padding: 16, paddingBottom: 100 },
+  sectionTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginTop: 16,
+    marginBottom: 4,
+  },
   sectionTitle: {
     fontSize: 13, fontWeight: "600", color: "#4CAF82",
-    marginTop: 16, marginBottom: 4,
   },
+  expandBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#4CAF82",
+  },
+  expandBtnText: { fontSize: 11, color: "#4CAF82", fontWeight: "600" },
 
   recordsContent: { padding: 16, gap: 8, paddingBottom: 100 },
   emptyRecords: { paddingTop: 60, alignItems: "center", gap: 8 },

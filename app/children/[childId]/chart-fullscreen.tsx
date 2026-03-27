@@ -8,8 +8,10 @@
 
 import { GrowthChart, PredictionConfig } from "@/components/chart/GrowthChart";
 import { MeasurementPoint } from "@/components/chart/MeasurementSeries";
-import { getStandardFile, StandardId } from "@/constants/standards";
+import { getStandardFile, getWeightStandardFile, StandardId } from "@/constants/standards";
 import { useComputedMeasurements } from "@/hooks/growth/useComputedMeasurements";
+import { getAgeInMonths } from "@/services/growth/age";
+import { getPercentile } from "@/services/growth/percentile";
 import { useChildStore } from "@/store/childStore";
 import { useMeasurementStore } from "@/store/measurementStore";
 import {
@@ -50,11 +52,14 @@ export default function ChartFullscreenScreen() {
     childId,
     xMin: xMinStr,
     xMax: xMaxStr,
+    mode,
   } = useLocalSearchParams<{
     childId: string;
     xMin: string;
     xMax: string;
+    mode?: string;
   }>();
+  const isWeightMode = mode === "weight";
   const { t } = useTranslation();
   const router = useRouter();
   const { width, height } = useWindowDimensions();
@@ -71,9 +76,13 @@ export default function ChartFullscreenScreen() {
   );
 
   const standard = child
-    ? getStandardFile(child.standardId as StandardId, child.sex)
+    ? (isWeightMode
+        ? getWeightStandardFile(child.standardId as StandardId, child.sex)
+        : getStandardFile(child.standardId as StandardId, child.sex))
     : null;
-  const computed = useComputedMeasurements(
+
+  // 身高模式：复用 hook 计算百分位
+  const heightComputed = useComputedMeasurements(
     measurements,
     child?.birthDate ?? "",
     standard?.rows ?? [],
@@ -229,21 +238,44 @@ export default function ChartFullscreenScreen() {
 
   const xMin = parseInt(xMinStr ?? "0");
   const xMax = parseInt(xMaxStr ?? String(standard.meta.ageMaxMonths));
-
-  const latestComputed =
-    computed.length > 0 ? computed[computed.length - 1] : null;
-  const currentPercentile = latestComputed?.percentile ?? 50;
   const maxAgeMonths = standard.meta.ageMaxMonths;
 
-  const chartPoints: MeasurementPoint[] = computed.map((m) => ({
-    ageMonths: m.ageMonths,
-    heightCm: m.heightCm,
-    date: m.measuredAt,
-    percentile: m.percentile,
-  }));
+  // ── 体重模式：手动计算 chartPoints ─────────────────────────
+  const weightChartPoints: MeasurementPoint[] = isWeightMode
+    ? measurements
+        .filter((m) => m.weightKg != null)
+        .map((m) => {
+          const ageMonths = getAgeInMonths(
+            new Date(child.birthDate),
+            new Date(m.measuredAt),
+          );
+          const percentile = getPercentile(ageMonths, m.weightKg!, standard.rows);
+          return {
+            ageMonths,
+            heightCm: m.weightKg!,   // GrowthChart Y 轴复用 heightCm 字段
+            date: m.measuredAt,
+            percentile,
+          };
+        })
+        .sort((a, b) => a.ageMonths - b.ageMonths)
+    : [];
+
+  // ── 身高模式：使用 hook 结果 ───────────────────────────────
+  const computed = isWeightMode ? [] : heightComputed;
+  const latestComputed = computed.length > 0 ? computed[computed.length - 1] : null;
+  const currentPercentile = latestComputed?.percentile ?? 50;
+
+  const chartPoints: MeasurementPoint[] = isWeightMode
+    ? weightChartPoints
+    : computed.map((m) => ({
+        ageMonths: m.ageMonths,
+        heightCm: m.heightCm,
+        date: m.measuredAt,
+        percentile: m.percentile,
+      }));
 
   const prediction: PredictionConfig | undefined =
-    latestComputed && latestComputed.ageMonths < maxAgeMonths
+    !isWeightMode && latestComputed && latestComputed.ageMonths < maxAgeMonths
       ? {
           startAgeMonths: latestComputed.ageMonths,
           startHeightCm: latestComputed.heightCm,
