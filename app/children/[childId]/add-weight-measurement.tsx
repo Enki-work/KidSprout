@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import {
-  Text, TextInput, TouchableOpacity,
+  Text, TextInput, TouchableOpacity, View,
   StyleSheet, Alert, ScrollView, Platform,
 } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
@@ -16,7 +16,11 @@ function genId(): string {
 }
 
 function dateToStr(d: Date): string {
-  return d.toISOString().slice(0, 10);
+  // 使用本地日期分量，避免 toISOString() 转 UTC 导致跨日（JST 等东亚时区凌晨-1天）
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
 }
 
 export default function AddWeightMeasurementScreen() {

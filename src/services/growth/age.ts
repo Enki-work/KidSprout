@@ -3,18 +3,34 @@
  * 内部统一使用月龄（小数）作为时间基准
  */
 
-// 平均每月天数
-const AVG_DAYS_PER_MONTH = 30.4375;
 
 /**
  * 计算月龄（支持小数）
+ * 整数部分：日历式（与生日同日或之后视为满整月），避免平均天数除法导致同月重复
+ * 小数部分：当月剩余天数比例，供 LMS 插值平滑使用
  * @param birthDate 出生日期
  * @param measuredAt 测量日期，默认今天
  */
 export function getAgeInMonths(birthDate: Date, measuredAt: Date = new Date()): number {
-  const ms = measuredAt.getTime() - birthDate.getTime();
-  const days = ms / (1000 * 60 * 60 * 24);
-  return days / AVG_DAYS_PER_MONTH;
+  const by = birthDate.getFullYear();
+  const bm = birthDate.getMonth();
+  const bd = birthDate.getDate();
+
+  const my = measuredAt.getFullYear();
+  const mm = measuredAt.getMonth();
+  const md = measuredAt.getDate();
+
+  // 整月数：测量日 < 生日日期 则当月未满，减 1
+  let completedMonths = (my - by) * 12 + (mm - bm);
+  if (md < bd) completedMonths -= 1;
+
+  // 小数部分：当前月内已过天数 / 当月天数
+  const daysInMonth = new Date(my, mm + 1, 0).getDate();
+  const dayFraction = md >= bd
+    ? (md - bd) / daysInMonth
+    : (md + daysInMonth - bd) / daysInMonth;
+
+  return completedMonths + dayFraction;
 }
 
 /**
