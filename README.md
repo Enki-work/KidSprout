@@ -131,6 +131,57 @@ npx expo run:ios
 npx expo run:android
 ```
 
+---
+
+## 内购功能测试（react-native-iap）
+
+> **为什么不能在 Expo Go 中测试内购？**
+>
+> `react-native-iap` 依赖原生 StoreKit / Billing 模块，Expo Go 沙盒中不包含这些原生代码。
+> 内购功能必须通过 **本地原生构建** 或 **EAS Build** 才能运行。
+> 在 Expo Go 中启动时，所有内购调用已做 try-catch 保护，不会崩溃，但无法实际发起购买。
+
+### 方法一：本地构建（推荐开发阶段）
+
+```bash
+# 1. 生成原生代码（app.json 变更后需重新执行）
+npx expo prebuild --platform ios
+
+# 2. 安装 iOS 依赖
+cd ios && pod install && cd ..
+
+# 3. 编译并启动到模拟器或真机
+npx expo run:ios
+```
+
+### 方法二：EAS Build（推荐提交前验证）
+
+```bash
+# 构建开发版（包含 dev 工具）
+eas build --platform ios --profile development
+
+# 构建 TestFlight 包（模拟真实用户环境）
+eas build --platform ios --profile preview
+```
+
+### 在模拟器 / 真机上测试 StoreKit 沙盒
+
+#### iOS 模拟器（StoreKit 本地配置文件）
+
+1. 在 Xcode 中打开 `ios/app.xcworkspace`
+2. 菜单 → **Product → Scheme → Edit Scheme…**
+3. 选择 **Run** → **Options** → **StoreKit Configuration** → 选择项目根目录下的 `.storekit` 配置文件（如无则新建）
+4. 新建 `.storekit` 文件时，添加一个 **Non-Consumable** 商品，Product ID 填写 `com.qiyan.KidSprout.weight`
+5. 重新运行 App，即可在模拟器中触发沙盒购买弹窗
+
+#### iOS 真机（App Store Connect 沙盒账号）
+
+1. 在 [App Store Connect](https://appstoreconnect.apple.com) → 用户和访问 → 沙盒测试员 中创建测试账号
+2. 在真机 → **设置 → App Store → 沙盒账户** 中登录测试账号
+3. 运行通过本地构建或 TestFlight 安装的 App，触发购买时会使用沙盒账户，不会实际扣款
+
+> **注意**：沙盒购买不会触发真实账单，恢复购买（Restore）同样可以用沙盒账号测试。
+
 ### 4. EAS Build（云端构建，推荐发布时使用）
 
 ```bash
