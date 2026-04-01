@@ -14,20 +14,42 @@ import { initLanguage } from '@/store/settingsStore';
 import { initPurchaseState } from '@/store/purchaseStore';
 import { useBackup } from '@/hooks/useBackup';
 
-// 在模块加载时拦截初始 URL：阻止 Expo Router 将备份文件 URL 当作路由处理
-// （会导致找不到路由 → 触发 GO_BACK → 报错）
-// 我们将 URL 保存在此变量，由 _layout 的 useEffect 自行处理
+// 在模块加载时双重拦截：阻止 Expo Router 将备份文件 URL 当作路由处理
+// 问题：Expo Router 也监听 getInitialURL 和 addEventListener，
+// 收到 .kidsprout URL 后会尝试导航 → "Unmatched Route" 页面
+// 解决：拦截这两个 API，让 Expo Router 看不到备份 URL；
+//       我们用保存的原始 addEventListener 来自行处理导入
 let _pendingBackupUri: string | null = null;
+// 保存原始 addEventListener 供 _layout useEffect 使用（绕过过滤）
+type UrlListener = (e: { url: string }) => void;
+let _origAddEventListener: ((event: string, handler: UrlListener) => { remove: () => void }) | null = null;
+
 if (Platform.OS === 'ios') {
   const _origGetInitialURL = Linking.getInitialURL.bind(Linking);
+  _origAddEventListener = Linking.addEventListener.bind(Linking) as typeof _origAddEventListener;
+
+  // 1. 拦截 getInitialURL：冷启动时 Expo Router 通过此获取初始 URL
   (Linking as unknown as { getInitialURL: () => Promise<string | null> }).getInitialURL =
     async () => {
       const url = await _origGetInitialURL();
       if (url && isBackupFile(url)) {
         _pendingBackupUri = url;
-        return null; // Expo Router 收到 null，不再尝试导航
+        return null; // 返回 null，Expo Router 不尝试导航
       }
       return url;
+    };
+
+  // 2. 拦截 addEventListener：热启动时 Expo Router 通过此接收 URL 事件
+  (Linking as unknown as { addEventListener: typeof Linking.addEventListener }).addEventListener =
+    (event: string, handler: UrlListener) => {
+      if (event === 'url') {
+        // 给 Expo Router 包一层过滤：备份文件 URL 不传给它
+        const filtered: UrlListener = (e) => {
+          if (!isBackupFile(e.url)) handler(e);
+        };
+        return _origAddEventListener!(event, filtered);
+      }
+      return _origAddEventListener!(event, handler);
     };
 }
 
@@ -54,7 +76,9 @@ export default function RootLayout() {
     }
 
     // 热启动（App 已运行时打开文件）
-    const sub = Linking.addEventListener('url', ({ url }) => {
+    // 使用原始 addEventListener（绕过 Expo Router 的过滤层），确保能收到备份 URL
+    const addListener = (_origAddEventListener ?? Linking.addEventListener.bind(Linking)) as (event: string, handler: UrlListener) => { remove: () => void };
+    const sub = addListener('url', ({ url }) => {
       if (isBackupFile(url)) handleImportFromUri(url);
     });
     return () => sub.remove();
