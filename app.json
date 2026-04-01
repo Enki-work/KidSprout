@@ -50,23 +50,20 @@
       "predictiveBackGestureEnabled": false,
       "intentFilters": [
         {
-          "action": "android.intent.action.VIEW",
+          "action": "VIEW",
           "data": [
             { "mimeType": "application/octet-stream" },
             { "mimeType": "application/json" }
           ],
-          "category": [
-            "android.intent.category.DEFAULT",
-            "android.intent.category.BROWSABLE"
-          ]
+          "category": ["DEFAULT", "BROWSABLE"]
         },
         {
-          "action": "android.intent.action.SEND",
+          "action": "SEND",
           "data": [
             { "mimeType": "application/octet-stream" },
             { "mimeType": "application/json" }
           ],
-          "category": ["android.intent.category.DEFAULT"]
+          "category": ["DEFAULT"]
         }
       ]
     },
