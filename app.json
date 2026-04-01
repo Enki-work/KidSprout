@@ -80,6 +80,7 @@
       "expo-asset",
       "@react-native-community/datetimepicker",
       "./plugins/withLocalizedAppName",
+      "./plugins/withReceiveSharingIntent",
       "expo-font"
     ],
     "experiments": {

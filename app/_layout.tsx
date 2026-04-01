@@ -1,11 +1,13 @@
 import '@/i18n'; // 必须最先引入，初始化 i18n
 import { useEffect } from 'react';
+import { Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { StyleSheet } from 'react-native';
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import * as Linking from 'expo-linking';
+import ReceiveSharingIntent from 'react-native-receive-sharing-intent';
 import { initDb } from '@/db/sqlite';
 import { useChildStore } from '@/store/childStore';
 import { initLanguage } from '@/store/settingsStore';
@@ -23,17 +25,32 @@ export default function RootLayout() {
     loadChildren();
   }, []);
 
-  // 监听 .kidsprout 文件打开事件
+  // iOS：监听 .kidsprout 文件通过 UTType document opener 打开
   useEffect(() => {
-    // 处理已运行时通过 URL 打开文件
+    if (Platform.OS !== 'ios') return;
     const sub = Linking.addEventListener('url', ({ url }) => {
       if (isBackupFile(url)) handleImportFromUri(url);
     });
-    // 处理冷启动时打开文件
     Linking.getInitialURL().then((url) => {
       if (url && isBackupFile(url)) handleImportFromUri(url);
     });
     return () => sub.remove();
+  }, [handleImportFromUri]);
+
+  // Android：监听 SEND / VIEW intent（含热启动场景）
+  useEffect(() => {
+    if (Platform.OS !== 'android') return;
+    ReceiveSharingIntent.getReceivedFiles(
+      (files: SharedFile[]) => {
+        const f = files?.[0];
+        const uri = f?.contentUri ?? f?.filePath;
+        if (uri && isBackupFile(f?.fileName ?? uri)) {
+          handleImportFromUri(uri);
+        }
+        ReceiveSharingIntent.clearReceivedFiles();
+      },
+      () => { /* 非备份文件，静默忽略 */ },
+    );
   }, [handleImportFromUri]);
 
   return (
@@ -61,6 +78,12 @@ export default function RootLayout() {
     </GestureHandlerRootView>
   );
 }
+
+type SharedFile = {
+  contentUri?: string;
+  filePath?: string;
+  fileName?: string;
+};
 
 function isBackupFile(url: string): boolean {
   return url.toLowerCase().includes('.kidsprout');
