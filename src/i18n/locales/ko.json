@@ -211,7 +211,34 @@
   "drawer": {
     "language": "언어",
     "about": "앱 정보",
-    "manage": "프로필 편집"
+    "manage": "프로필 편집",
+    "backup": "데이터 백업"
+  },
+  "backup": {
+    "exportError": {
+      "title": "백업 실패",
+      "message": "데이터를 내보내는 중 오류가 발생했습니다. 다시 시도해 주세요."
+    },
+    "importError": {
+      "title": "복원 실패",
+      "invalidFormat": "파일 형식이 올바르지 않습니다. KidSprout 백업 파일을 사용해 주세요.",
+      "invalidJson": "파일이 손상된 것 같습니다.",
+      "readFailed": "파일을 읽을 수 없습니다. 파일이 존재하는지 확인해 주세요."
+    },
+    "confirmRestore": {
+      "title": "데이터를 복원하시겠습니까?",
+      "message": "{{date}} 백업을 복원합니다.\n아이: {{childCount}}명, 기록: {{measureCount}}건\n\n현재 모든 데이터가 덮어씌워집니다. 이 작업은 취소할 수 없습니다.",
+      "cancel": "취소",
+      "confirm": "복원"
+    },
+    "restoreSuccess": {
+      "title": "복원 완료",
+      "message": "데이터가 성공적으로 복원되었습니다."
+    },
+    "restoreError": {
+      "title": "복원 실패",
+      "message": "데이터를 쓰는 중 오류가 발생했습니다. 기존 데이터는 변경되지 않았습니다."
+    }
   },
   "manageChildren": {
     "title": "어린이 프로필",

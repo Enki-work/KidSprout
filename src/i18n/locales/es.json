@@ -211,7 +211,34 @@
   "drawer": {
     "language": "Idioma",
     "about": "Acerca de",
-    "manage": "Editar perfiles"
+    "manage": "Editar perfiles",
+    "backup": "Copia de seguridad"
+  },
+  "backup": {
+    "exportError": {
+      "title": "Error al hacer copia",
+      "message": "Ocurrió un error al exportar los datos. Inténtalo de nuevo."
+    },
+    "importError": {
+      "title": "Error al restaurar",
+      "invalidFormat": "El formato del archivo no es válido. Usa un archivo de copia de KidSprout.",
+      "invalidJson": "El archivo parece estar dañado.",
+      "readFailed": "No se pudo leer el archivo. Verifica que exista."
+    },
+    "confirmRestore": {
+      "title": "¿Restaurar datos?",
+      "message": "Se restaurará la copia del {{date}}.\nNiños: {{childCount}}, Registros: {{measureCount}}\n\nTodos los datos actuales serán reemplazados. Esta acción no se puede deshacer.",
+      "cancel": "Cancelar",
+      "confirm": "Restaurar"
+    },
+    "restoreSuccess": {
+      "title": "Restaurado",
+      "message": "Los datos se han restaurado correctamente."
+    },
+    "restoreError": {
+      "title": "Error al restaurar",
+      "message": "Ocurrió un error al escribir los datos. Tus datos existentes no fueron modificados."
+    }
   },
   "manageChildren": {
     "title": "Perfiles",

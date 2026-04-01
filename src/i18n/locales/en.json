@@ -211,7 +211,34 @@
   "drawer": {
     "language": "Language",
     "about": "About",
-    "manage": "Edit Profiles"
+    "manage": "Edit Profiles",
+    "backup": "Backup & Restore"
+  },
+  "backup": {
+    "exportError": {
+      "title": "Backup Failed",
+      "message": "An error occurred while exporting data. Please try again."
+    },
+    "importError": {
+      "title": "Restore Failed",
+      "invalidFormat": "The file format is not recognized. Please use a KidSprout backup file.",
+      "invalidJson": "The file appears to be corrupted.",
+      "readFailed": "Could not read the file. Please check if it exists."
+    },
+    "confirmRestore": {
+      "title": "Restore Data?",
+      "message": "Restoring backup from {{date}}.\nChildren: {{childCount}}, Records: {{measureCount}}\n\nAll current data will be overwritten. This cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Restore"
+    },
+    "restoreSuccess": {
+      "title": "Restored",
+      "message": "Data has been successfully restored."
+    },
+    "restoreError": {
+      "title": "Restore Failed",
+      "message": "An error occurred while writing data. Your existing data was not changed."
+    }
   },
   "manageChildren": {
     "title": "Children",

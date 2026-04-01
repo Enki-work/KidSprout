@@ -16,7 +16,26 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.qiyan.KidSprout",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "CFBundleDocumentTypes": [
+          {
+            "CFBundleTypeName": "KidSprout Backup",
+            "CFBundleTypeRole": "Editor",
+            "LSHandlerRank": "Owner",
+            "LSItemContentTypes": ["com.qiyan.kidsprout.backup"]
+          }
+        ],
+        "UTExportedTypeDeclarations": [
+          {
+            "UTTypeIdentifier": "com.qiyan.kidsprout.backup",
+            "UTTypeDescription": "KidSprout Backup File",
+            "UTTypeConformsTo": ["public.data", "public.json"],
+            "UTTypeTagSpecification": {
+              "public.filename-extension": ["kidsprout"],
+              "public.mime-type": "application/json"
+            }
+          }
+        ]
       }
     },
     "android": {
@@ -28,7 +47,28 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "intentFilters": [
+        {
+          "action": "android.intent.action.VIEW",
+          "data": [
+            { "mimeType": "application/octet-stream" },
+            { "mimeType": "application/json" }
+          ],
+          "category": [
+            "android.intent.category.DEFAULT",
+            "android.intent.category.BROWSABLE"
+          ]
+        },
+        {
+          "action": "android.intent.action.SEND",
+          "data": [
+            { "mimeType": "application/octet-stream" },
+            { "mimeType": "application/json" }
+          ],
+          "category": ["android.intent.category.DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png",

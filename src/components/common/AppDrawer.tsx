@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useRouter } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import {
+  ActivityIndicator,
   Animated,
   Modal,
   Pressable,
@@ -15,6 +16,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useBackup } from '@/hooks/useBackup';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -29,6 +31,7 @@ export function AppDrawer({ visible, onClose }: Props) {
   const { t } = useTranslation();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { handleExport, isExporting } = useBackup();
 
   const translateX = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
   const opacity = useRef(new Animated.Value(0)).current;
@@ -126,6 +129,19 @@ export function AppDrawer({ visible, onClose }: Props) {
             <Ionicons name="language-outline" size={22} color="#4CAF82" style={styles.menuIcon} />
             <Text style={styles.menuLabel}>{t('drawer.language')}</Text>
             <Ionicons name="chevron-forward" size={18} color="#CCC" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => { onClose(); setTimeout(handleExport, 210); }}
+            activeOpacity={0.6}
+            disabled={isExporting}
+          >
+            <Ionicons name="archive-outline" size={22} color="#4CAF82" style={styles.menuIcon} />
+            <Text style={styles.menuLabel}>{t('drawer.backup')}</Text>
+            {isExporting
+              ? <ActivityIndicator size="small" color="#CCC" />
+              : <Ionicons name="chevron-forward" size={18} color="#CCC" />}
           </TouchableOpacity>
 
           <TouchableOpacity

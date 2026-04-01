@@ -212,7 +212,34 @@
   "drawer": {
     "language": "語言",
     "about": "關於",
-    "manage": "編輯檔案"
+    "manage": "編輯檔案",
+    "backup": "資料備份"
+  },
+  "backup": {
+    "exportError": {
+      "title": "備份失敗",
+      "message": "匯出資料時發生錯誤，請稍後再試。"
+    },
+    "importError": {
+      "title": "還原失敗",
+      "invalidFormat": "檔案格式不正確，請確認是 KidSprout 備份檔案。",
+      "invalidJson": "檔案已損壞，無法讀取。",
+      "readFailed": "無法讀取檔案，請確認檔案是否存在。"
+    },
+    "confirmRestore": {
+      "title": "還原資料？",
+      "message": "將還原 {{date}} 的備份。\n孩子：{{childCount}} 人，記錄：{{measureCount}} 筆\n\n目前所有資料將被覆蓋，此操作無法復原。",
+      "cancel": "再想想",
+      "confirm": "確認還原"
+    },
+    "restoreSuccess": {
+      "title": "還原成功",
+      "message": "資料已成功還原。"
+    },
+    "restoreError": {
+      "title": "還原失敗",
+      "message": "寫入資料時發生錯誤，原有資料未變更。"
+    }
   },
   "manageChildren": {
     "title": "兒童檔案",

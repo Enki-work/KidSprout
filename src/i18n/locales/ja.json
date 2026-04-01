@@ -211,7 +211,34 @@
   "drawer": {
     "language": "言語",
     "about": "アプリについて",
-    "manage": "プロフィール編集"
+    "manage": "プロフィール編集",
+    "backup": "データバックアップ"
+  },
+  "backup": {
+    "exportError": {
+      "title": "バックアップ失敗",
+      "message": "データのエクスポート中にエラーが発生しました。"
+    },
+    "importError": {
+      "title": "復元失敗",
+      "invalidFormat": "ファイル形式が正しくありません。KidSprout のバックアップファイルをご確認ください。",
+      "invalidJson": "ファイルが破損しています。",
+      "readFailed": "ファイルを読み込めませんでした。"
+    },
+    "confirmRestore": {
+      "title": "データを復元しますか？",
+      "message": "{{date}} のバックアップを復元します。\n子ども: {{childCount}} 人、記録: {{measureCount}} 件\n\n現在のデータはすべて上書きされます。この操作は元に戻せません。",
+      "cancel": "キャンセル",
+      "confirm": "復元する"
+    },
+    "restoreSuccess": {
+      "title": "復元完了",
+      "message": "データを正常に復元しました。"
+    },
+    "restoreError": {
+      "title": "復元失敗",
+      "message": "データの書き込み中にエラーが発生しました。既存のデータは変更されていません。"
+    }
   },
   "manageChildren": {
     "title": "子どものプロフィール",
