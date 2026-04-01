@@ -1,6 +1,5 @@
 import { GrowthChart, PredictionConfig } from "@/components/chart/GrowthChart";
 import { MeasurementPoint } from "@/components/chart/MeasurementSeries";
-import { DebugAddTestData } from "@/components/debug/DebugAddTestData";
 import { getStandardFile, StandardId } from "@/constants/standards";
 import { useComputedMeasurements } from "@/hooks/growth/useComputedMeasurements";
 import { useFormatAge } from "@/hooks/useFormatAge";
@@ -166,11 +165,6 @@ export default function ChildDetailScreen() {
       <Stack.Screen
         options={{
           title: `${child.name} ${t("childDetail.analysis.height")}`,
-          headerRight: () => (
-            <View style={styles.headerRight}>
-              <DebugAddTestData childId={childId ?? ""} />
-            </View>
-          ),
         }}
       />
 
@@ -761,13 +755,6 @@ const styles = StyleSheet.create({
   },
   fabText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
 
-  headerRight: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
-  editBtn: { paddingHorizontal: 8, paddingVertical: 6, alignSelf: "center" },
-  editBtnText: { color: "#4CAF82", fontSize: 18, fontWeight: "600" },
 
   modalOverlay: {
     flex: 1,

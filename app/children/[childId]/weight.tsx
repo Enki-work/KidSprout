@@ -1,6 +1,5 @@
 import { GrowthChart } from "@/components/chart/GrowthChart";
 import { MeasurementPoint } from "@/components/chart/MeasurementSeries";
-import { DebugAddWeightTestData } from "@/components/debug/DebugAddWeightTestData";
 import { getWeightStandardFile, StandardId } from "@/constants/standards";
 import { useFormatAge } from "@/hooks/useFormatAge";
 import { getAgeInMonths } from "@/services/growth/age";
@@ -168,7 +167,6 @@ export default function WeightDetailScreen() {
       <Stack.Screen
         options={{
           title: `${child.name} ${t("childDetail.analysis.weight")}`,
-          headerRight: () => <DebugAddWeightTestData childId={childId ?? ""} />,
         }}
       />
 

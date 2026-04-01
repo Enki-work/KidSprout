@@ -153,6 +153,18 @@ export function AppDrawer({ visible, onClose }: Props) {
             <Text style={styles.menuLabel}>{t('drawer.about')}</Text>
             <Ionicons name="chevron-forward" size={18} color="#CCC" />
           </TouchableOpacity>
+
+          {__DEV__ && (
+            <TouchableOpacity
+              style={styles.menuItem}
+              onPress={() => navigate('/debug')}
+              activeOpacity={0.6}
+            >
+              <Ionicons name="bug-outline" size={22} color="#FF9500" style={styles.menuIcon} />
+              <Text style={[styles.menuLabel, styles.debugLabel]}>Debug</Text>
+              <Ionicons name="chevron-forward" size={18} color="#CCC" />
+            </TouchableOpacity>
+          )}
         </View>
       </Animated.View>
     </Modal>
@@ -211,5 +223,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   menuIcon: { width: 28, textAlign: 'center' },
-  menuLabel: { flex: 1, fontSize: 16, color: '#1A1A2E' },
+  menuLabel:  { flex: 1, fontSize: 16, color: '#1A1A2E' },
+  debugLabel: { color: '#FF9500' },
 });
