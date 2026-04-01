@@ -689,3 +689,241 @@ export function usePurchase() {
 | 退出重启 App | 体重记录和购买状态均保留 |
 | 旧数据迁移 | 已有 measurements 行正常读写，weight_kg 列为 NULL |
 | 切换语言为日語 | BottomSheet、体重页、购买 Alert 均正确日文显示 |
+
+---
+
+## 14. 数据备份与恢复功能
+
+> 版本：v0.8（规划中）
+> 目标：让用户可以将数据导出为文件保存备份，并在新设备或重装后恢复数据。
+
+### 14.1 功能概述
+
+| 功能 | 入口 | 说明 |
+|------|------|------|
+| 导出备份 | 侧边菜单「データバックアップ」按钮 | 导出全部数据为 `.kidsprout` 文件，弹出系统 share sheet |
+| 导入恢复 | 系统文件管理器/分享打开 `.kidsprout` 文件 | App 读取文件内容，确认后覆盖数据库并刷新 |
+
+### 14.2 新增依赖
+
+```bash
+npx expo install expo-file-system expo-sharing
+```
+
+| 库 | 用途 |
+|---|---|
+| `expo-file-system` | 写入临时文件、读取 URI 内容（使用 legacy API） |
+| `expo-sharing` | 触发系统 share sheet |
+
+不需要 `react-native-receive-sharing-intent`。Android SEND/VIEW intent 的文件 URI 通过 `expo-linking` 直接获取。
+
+### 14.3 备份文件格式（`.kidsprout`）
+
+UTF-8 编码 JSON，平铺结构（children 与 measurements 各自独立数组）：
+
+```json
+{
+  "version": 1,
+  "exportedAt": "2026-04-01T10:30:00.000Z",
+  "appBundleId": "com.qiyan.KidSprout",
+  "settings": {
+    "language": "ja"
+  },
+  "children": [
+    {
+      "id": "uuid",
+      "name": "小花",
+      "sex": "female",
+      "birthDate": "2021-03-15",
+      "standardId": "japan",
+      "createdAt": "2023-01-01T00:00:00.000Z",
+      "updatedAt": "2026-04-01T00:00:00.000Z"
+    }
+  ],
+  "measurements": [
+    {
+      "id": "uuid",
+      "childId": "uuid",
+      "measuredAt": "2026-04-01",
+      "heightCm": 105.5,
+      "weightKg": 17.2,
+      "note": "健康診断",
+      "createdAt": "2026-04-01T00:00:00.000Z",
+      "updatedAt": "2026-04-01T00:00:00.000Z"
+    }
+  ]
+}
+```
+
+**设计决策：**
+- `settings` 只备份 `language`，**不备份 `purchase_weight`**（防止用户篡改 JSON 绕过内购）
+- 文件命名：`KidSprout_backup_2026-04-01.kidsprout`
+
+### 14.4 app.json 新增配置
+
+**iOS — `ios.infoPlist` 新增（注册自定义文件类型）：**
+
+```json
+"CFBundleDocumentTypes": [
+  {
+    "CFBundleTypeName": "KidSprout Backup",
+    "CFBundleTypeRole": "Editor",
+    "LSHandlerRank": "Owner",
+    "LSItemContentTypes": ["com.qiyan.kidsprout.backup"]
+  }
+],
+"UTExportedTypeDeclarations": [
+  {
+    "UTTypeIdentifier": "com.qiyan.kidsprout.backup",
+    "UTTypeDescription": "KidSprout Backup File",
+    "UTTypeConformsTo": ["public.data", "public.json"],
+    "UTTypeTagSpecification": {
+      "public.filename-extension": ["kidsprout"],
+      "public.mime-type": "application/json"
+    }
+  }
+]
+```
+
+注册后，iOS 文件 App 中的 `.kidsprout` 文件可通过「用小芽成长打开」唤起 App，无需 Share Extension。
+
+**Android — `android` 节点新增 `intentFilters`：**
+
+```json
+"intentFilters": [
+  {
+    "action": "android.intent.action.VIEW",
+    "data": [
+      { "mimeType": "application/octet-stream" },
+      { "mimeType": "application/json" },
+      { "mimeType": "*/*", "pathSuffix": ".kidsprout" }
+    ],
+    "category": ["android.intent.category.DEFAULT", "android.intent.category.BROWSABLE"]
+  },
+  {
+    "action": "android.intent.action.SEND",
+    "data": [
+      { "mimeType": "application/octet-stream" },
+      { "mimeType": "application/json" }
+    ],
+    "category": ["android.intent.category.DEFAULT"]
+  }
+]
+```
+
+### 14.5 文件结构
+
+```
+新建：
+  src/backup/
+  ├─ backupSchema.ts        Zod schema + BackupFile 类型
+  └─ backupService.ts       导出/导入解析核心逻辑（纯函数）
+  src/db/
+  └─ backup.repo.ts         事务性恢复写入（withTransactionSync）
+  src/hooks/
+  └─ useBackup.ts           React hook，封装确认对话框 + Store 刷新
+
+修改：
+  app.json                  iOS UTType + Android intentFilters
+  app/_layout.tsx           注册 Linking 监听（冷启动 + 热启动）
+  src/components/common/
+  └─ AppDrawer.tsx          新增备份按钮（archive-outline 图标）
+  src/i18n/locales/*.json   6 个语言文件新增 backup.* key
+```
+
+### 14.6 核心实现逻辑
+
+**导出（`backupService.ts`）：**
+
+```typescript
+export async function exportBackup(): Promise<void> {
+  const children = getAllChildren();
+  const measurements = children.flatMap(c => getMeasurementsByChild(c.id));
+  const language = getSetting('language');
+
+  const backup: BackupFile = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    appBundleId: 'com.qiyan.KidSprout',
+    settings: { language: language ?? undefined },
+    children,
+    measurements: measurements.map(m => ({ ...m, weightKg: m.weightKg ?? null })),
+  };
+
+  const fileName = `KidSprout_backup_${new Date().toISOString().slice(0, 10)}.kidsprout`;
+  const uri = `${FileSystem.cacheDirectory}${fileName}`;
+  await FileSystem.writeAsStringAsync(uri, JSON.stringify(backup, null, 2), {
+    encoding: FileSystem.EncodingType.UTF8,
+  });
+  await Sharing.shareAsync(uri, {
+    mimeType: 'application/json',
+    UTI: 'com.qiyan.kidsprout.backup',
+  });
+}
+```
+
+**恢复写入（`backup.repo.ts`）：** 使用 `withTransactionSync` 事务，失败自动 ROLLBACK：
+
+```typescript
+export function restoreFromBackup(backup: BackupFile): void {
+  const db = getDb();
+  db.withTransactionSync(() => {
+    db.execSync('DELETE FROM measurements');
+    db.execSync('DELETE FROM children');
+    for (const c of backup.children) {
+      db.runSync('INSERT INTO children (...) VALUES (?,...)', [...]);
+    }
+    for (const m of backup.measurements) {
+      db.runSync('INSERT INTO measurements (...) VALUES (?,...)', [...]);
+    }
+    if (backup.settings?.language) setSetting('language', backup.settings.language);
+    // purchase_weight 故意不恢复
+  });
+}
+```
+
+**Linking 监听（`_layout.tsx` 新增）：**
+
+```typescript
+useEffect(() => {
+  const sub = Linking.addEventListener('url', ({ url }) => {
+    if (url.toLowerCase().includes('.kidsprout')) handleImportFromUri(url);
+  });
+  Linking.getInitialURL().then(url => {
+    if (url?.toLowerCase().includes('.kidsprout')) handleImportFromUri(url);
+  });
+  return () => sub.remove();
+}, [handleImportFromUri]);
+```
+
+**Store 刷新（`useBackup.ts` 恢复成功后）：**
+
+```typescript
+loadChildren();                                                   // childStore
+useMeasurementStore.setState({ byChild: {}, loadingByChild: {} }); // 清空缓存
+initLanguage();                                                   // 若语言被恢复
+```
+
+### 14.7 国际化新增 key
+
+在所有 6 个语言文件中新增：
+
+| key | zh | zh-Hant | ja | en | es | ko |
+|-----|----|---------|----|----|----|-----|
+| `drawer.backup` | 数据备份 | 資料備份 | データバックアップ | Backup & Restore | Copia de seguridad | 데이터 백업 |
+| `backup.confirmRestore.title` | 恢复数据？ | 恢復資料？ | データを復元しますか？ | Restore Data? | ¿Restaurar datos? | 데이터 복원? |
+| `backup.confirmRestore.message` | 将恢复 {{date}} 的备份\n孩子：{{childCount}} 人，记录：{{measureCount}} 条\n当前数据将被覆盖。 | 同左繁體 | {{date}} のバックアップを復元します。\n子ども: {{childCount}} 人、記録: {{measureCount}} 件\n現在のデータは上書きされます。 | Restoring backup from {{date}}.\nChildren: {{childCount}}, Records: {{measureCount}}\nAll current data will be overwritten. | 同 en | 同 en |
+| `backup.restoreSuccess.title` | 恢复成功 | 恢復成功 | 復元完了 | Restored | Restaurado | 복원 완료 |
+
+### 14.8 验证清单
+
+| 场景 | 预期结果 |
+|------|---------|
+| 点击侧边菜单「データバックアップ」 | 系统 share sheet 弹出，文件名为 `KidSprout_backup_YYYY-MM-DD.kidsprout` |
+| iOS：保存到文件 App → 长按 → 分享 → 选择小芽成长 | 弹出确认 Alert，含孩子数/记录数/备份日期 |
+| 确认恢复 | 数据库覆盖写入，首页孩子列表刷新 |
+| Android：文件管理器点击 `.kidsprout` 文件 | 系统询问用哪个 App 打开，选择 KidSprout，弹出确认 Alert |
+| 导入损坏的 JSON 文件 | 显示错误提示，现有数据不变（事务 ROLLBACK） |
+| 冷启动时从文件打开 | `getInitialURL` 触发导入流程，正常弹出确认 |
+| 备份文件中 `purchase_weight` 被手动篡改 | 该字段被忽略，内购状态不变 |
+| 切换语言后导出，导入到新设备 | 语言设置随备份恢复 |
