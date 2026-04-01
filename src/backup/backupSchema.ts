@@ -18,7 +18,7 @@ const MeasurementBackupSchema = z.object({
   id:         z.string().min(1),
   childId:    z.string().min(1),
   measuredAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  heightCm:   z.number().min(1).max(300),
+  heightCm:   z.number().min(0).max(300), // 0 表示纯体重记录（无身高）
   weightKg:   z.number().min(0.1).max(500).nullable().optional(),
   note:       z.string().nullable().optional(),
   createdAt:  z.string(),
