@@ -199,12 +199,18 @@ eas login
 # 初始化 EAS 配置（首次）
 eas build:configure
 
-# 构建 iOS（提交 App Store）
-eas build --platform ios
+# 构建 iOS（生产）
+eas build --platform ios --profile production
 
-# 构建 Android（提交 Google Play）
-eas build --platform android
+# 构建 Android（生产，生成正式签名的 AAB）
+eas build --platform android --profile production
 ```
+
+> **说明**：
+>
+> 1. Android 正式发版默认走 **EAS 远程签名凭据**，本地没有 `release.keystore` 也可以构建和提交。
+> 2. 本地 `./gradlew bundleRelease` 仅适合排查原生构建问题；当前项目正式发布不以本地 Gradle 产物为准。
+> 3. 如需确认 Android 远程签名凭据是否存在，可运行：`eas credentials -p android`
 
 ### 5. 提交到商店
 
@@ -212,7 +218,7 @@ eas build --platform android
 
 ```bash
 # 提交最新构建到 App Store Connect
-eas submit --platform ios
+eas submit --platform ios --profile production
 
 # 同步 store.config.json 中的元数据（标题、描述、关键词等）到 App Store Connect
 eas metadata:push
@@ -224,7 +230,10 @@ eas metadata:push
 
 ```bash
 # 提交最新构建到 Google Play（Internal Testing）
-eas submit --platform android
+eas submit --platform android --profile production
+
+# 或者一步完成构建 + 提交
+eas build --platform android --profile production --auto-submit
 ```
 
 > **前提**：
@@ -232,6 +241,10 @@ eas submit --platform android
 > 1. 已在 Google Play Console 手动创建 App 记录并上传至少一个 AAB（首次需手动上传）
 > 2. 已配置 Google Play API Service Account 并授予发布权限
 > 3. Google Play 元数据（描述、关键词等）需在 Play Console 手动填写，`store.config.json` 不支持自动推送到 Google Play
+> 4. Google Play 应用内商品需手动配置：
+>    - 类型：`Managed product`
+>    - Product ID：`com.qiyan.KidSprout.weight`
+>    - 不创建订阅商品
 
 ---
 
