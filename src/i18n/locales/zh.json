@@ -34,7 +34,8 @@
     "labelStandard": "参考哪个成长标准？",
     "save": "好啦，出发！",
     "alertTitle": "还差一步",
-    "alertNameRequired": "请填写孩子的名字 😊"
+    "alertNameRequired": "请填写孩子的名字 😊",
+    "alertMaxChildren": "最多只能添加 {{max}} 个孩子档案"
   },
   "editChild": {
     "title": "修改一下档案",

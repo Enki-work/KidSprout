@@ -34,7 +34,8 @@
     "labelStandard": "Which growth standard?",
     "save": "Let's go!",
     "alertTitle": "One more thing",
-    "alertNameRequired": "Please enter your child's name 😊"
+    "alertNameRequired": "Please enter your child's name 😊",
+    "alertMaxChildren": "You can add up to {{max}} child profiles"
   },
   "editChild": {
     "title": "Edit Profile",

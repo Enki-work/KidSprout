@@ -34,7 +34,8 @@
     "labelStandard": "어떤 성장 기준을 사용할까요?",
     "save": "시작해요!",
     "alertTitle": "한 가지 더",
-    "alertNameRequired": "아이의 이름을 입력해 주세요 😊"
+    "alertNameRequired": "아이의 이름을 입력해 주세요 😊",
+    "alertMaxChildren": "아이 프로필은 최대 {{max}}명까지 추가할 수 있습니다"
   },
   "editChild": {
     "title": "프로필 수정",

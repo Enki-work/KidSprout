@@ -18,6 +18,8 @@ import {
   View,
 } from "react-native";
 
+const MAX_CHILDREN = 4;
+
 function genId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
@@ -30,6 +32,7 @@ export default function NewChildScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const addChild = useChildStore((s) => s.add);
+  const childCount = useChildStore((s) => s.children.length);
 
   const today = new Date();
   const minBirthDate = new Date(
@@ -52,6 +55,13 @@ export default function NewChildScreen() {
   function handleSave() {
     if (!name.trim()) {
       Alert.alert(t("newChild.alertTitle"), t("newChild.alertNameRequired"));
+      return;
+    }
+    if (childCount >= MAX_CHILDREN) {
+      Alert.alert(
+        t("newChild.alertTitle"),
+        t("newChild.alertMaxChildren", { max: MAX_CHILDREN }),
+      );
       return;
     }
     const now = new Date().toISOString();

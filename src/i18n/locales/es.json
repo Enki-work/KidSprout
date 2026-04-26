@@ -34,7 +34,8 @@
     "labelStandard": "¿Qué estándar de crecimiento usar?",
     "save": "¡Vamos!",
     "alertTitle": "Falta algo",
-    "alertNameRequired": "Por favor ingresa el nombre del niño/a 😊"
+    "alertNameRequired": "Por favor ingresa el nombre del niño/a 😊",
+    "alertMaxChildren": "Puedes agregar hasta {{max}} perfiles de niños"
   },
   "editChild": {
     "title": "Editar perfil",

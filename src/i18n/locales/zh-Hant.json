@@ -34,7 +34,8 @@
     "labelStandard": "參考哪個成長標準？",
     "save": "好啦，出發！",
     "alertTitle": "還差一步",
-    "alertNameRequired": "請填寫孩子的名字 😊"
+    "alertNameRequired": "請填寫孩子的名字 😊",
+    "alertMaxChildren": "最多只能新增 {{max}} 個孩子檔案"
   },
   "editChild": {
     "title": "修改一下檔案",

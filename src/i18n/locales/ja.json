@@ -34,7 +34,8 @@
     "labelStandard": "成長基準は？",
     "save": "さあ、始めよう！",
     "alertTitle": "入力が必要です",
-    "alertNameRequired": "お子さまの名前を入力してください 😊"
+    "alertNameRequired": "お子さまの名前を入力してください 😊",
+    "alertMaxChildren": "登録できるお子さまのプロフィールは最大 {{max}} 人までです"
   },
   "editChild": {
     "title": "プロフィールを編集",
