@@ -154,6 +154,11 @@
     "delete": "Eliminar este registro"
   },
   "purchase": {
+    "error": {
+      "title": "Error de compra",
+      "receiptInvalid": "No se pudo verificar la compra. Inténtalo de nuevo.",
+      "restoreFailed": "No se pudo conectar con App Store. Inténtalo de nuevo."
+    },
     "weightFeature": {
       "alertTitle": "Curva de peso (Premium)",
       "alertMessage": "Desbloquea las curvas de crecimiento de peso para registrar el peso de tu hijo/a y compararlo con percentiles.",

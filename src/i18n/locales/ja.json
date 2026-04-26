@@ -154,6 +154,11 @@
     "delete": "この記録を削除"
   },
   "purchase": {
+    "error": {
+      "title": "購入エラー",
+      "receiptInvalid": "購入内容を確認できませんでした。もう一度お試しください。",
+      "restoreFailed": "App Store に接続できませんでした。もう一度お試しください。"
+    },
     "weightFeature": {
       "alertTitle": "体重曲線（プレミアム機能）",
       "alertMessage": "体重成長曲線をアンロックして、お子さまの体重変化を記録し、同年齢の子どもと百分位を比較できます。",

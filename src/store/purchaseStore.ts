@@ -10,6 +10,7 @@ type PurchaseStore = {
   hasPurchasedWeightFeature: boolean;
   isLoading: boolean;
   setPurchased: (value: boolean) => void;
+  setLoading: (value: boolean) => void;
 };
 
 export const usePurchaseStore = create<PurchaseStore>((set) => ({
@@ -18,6 +19,9 @@ export const usePurchaseStore = create<PurchaseStore>((set) => ({
   setPurchased: (value) => {
     setSetting('purchase_weight', value ? '1' : '0');
     set({ hasPurchasedWeightFeature: value });
+  },
+  setLoading: (value) => {
+    set({ isLoading: value });
   },
 }));
 

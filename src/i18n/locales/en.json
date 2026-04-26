@@ -154,6 +154,11 @@
     "delete": "Delete This Record"
   },
   "purchase": {
+    "error": {
+      "title": "Purchase Error",
+      "receiptInvalid": "The purchase could not be verified. Please try again.",
+      "restoreFailed": "Could not connect to the App Store. Please try again."
+    },
     "weightFeature": {
       "alertTitle": "Weight Charts (Premium)",
       "alertMessage": "Unlock weight growth charts to track your child's weight and compare with age-matched percentiles.",

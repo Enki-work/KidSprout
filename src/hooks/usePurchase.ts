@@ -11,32 +11,20 @@ import {
   endConnection,
   fetchProducts,
   finishTransaction,
-  getAvailablePurchases,
   initConnection,
   purchaseErrorListener,
   purchaseUpdatedListener,
   requestPurchase,
-  verifyPurchase,
   ErrorCode,
   type Purchase,
   type PurchaseError,
-  type VerifyPurchaseResultIOS,
 } from 'react-native-iap';
 import { usePurchaseStore } from '@/store/purchaseStore';
-
-export const WEIGHT_PRODUCT_ID = 'com.qiyan.KidSprout.weight';
-
-// ─────────────────────────────────────────────
-// iOS 本地收据验证（StoreKit 2 通过 react-native-iap v14 内置实现）
-// ─────────────────────────────────────────────
-async function verifyIosPurchase(): Promise<boolean> {
-  try {
-    const result = await verifyPurchase({ apple: { sku: WEIGHT_PRODUCT_ID } });
-    return (result as VerifyPurchaseResultIOS).isValid;
-  } catch {
-    return false;
-  }
-}
+import {
+  restoreWeightPurchases,
+  WEIGHT_PRODUCT_ID,
+  type RestoreResult,
+} from '@/services/purchase/weightEntitlement';
 
 // ─────────────────────────────────────────────
 // Hook
@@ -64,15 +52,16 @@ export function usePurchase() {
         purchaseSub = purchaseUpdatedListener(async (purchase: Purchase) => {
           if (purchase.productId !== WEIGHT_PRODUCT_ID) return;
           try {
-            let valid = false;
-            if (Platform.OS === 'ios') {
-              valid = await verifyIosPurchase();
-            } else {
-              valid = !!purchase.purchaseToken;
-            }
+            const valid = Platform.OS === 'ios'
+              ? (await restoreWeightPurchases()) === 'restored'
+              : !!purchase.purchaseToken;
             if (valid) {
-              await finishTransaction({ purchase, isConsumable: false });
-              if (mounted) setPurchasedRef.current(true);
+              if (Platform.OS === 'ios') {
+                if (mounted) setPurchasedRef.current(true);
+              } else {
+                await finishTransaction({ purchase, isConsumable: false });
+                if (mounted) setPurchasedRef.current(true);
+              }
             } else {
               Alert.alert(t('purchase.error.title'), t('purchase.error.receiptInvalid'));
             }
@@ -123,15 +112,8 @@ export function usePurchase() {
   }, []);
 
   /** 恢复购买 */
-  const restore = useCallback(async (): Promise<boolean> => {
-    try {
-      const purchases = await getAvailablePurchases();
-      const found = purchases?.some((p) => p.productId === WEIGHT_PRODUCT_ID) ?? false;
-      if (found) setPurchasedRef.current(true);
-      return found;
-    } catch {
-      return false;
-    }
+  const restore = useCallback(async (): Promise<RestoreResult> => {
+    return restoreWeightPurchases();
   }, []);
 
   return {

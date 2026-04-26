@@ -154,6 +154,11 @@
     "delete": "刪除這條記錄"
   },
   "purchase": {
+    "error": {
+      "title": "購買錯誤",
+      "receiptInvalid": "無法驗證此次購買，請稍後再試。",
+      "restoreFailed": "無法連接 App Store，請稍後再試。"
+    },
     "weightFeature": {
       "alertTitle": "體重曲線（進階功能）",
       "alertMessage": "解鎖體重成長曲線，記錄孩子體重變化，與同齡兒童對比百分位。",

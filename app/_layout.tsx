@@ -1,6 +1,6 @@
 import '@/i18n'; // 必须最先引入，初始化 i18n
 import { useEffect } from 'react';
-import { Platform } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -13,6 +13,7 @@ import { useChildStore } from '@/store/childStore';
 import { initLanguage } from '@/store/settingsStore';
 import { initPurchaseState } from '@/store/purchaseStore';
 import { useBackup } from '@/hooks/useBackup';
+import { syncWeightEntitlement } from '@/services/purchase/weightEntitlement';
 
 // 在模块加载时双重拦截：阻止 Expo Router 将备份文件 URL 当作路由处理
 // 问题：Expo Router 也监听 getInitialURL 和 addEventListener，
@@ -22,11 +23,13 @@ import { useBackup } from '@/hooks/useBackup';
 let _pendingBackupUri: string | null = null;
 // 保存原始 addEventListener 供 _layout useEffect 使用（绕过过滤）
 type UrlListener = (e: { url: string }) => void;
-let _origAddEventListener: ((event: string, handler: UrlListener) => { remove: () => void }) | null = null;
+type UrlSubscription = { remove: () => void };
+type UrlAddEventListener = (event: string, handler: UrlListener) => UrlSubscription;
+let _origAddEventListener: UrlAddEventListener | null = null;
 
 if (Platform.OS === 'ios') {
   const _origGetInitialURL = Linking.getInitialURL.bind(Linking);
-  _origAddEventListener = Linking.addEventListener.bind(Linking) as typeof _origAddEventListener;
+  _origAddEventListener = Linking.addEventListener.bind(Linking) as unknown as UrlAddEventListener;
 
   // 1. 拦截 getInitialURL：冷启动时 Expo Router 通过此获取初始 URL
   (Linking as unknown as { getInitialURL: () => Promise<string | null> }).getInitialURL =
@@ -40,7 +43,7 @@ if (Platform.OS === 'ios') {
     };
 
   // 2. 拦截 addEventListener：热启动时 Expo Router 通过此接收 URL 事件
-  (Linking as unknown as { addEventListener: typeof Linking.addEventListener }).addEventListener =
+  (Linking as unknown as { addEventListener: UrlAddEventListener }).addEventListener =
     (event: string, handler: UrlListener) => {
       if (event === 'url') {
         // 给 Expo Router 包一层过滤：备份文件 URL 不传给它
@@ -62,6 +65,22 @@ export default function RootLayout() {
     initLanguage();       // 再读取已保存的语言
     initPurchaseState();  // 读取内购状态
     loadChildren();
+
+    if (Platform.OS === 'ios') {
+      syncWeightEntitlement().catch(() => {});
+    }
+  }, []);
+
+  useEffect(() => {
+    if (Platform.OS !== 'ios') return;
+
+    const sub = AppState.addEventListener('change', (nextState) => {
+      if (nextState === 'active') {
+        syncWeightEntitlement().catch(() => {});
+      }
+    });
+
+    return () => sub.remove();
   }, []);
 
   // iOS：监听 .kidsprout 文件通过 UTType document opener 打开
@@ -77,7 +96,7 @@ export default function RootLayout() {
 
     // 热启动（App 已运行时打开文件）
     // 使用原始 addEventListener（绕过 Expo Router 的过滤层），确保能收到备份 URL
-    const addListener = (_origAddEventListener ?? Linking.addEventListener.bind(Linking)) as (event: string, handler: UrlListener) => { remove: () => void };
+    const addListener = (_origAddEventListener ?? (Linking.addEventListener.bind(Linking) as unknown as UrlAddEventListener)) as UrlAddEventListener;
     const sub = addListener('url', ({ url }) => {
       if (isBackupFile(url)) handleImportFromUri(url);
     });

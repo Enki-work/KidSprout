@@ -76,9 +76,13 @@ export default function WeightFeaturePurchasePage() {
   async function handleRestore() {
     setRestoring(true);
     try {
-      const found = await restore();
-      if (!found) {
+      const result = await restore();
+      if (result === 'restored') {
+        Alert.alert('', t('purchase.weightFeature.restoreSuccess'));
+      } else if (result === 'not_found') {
         Alert.alert('', t('purchase.weightFeature.restoreFail'));
+      } else {
+        Alert.alert(t('purchase.error.title'), t('purchase.error.restoreFailed'));
       }
     } finally {
       setRestoring(false);

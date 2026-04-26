@@ -154,6 +154,11 @@
     "delete": "删除这条记录"
   },
   "purchase": {
+    "error": {
+      "title": "购买错误",
+      "receiptInvalid": "无法验证此次购买，请稍后重试。",
+      "restoreFailed": "无法连接 App Store，请稍后重试。"
+    },
     "weightFeature": {
       "alertTitle": "体重曲线（高级功能）",
       "alertMessage": "解锁体重成长曲线，记录孩子体重变化，与同龄儿童对比百分位。",
