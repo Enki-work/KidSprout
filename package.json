@@ -48,5 +48,14 @@
     "babel-preset-expo": "~54.0.10",
     "typescript": "~5.9.2"
   },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "react-native-receive-sharing-intent"
+        ]
+      }
+    }
+  },
   "private": true
 }
