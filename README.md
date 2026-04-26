@@ -150,8 +150,11 @@ npx expo prebuild --platform ios
 # 2. 安装 iOS 依赖
 cd ios && pod install && cd ..
 
+# 确认 Xcode 能识别到设备
+xcrun xctrace list devices
+
 # 3. 编译并启动到模拟器或真机
-npx expo run:ios
+npx expo run:ios --udid 00008140-000C491E0C44801C
 ```
 
 ### 方法二：EAS Build（推荐提交前验证）
