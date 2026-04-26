@@ -18,7 +18,7 @@ import {
   View,
 } from "react-native";
 
-const MAX_CHILDREN = 4;
+const MAX_CHILDREN = 5;
 
 function genId(): string {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
