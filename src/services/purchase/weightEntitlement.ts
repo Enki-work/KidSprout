@@ -7,6 +7,7 @@ import {
   type Purchase,
   type VerifyPurchaseResultIOS,
 } from 'react-native-iap';
+import { Platform } from 'react-native';
 import { usePurchaseStore } from '@/store/purchaseStore';
 
 export const WEIGHT_PRODUCT_ID = 'com.qiyan.KidSprout.weight';
@@ -37,6 +38,9 @@ async function finalizePurchases(purchases: Purchase[]): Promise<void> {
 
 async function validateWeightPurchases(purchases: Purchase[]): Promise<boolean> {
   if (!purchases.length) return false;
+  if (Platform.OS === 'android') {
+    return purchases.some((purchase) => !!purchase.purchaseToken);
+  }
   return verifyWeightEntitlementIos();
 }
 

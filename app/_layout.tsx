@@ -66,14 +66,10 @@ export default function RootLayout() {
     initPurchaseState();  // 读取内购状态
     loadChildren();
 
-    if (Platform.OS === 'ios') {
-      syncWeightEntitlement().catch(() => {});
-    }
+    syncWeightEntitlement().catch(() => {});
   }, []);
 
   useEffect(() => {
-    if (Platform.OS !== 'ios') return;
-
     const sub = AppState.addEventListener('change', (nextState) => {
       if (nextState === 'active') {
         syncWeightEntitlement().catch(() => {});
