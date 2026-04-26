@@ -177,7 +177,8 @@ eas build --platform ios --profile preview
 4. 新建 `.storekit` 文件时，添加一个 **Non-Consumable** 商品，Product ID 填写 `com.qiyan.KidSprout.weight`
 5. 重新运行 App，即可在模拟器中触发沙盒购买弹窗
 
-> 当前正式内购只有一次性买断商品 `com.qiyan.KidSprout.weight`，没有正式订阅商品。历史订阅测试可忽略。
+> 当前正式内购只有一次性买断商品，没有正式订阅商品：
+> iOS 使用 `com.qiyan.KidSprout.weight`，Android 使用 `com.qiyan.kidsprout.weight`。历史订阅测试可忽略。
 
 #### iOS 真机（App Store Connect 沙盒账号）
 
@@ -243,7 +244,7 @@ eas build --platform android --profile production --auto-submit
 > 3. Google Play 元数据（描述、关键词等）需在 Play Console 手动填写，`store.config.json` 不支持自动推送到 Google Play
 > 4. Google Play 应用内商品需手动配置：
 >    - 类型：`Managed product`
->    - Product ID：`com.qiyan.KidSprout.weight`
+>    - Product ID：`com.qiyan.kidsprout.weight`
 >    - 不创建订阅商品
 
 ---

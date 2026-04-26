@@ -446,7 +446,7 @@ export function calcZScore(x: number, l: number, m: number, s: number): number {
 | 平台 | Product ID |
 |------|-----------|
 | App Store | `com.qiyan.KidSprout.weight` |
-| Google Play | `com.qiyan.KidSprout.weight` |
+| Google Play | `com.qiyan.kidsprout.weight` |
 
 产品类型：**Non-Consumable（一次性买断）**
 
@@ -534,7 +534,7 @@ export function usePurchase() {
 
    | 字段 | 值 |
    |------|---|
-   | 产品 ID | `com.qiyan.KidSprout.weight` |
+   | 产品 ID | `com.qiyan.kidsprout.weight` |
    | 名称（默认语言） | Weight Curve Feature |
    | 说明 | Unlock weight growth charts |
    | 状态 | 活跃 |

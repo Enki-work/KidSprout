@@ -1,6 +1,9 @@
 /**
  * 内购 Hook（react-native-iap v14 · Nitro 架构）
- * 商品：com.qiyan.KidSprout.weight（非消耗品 · 买断）
+ * 商品：
+ *   iOS     com.qiyan.KidSprout.weight
+ *   Android com.qiyan.kidsprout.weight
+ * 类型：非消耗品 / 一次性买断
  * 收据验证：v14 内置 verifyPurchase（StoreKit 2 本地验证，无需自建服务器）
  */
 
@@ -21,8 +24,8 @@ import {
 } from 'react-native-iap';
 import { usePurchaseStore } from '@/store/purchaseStore';
 import {
+  getWeightProductId,
   restoreWeightPurchases,
-  WEIGHT_PRODUCT_ID,
   type RestoreResult,
 } from '@/services/purchase/weightEntitlement';
 
@@ -32,6 +35,7 @@ import {
 export function usePurchase() {
   const { t } = useTranslation();
   const { hasPurchasedWeightFeature, isLoading, setPurchased } = usePurchaseStore();
+  const productId = getWeightProductId();
 
   const [displayPrice, setDisplayPrice] = useState<string | undefined>();
   const [loadingProducts, setLoadingProducts] = useState(false);
@@ -50,7 +54,7 @@ export function usePurchase() {
       try {
         // 注册监听器（若原生模块不存在会在此抛出，Expo Go 中安全跳过）
         purchaseSub = purchaseUpdatedListener(async (purchase: Purchase) => {
-          if (purchase.productId !== WEIGHT_PRODUCT_ID) return;
+          if (purchase.productId !== productId) return;
           try {
             const valid = Platform.OS === 'ios'
               ? (await restoreWeightPurchases()) === 'restored'
@@ -79,7 +83,7 @@ export function usePurchase() {
         // 初始化连接并获取商品本地化价格
         await initConnection();
         setLoadingProducts(true);
-        const products = await fetchProducts({ skus: [WEIGHT_PRODUCT_ID] });
+        const products = await fetchProducts({ skus: [productId] });
         if (mounted && products && products.length > 0) {
           setDisplayPrice(products[0].displayPrice);
         }
@@ -98,18 +102,18 @@ export function usePurchase() {
       errorSub?.remove();
       endConnection().catch(() => {});
     };
-  }, [t]);
+  }, [productId, t]);
 
   /** 发起购买（结果通过 purchaseUpdatedListener 异步回调处理） */
   const purchase = useCallback(async (): Promise<void> => {
     await requestPurchase({
       type: 'in-app',
       request: Platform.OS === 'ios'
-        ? { apple: { sku: WEIGHT_PRODUCT_ID } }
-        : { google: { skus: [WEIGHT_PRODUCT_ID] } },
+        ? { apple: { sku: productId } }
+        : { google: { skus: [productId] } },
     });
     // 若原生模块不可用（Expo Go）会抛出，由调用方 try-catch 处理
-  }, []);
+  }, [productId]);
 
   /** 恢复购买 */
   const restore = useCallback(async (): Promise<RestoreResult> => {

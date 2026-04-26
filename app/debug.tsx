@@ -25,7 +25,8 @@ import { DebugAddTestData } from '@/components/debug/DebugAddTestData';
 import { DebugAddWeightTestData } from '@/components/debug/DebugAddWeightTestData';
 
 const SUB_PRODUCT_ID = 'com.qiyan.KidSprout.remote_ads';
-const FORMAL_PRODUCT_ID = 'com.qiyan.KidSprout.weight';
+const FORMAL_PRODUCT_ID_IOS = 'com.qiyan.KidSprout.weight';
+const FORMAL_PRODUCT_ID_ANDROID = 'com.qiyan.kidsprout.weight';
 
 // ── 历史订阅测试组件（当前忽略，不属于正式产品能力） ───────────────────────────
 
@@ -129,7 +130,7 @@ function DebugSubscription() {
     <View style={styles.subCard}>
       <Text style={styles.subTitle}>历史订阅测试（当前忽略）</Text>
       <Text style={styles.subDesc}>
-        正式内购只有一次性买断商品 {FORMAL_PRODUCT_ID}。下面的 remote_ads 仅保留为历史调试用途，不参与发布、验收或商店配置。
+        正式内购只有一次性买断商品。iOS 使用 {FORMAL_PRODUCT_ID_IOS}，Android 使用 {FORMAL_PRODUCT_ID_ANDROID}。下面的 remote_ads 仅保留为历史调试用途，不参与发布、验收或商店配置。
       </Text>
       <Text style={styles.subId}>{SUB_PRODUCT_ID}</Text>
 

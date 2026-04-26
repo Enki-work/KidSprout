@@ -10,14 +10,19 @@ import {
 import { Platform } from 'react-native';
 import { usePurchaseStore } from '@/store/purchaseStore';
 
-export const WEIGHT_PRODUCT_ID = 'com.qiyan.KidSprout.weight';
+export const WEIGHT_PRODUCT_ID_IOS = 'com.qiyan.KidSprout.weight';
+export const WEIGHT_PRODUCT_ID_ANDROID = 'com.qiyan.kidsprout.weight';
+
+export function getWeightProductId(): string {
+  return Platform.OS === 'android' ? WEIGHT_PRODUCT_ID_ANDROID : WEIGHT_PRODUCT_ID_IOS;
+}
 
 export type RestoreResult = 'restored' | 'not_found' | 'store_error';
 export type SyncResult = 'synced' | 'store_error';
 
 async function verifyWeightEntitlementIos(): Promise<boolean> {
   try {
-    const result = await verifyPurchase({ apple: { sku: WEIGHT_PRODUCT_ID } });
+    const result = await verifyPurchase({ apple: { sku: WEIGHT_PRODUCT_ID_IOS } });
     return (result as VerifyPurchaseResultIOS).isValid;
   } catch {
     return false;
@@ -25,8 +30,9 @@ async function verifyWeightEntitlementIos(): Promise<boolean> {
 }
 
 async function findWeightPurchases(): Promise<Purchase[]> {
+  const productId = getWeightProductId();
   const purchases = await getAvailablePurchases();
-  return (purchases ?? []).filter((purchase) => purchase.productId === WEIGHT_PRODUCT_ID);
+  return (purchases ?? []).filter((purchase) => purchase.productId === productId);
 }
 
 async function finalizePurchases(purchases: Purchase[]): Promise<void> {
