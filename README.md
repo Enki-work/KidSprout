@@ -154,7 +154,7 @@ cd ios && pod install && cd ..
 xcrun xctrace list devices
 
 # 3. 编译并启动到模拟器或真机
-npx expo run:ios --udid 00008140-000C491E0C44801C
+npx expo run:ios --device 00008140-000C491E0C44801C
 ```
 
 ### 方法二：EAS Build（推荐提交前验证）
