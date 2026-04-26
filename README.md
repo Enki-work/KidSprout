@@ -177,6 +177,8 @@ eas build --platform ios --profile preview
 4. 新建 `.storekit` 文件时，添加一个 **Non-Consumable** 商品，Product ID 填写 `com.qiyan.KidSprout.weight`
 5. 重新运行 App，即可在模拟器中触发沙盒购买弹窗
 
+> 当前正式内购只有一次性买断商品 `com.qiyan.KidSprout.weight`，没有正式订阅商品。历史订阅测试可忽略。
+
 #### iOS 真机（App Store Connect 沙盒账号）
 
 1. 在 [App Store Connect](https://appstoreconnect.apple.com) → 用户和访问 → 沙盒测试员 中创建测试账号

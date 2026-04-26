@@ -445,8 +445,8 @@ export function calcZScore(x: number, l: number, m: number, s: number): number {
 
 | 平台 | Product ID |
 |------|-----------|
-| App Store | `com.qiyan.KidSprout.weight_feature` |
-| Google Play | `weight_feature` |
+| App Store | `com.qiyan.KidSprout.weight` |
+| Google Play | `com.qiyan.KidSprout.weight` |
 
 产品类型：**Non-Consumable（一次性买断）**
 
@@ -508,7 +508,7 @@ export function usePurchase() {
    | 字段 | 值 |
    |------|---|
    | 参考名称 | Weight Curve Feature |
-   | 产品 ID | `com.qiyan.KidSprout.weight_feature` |
+   | 产品 ID | `com.qiyan.KidSprout.weight` |
    | 定价档位 | 建议 Tier 3（约 ¥18 / $2.99） |
 
 5. **本地化（每种语言）：**
@@ -534,7 +534,7 @@ export function usePurchase() {
 
    | 字段 | 值 |
    |------|---|
-   | 产品 ID | `weight_feature` |
+   | 产品 ID | `com.qiyan.KidSprout.weight` |
    | 名称（默认语言） | Weight Curve Feature |
    | 说明 | Unlock weight growth charts |
    | 状态 | 活跃 |

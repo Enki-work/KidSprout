@@ -25,8 +25,9 @@ import { DebugAddTestData } from '@/components/debug/DebugAddTestData';
 import { DebugAddWeightTestData } from '@/components/debug/DebugAddWeightTestData';
 
 const SUB_PRODUCT_ID = 'com.qiyan.KidSprout.remote_ads';
+const FORMAL_PRODUCT_ID = 'com.qiyan.KidSprout.weight';
 
-// ── 订阅测试组件 ──────────────────────────────────────────────────────────────
+// ── 历史订阅测试组件（当前忽略，不属于正式产品能力） ───────────────────────────
 
 function DebugSubscription() {
   const [busy, setBusy] = useState(false);
@@ -79,15 +80,15 @@ function DebugSubscription() {
     };
   }, []);
 
-  /** 发起订阅购买 */
+  /** 发起历史订阅测试购买 */
   async function handleSubscribe() {
     setBusy(true);
     try {
-      // 先获取订阅商品信息
+      // 先获取历史测试订阅商品信息
       const products = await fetchProducts({ skus: [SUB_PRODUCT_ID] });
       console.log('[Debug/Subscription] fetchProducts result:', JSON.stringify(products, null, 2));
 
-      // 发起订阅购买（type: 'subs'）
+      // 发起历史测试订阅购买（type: 'subs'）
       await requestPurchase({
         type: 'subs',
         request: Platform.OS === 'ios'
@@ -99,14 +100,14 @@ function DebugSubscription() {
       const err = e as PurchaseError;
       if (err?.code !== ErrorCode.UserCancelled) {
         console.error('[Debug/Subscription] requestPurchase error:', e);
-        Alert.alert('订阅失败', String((e as Error)?.message ?? e));
+        Alert.alert('历史订阅测试失败', String((e as Error)?.message ?? e));
       }
     } finally {
       setBusy(false);
     }
   }
 
-  /** 打印当前所有有效购买（含订阅） */
+  /** 打印当前历史测试订阅的有效购买 */
   async function handleShowSubscriptionInfo() {
     try {
       const purchases = await getAvailablePurchases();
@@ -114,9 +115,9 @@ function DebugSubscription() {
       console.log('[Debug/Subscription] getAvailablePurchases (remote_ads):');
       console.log(JSON.stringify(filtered, null, 2));
       setSubInfo(`共 ${filtered.length} 条，详见控制台`);
-      Alert.alert('订阅信息', filtered.length > 0
-        ? `找到 ${filtered.length} 条订阅记录，详见控制台`
-        : '未找到有效订阅记录'
+      Alert.alert('历史订阅测试信息', filtered.length > 0
+        ? `找到 ${filtered.length} 条历史订阅测试记录，详见控制台`
+        : '未找到历史订阅测试记录'
       );
     } catch (e) {
       console.error('[Debug/Subscription] getAvailablePurchases error:', e);
@@ -126,7 +127,10 @@ function DebugSubscription() {
 
   return (
     <View style={styles.subCard}>
-      <Text style={styles.subTitle}>订阅测试</Text>
+      <Text style={styles.subTitle}>历史订阅测试（当前忽略）</Text>
+      <Text style={styles.subDesc}>
+        正式内购只有一次性买断商品 {FORMAL_PRODUCT_ID}。下面的 remote_ads 仅保留为历史调试用途，不参与发布、验收或商店配置。
+      </Text>
       <Text style={styles.subId}>{SUB_PRODUCT_ID}</Text>
 
       <TouchableOpacity
@@ -137,7 +141,7 @@ function DebugSubscription() {
       >
         {busy
           ? <ActivityIndicator color="#fff" size="small" />
-          : <Text style={styles.subBtnText}>购买订阅</Text>
+          : <Text style={styles.subBtnText}>触发历史订阅测试</Text>
         }
       </TouchableOpacity>
 
@@ -146,7 +150,7 @@ function DebugSubscription() {
         onPress={handleShowSubscriptionInfo}
         activeOpacity={0.75}
       >
-        <Text style={styles.infoBtnText}>显示订阅信息（打印到控制台）</Text>
+        <Text style={styles.infoBtnText}>显示历史订阅测试信息（打印到控制台）</Text>
       </TouchableOpacity>
 
       {subInfo && <Text style={styles.subHint}>{subInfo}</Text>}
@@ -166,8 +170,8 @@ export default function DebugScreen() {
       <Stack.Screen options={{ title: 'Debug' }} />
       <ScrollView contentContainerStyle={styles.content}>
 
-        {/* 订阅测试 */}
-        <Text style={styles.sectionTitle}>内购 / 订阅</Text>
+        {/* 历史订阅测试 */}
+        <Text style={styles.sectionTitle}>内购 / 历史订阅测试（忽略）</Text>
         <DebugSubscription />
 
         {/* 测试数据生成 */}
@@ -216,6 +220,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   subTitle:       { fontSize: 16, fontWeight: '700', color: '#1A1A2E' },
+  subDesc:        { fontSize: 13, lineHeight: 19, color: '#666' },
   subId:          { fontSize: 12, color: '#999', fontFamily: 'monospace' },
   subBtn: {
     backgroundColor: '#4CAF82',
