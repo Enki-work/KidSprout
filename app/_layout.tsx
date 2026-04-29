@@ -105,11 +105,11 @@ export default function RootLayout() {
     ReceiveSharingIntent.getReceivedFiles(
       (files: SharedFile[]) => {
         const f = files?.[0];
-        const uri = f?.contentUri ?? f?.filePath;
-        if (uri && isBackupFile(f?.fileName ?? uri)) {
+        const uri = f?.filePath ?? f?.contentUri ?? f?.weblink;
+        const name = f?.fileName ?? f?.filePath ?? f?.contentUri ?? f?.weblink ?? '';
+        if (uri && isBackupFile(name)) {
           handleImportFromUri(uri);
         }
-        ReceiveSharingIntent.clearReceivedFiles();
       },
       () => { /* 非备份文件，静默忽略 */ },
     );
@@ -145,6 +145,7 @@ type SharedFile = {
   contentUri?: string;
   filePath?: string;
   fileName?: string;
+  weblink?: string;
 };
 
 function isBackupFile(url: string): boolean {
