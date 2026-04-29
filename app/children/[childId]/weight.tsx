@@ -24,7 +24,7 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Tab = "chart" | "records" | "analysis";
 const TABS: Tab[] = ["chart", "records", "analysis"];
@@ -69,6 +69,7 @@ export default function WeightDetailScreen() {
   const { childId } = useLocalSearchParams<{ childId: string }>();
   const router = useRouter();
   const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
 
   const child = useChildStore((s) => s.children.find((c) => c.id === childId));
   const {
@@ -126,6 +127,8 @@ export default function WeightDetailScreen() {
 
   const ageMonths = getAgeInMonths(new Date(child.birthDate));
   const chartWidth = width - 32;
+  const fabBottom = Math.max(insets.bottom + 16, 28);
+  const contentBottomPadding = fabBottom + 72;
   const latestComputed =
     computed.length > 0 ? computed[computed.length - 1] : null;
   const currentPercentile = latestComputed?.percentile ?? 50;
@@ -222,7 +225,10 @@ export default function WeightDetailScreen() {
         {/* Page 0: 曲线 */}
         <ScrollView
           style={{ width }}
-          contentContainerStyle={styles.chartContent}
+          contentContainerStyle={[
+            styles.chartContent,
+            { paddingBottom: contentBottomPadding },
+          ]}
         >
           {isMeasurementsLoading ? (
             <ActivityIndicator style={{ marginTop: 60 }} color="#4CAF82" />
@@ -297,7 +303,10 @@ export default function WeightDetailScreen() {
         {/* Page 1: 记录 */}
         <ScrollView
           style={{ width }}
-          contentContainerStyle={styles.recordsContent}
+          contentContainerStyle={[
+            styles.recordsContent,
+            { paddingBottom: contentBottomPadding },
+          ]}
         >
           {latestComputed && (
             <View style={styles.summaryCard}>
@@ -393,7 +402,10 @@ export default function WeightDetailScreen() {
         {/* Page 2: 分析（无18岁预测） */}
         <ScrollView
           style={{ width }}
-          contentContainerStyle={styles.analysisContent}
+          contentContainerStyle={[
+            styles.analysisContent,
+            { paddingBottom: contentBottomPadding },
+          ]}
         >
           {!latestComputed ? (
             <View style={styles.emptyRecords}>
@@ -492,7 +504,7 @@ export default function WeightDetailScreen() {
 
       {/* FAB */}
       <TouchableOpacity
-        style={styles.fab}
+        style={[styles.fab, { bottom: fabBottom }]}
         onPress={() =>
           router.push(`/children/${childId}/add-weight-measurement` as never)
         }
@@ -652,7 +664,6 @@ const styles = StyleSheet.create({
 
   fab: {
     position: "absolute",
-    bottom: 28,
     right: 20,
     left: 20,
     backgroundColor: "#4CAF82",
