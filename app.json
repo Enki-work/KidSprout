@@ -56,19 +56,32 @@
       "intentFilters": [
         {
           "action": "VIEW",
-          "data": [
-            { "mimeType": "application/octet-stream" },
-            { "mimeType": "application/json" },
-            { "mimeType": "*/*", "pathSuffix": ".kidsprout" }
-          ],
+          "data": { "mimeType": "application/octet-stream" },
+          "category": ["DEFAULT", "BROWSABLE"]
+        },
+        {
+          "action": "VIEW",
+          "data": { "mimeType": "application/json" },
+          "category": ["DEFAULT", "BROWSABLE"]
+        },
+        {
+          "action": "VIEW",
+          "data": { "mimeType": "*/*" },
           "category": ["DEFAULT", "BROWSABLE"]
         },
         {
           "action": "SEND",
-          "data": [
-            { "mimeType": "application/octet-stream" },
-            { "mimeType": "application/json" }
-          ],
+          "data": { "mimeType": "application/octet-stream" },
+          "category": ["DEFAULT"]
+        },
+        {
+          "action": "SEND",
+          "data": { "mimeType": "application/json" },
+          "category": ["DEFAULT"]
+        },
+        {
+          "action": "SEND",
+          "data": { "mimeType": "*/*" },
           "category": ["DEFAULT"]
         }
       ]
