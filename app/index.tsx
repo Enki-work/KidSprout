@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  hamburger: { fontSize: 24, color: "#555", lineHeight: 28 },
+  hamburger: { fontSize: 24, color: "#4CAF82", lineHeight: 28 },
   addBtnText: { color: "#4CAF82", fontSize: 18, fontWeight: "600" },
 
   loader: { flex: 1 },
