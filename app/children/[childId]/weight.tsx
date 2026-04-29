@@ -24,7 +24,7 @@ import {
   View,
   useWindowDimensions,
 } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type Tab = "chart" | "records" | "analysis";
 const TABS: Tab[] = ["chart", "records", "analysis"];
@@ -166,7 +166,7 @@ export default function WeightDetailScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container} edges={["bottom"]}>
+    <View style={styles.container}>
       <Stack.Screen
         options={{
           title: `${child.name} ${t("childDetail.analysis.weight")}`,
@@ -511,7 +511,7 @@ export default function WeightDetailScreen() {
       >
         <Text style={styles.fabText}>{t("childDetail.addWeight")}</Text>
       </TouchableOpacity>
-    </SafeAreaView>
+    </View>
   );
 }
 
