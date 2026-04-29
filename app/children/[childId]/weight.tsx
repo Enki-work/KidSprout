@@ -17,6 +17,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
+  Animated,
   ScrollView,
   StyleSheet,
   Text,
@@ -87,6 +88,7 @@ export default function WeightDetailScreen() {
 
   const [tab, setTab] = useState<Tab>("chart");
   const pagerRef = useRef<ScrollView>(null);
+  const fabTranslateY = useRef(new Animated.Value(0)).current;
 
   useFocusEffect(
     useCallback(() => {
@@ -165,6 +167,30 @@ export default function WeightDetailScreen() {
     if (TABS[idx] && TABS[idx] !== tab) setTab(TABS[idx]);
   }
 
+  const hideFab = useCallback(() => {
+    Animated.timing(fabTranslateY, {
+      toValue: 120 + insets.bottom,
+      duration: 180,
+      useNativeDriver: true,
+    }).start();
+  }, [fabTranslateY, insets.bottom]);
+
+  const showFab = useCallback(() => {
+    Animated.timing(fabTranslateY, {
+      toValue: 0,
+      duration: 220,
+      useNativeDriver: true,
+    }).start();
+  }, [fabTranslateY]);
+
+  const verticalScrollProps = {
+    onScrollBeginDrag: hideFab,
+    onMomentumScrollBegin: hideFab,
+    onScrollEndDrag: showFab,
+    onMomentumScrollEnd: showFab,
+    scrollEventThrottle: 16,
+  };
+
   return (
     <View style={styles.container}>
       <Stack.Screen
@@ -229,6 +255,7 @@ export default function WeightDetailScreen() {
             styles.chartContent,
             { paddingBottom: contentBottomPadding },
           ]}
+          {...verticalScrollProps}
         >
           {isMeasurementsLoading ? (
             <ActivityIndicator style={{ marginTop: 60 }} color="#4CAF82" />
@@ -307,6 +334,7 @@ export default function WeightDetailScreen() {
             styles.recordsContent,
             { paddingBottom: contentBottomPadding },
           ]}
+          {...verticalScrollProps}
         >
           {latestComputed && (
             <View style={styles.summaryCard}>
@@ -406,6 +434,7 @@ export default function WeightDetailScreen() {
             styles.analysisContent,
             { paddingBottom: contentBottomPadding },
           ]}
+          {...verticalScrollProps}
         >
           {!latestComputed ? (
             <View style={styles.emptyRecords}>
@@ -503,14 +532,21 @@ export default function WeightDetailScreen() {
       </ScrollView>
 
       {/* FAB */}
-      <TouchableOpacity
-        style={[styles.fab, { bottom: fabBottom }]}
-        onPress={() =>
-          router.push(`/children/${childId}/add-weight-measurement` as never)
-        }
+      <Animated.View
+        style={[
+          styles.fabWrap,
+          { bottom: fabBottom, transform: [{ translateY: fabTranslateY }] },
+        ]}
       >
-        <Text style={styles.fabText}>{t("childDetail.addWeight")}</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() =>
+            router.push(`/children/${childId}/add-weight-measurement` as never)
+          }
+        >
+          <Text style={styles.fabText}>{t("childDetail.addWeight")}</Text>
+        </TouchableOpacity>
+      </Animated.View>
     </View>
   );
 }
@@ -662,10 +698,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
 
-  fab: {
+  fabWrap: {
     position: "absolute",
     right: 20,
     left: 20,
+  },
+  fab: {
     backgroundColor: "#4CAF82",
     borderRadius: 14,
     paddingVertical: 14,

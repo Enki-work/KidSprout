@@ -18,6 +18,7 @@ import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
+  Animated,
   Modal,
   Pressable,
   ScrollView,
@@ -87,6 +88,7 @@ export default function ChildDetailScreen() {
   const [tab, setTab] = useState<Tab>("chart");
   const [showPercentileInfo, setShowPercentileInfo] = useState(false);
   const pagerRef = useRef<ScrollView>(null);
+  const fabTranslateY = useRef(new Animated.Value(0)).current;
 
   useFocusEffect(
     useCallback(() => {
@@ -163,6 +165,30 @@ export default function ChildDetailScreen() {
     if (TABS[idx] && TABS[idx] !== tab) setTab(TABS[idx]);
   }
 
+  const hideFab = useCallback(() => {
+    Animated.timing(fabTranslateY, {
+      toValue: 120 + insets.bottom,
+      duration: 180,
+      useNativeDriver: true,
+    }).start();
+  }, [fabTranslateY, insets.bottom]);
+
+  const showFab = useCallback(() => {
+    Animated.timing(fabTranslateY, {
+      toValue: 0,
+      duration: 220,
+      useNativeDriver: true,
+    }).start();
+  }, [fabTranslateY]);
+
+  const verticalScrollProps = {
+    onScrollBeginDrag: hideFab,
+    onMomentumScrollBegin: hideFab,
+    onScrollEndDrag: showFab,
+    onMomentumScrollEnd: showFab,
+    scrollEventThrottle: 16,
+  };
+
   return (
     <View style={styles.container}>
       <Stack.Screen
@@ -229,6 +255,7 @@ export default function ChildDetailScreen() {
             styles.chartContent,
             { paddingBottom: contentBottomPadding },
           ]}
+          {...verticalScrollProps}
         >
           {isMeasurementsLoading ? (
             <ActivityIndicator style={{ marginTop: 60 }} color="#4CAF82" />
@@ -309,6 +336,7 @@ export default function ChildDetailScreen() {
             styles.recordsContent,
             { paddingBottom: contentBottomPadding },
           ]}
+          {...verticalScrollProps}
         >
           {latestComputed && (
             <View style={styles.summaryCard}>
@@ -404,6 +432,7 @@ export default function ChildDetailScreen() {
             styles.analysisContent,
             { paddingBottom: contentBottomPadding },
           ]}
+          {...verticalScrollProps}
         >
           {!latestComputed ? (
             <View style={styles.emptyRecords}>
@@ -514,14 +543,21 @@ export default function ChildDetailScreen() {
       </ScrollView>
 
       {/* FAB：新增测量 */}
-      <TouchableOpacity
-        style={[styles.fab, { bottom: fabBottom }]}
-        onPress={() =>
-          router.push(`/children/${childId}/add-measurement` as never)
-        }
+      <Animated.View
+        style={[
+          styles.fabWrap,
+          { bottom: fabBottom, transform: [{ translateY: fabTranslateY }] },
+        ]}
       >
-        <Text style={styles.fabText}>{t("childDetail.addHeight")}</Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.fab}
+          onPress={() =>
+            router.push(`/children/${childId}/add-measurement` as never)
+          }
+        >
+          <Text style={styles.fabText}>{t("childDetail.addHeight")}</Text>
+        </TouchableOpacity>
+      </Animated.View>
 
       {/* 百分位说明弹窗 */}
       <Modal
@@ -750,10 +786,12 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
 
-  fab: {
+  fabWrap: {
     position: "absolute",
     right: 20,
     left: 20,
+  },
+  fab: {
     backgroundColor: "#4CAF82",
     borderRadius: 14,
     paddingVertical: 14,
