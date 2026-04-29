@@ -53,7 +53,8 @@
           "action": "VIEW",
           "data": [
             { "mimeType": "application/octet-stream" },
-            { "mimeType": "application/json" }
+            { "mimeType": "application/json" },
+            { "mimeType": "*/*", "pathSuffix": ".kidsprout" }
           ],
           "category": ["DEFAULT", "BROWSABLE"]
         },
