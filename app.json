@@ -4,7 +4,6 @@
     "slug": "KidSprout",
     "version": "1.1.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "scheme": "kidsprout",
     "splash": {
@@ -14,6 +13,7 @@
     },
     "ios": {
       "supportsTablet": true,
+      "icon": "./assets/icon.png",
       "bundleIdentifier": "com.qiyan.KidSprout",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
@@ -44,7 +44,7 @@
       "adaptiveIcon": {
         "backgroundColor": "#4CAF82",
         "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.jpg",
+        "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "splash": {
