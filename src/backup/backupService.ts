@@ -4,6 +4,7 @@
  */
 
 import { File, Paths } from 'expo-file-system';
+import * as LegacyFileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
 import { BackupFile, BackupFileSchema } from './backupSchema';
 import { getAllChildren } from '@/db/child.repo';
@@ -61,8 +62,7 @@ export async function exportBackup(): Promise<void> {
 export async function parseBackupFromUri(uri: string): Promise<BackupFile> {
   let raw: string;
   try {
-    const file = new File(uri);
-    raw = await file.text();
+    raw = await readTextFromSharedUri(uri);
   } catch {
     throw new Error('READ_FAILED');
   }
@@ -78,4 +78,47 @@ export async function parseBackupFromUri(uri: string): Promise<BackupFile> {
   if (!result.success) throw new Error('INVALID_FORMAT');
 
   return result.data;
+}
+
+async function readTextFromSharedUri(uri: string): Promise<string> {
+  const candidates = getReadableUriCandidates(uri);
+  let lastError: unknown;
+
+  for (const candidate of candidates) {
+    try {
+      return await new File(candidate).text();
+    } catch (e) {
+      lastError = e;
+    }
+
+    try {
+      return await LegacyFileSystem.readAsStringAsync(candidate);
+    } catch (e) {
+      lastError = e;
+    }
+  }
+
+  throw lastError ?? new Error('READ_FAILED');
+}
+
+function getReadableUriCandidates(uri: string): string[] {
+  const candidates = [uri];
+
+  if (uri.startsWith('/')) {
+    candidates.push(`file://${uri}`);
+  }
+
+  try {
+    const decoded = decodeURI(uri);
+    if (decoded !== uri) {
+      candidates.push(decoded);
+      if (decoded.startsWith('/')) {
+        candidates.push(`file://${decoded}`);
+      }
+    }
+  } catch {
+    // Keep the original URI if it is not URI-encoded.
+  }
+
+  return [...new Set(candidates)];
 }
