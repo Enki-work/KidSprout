@@ -107,7 +107,7 @@ export default function RootLayout() {
         const f = files?.[0];
         const uri = f?.filePath ?? f?.contentUri ?? f?.weblink;
         const name = f?.fileName ?? f?.filePath ?? f?.contentUri ?? f?.weblink ?? '';
-        if (uri && isBackupFile(name)) {
+        if (uri && (isBackupFile(name) || isLocalSharedUri(uri))) {
           handleImportFromUri(uri);
         }
       },
@@ -146,10 +146,20 @@ type SharedFile = {
   filePath?: string;
   fileName?: string;
   weblink?: string;
+  mimeType?: string;
 };
 
 function isBackupFile(url: string): boolean {
   return url.toLowerCase().includes('.kidsprout');
+}
+
+function isLocalSharedUri(uri: string): boolean {
+  const lower = uri.toLowerCase();
+  return (
+    lower.startsWith('content://') ||
+    lower.startsWith('file://') ||
+    lower.startsWith('/')
+  );
 }
 
 const styles = StyleSheet.create({
