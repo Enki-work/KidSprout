@@ -241,7 +241,7 @@ eas build --platform android --profile production --auto-submit
 >
 > 1. 已在 Google Play Console 手动创建 App 记录并上传至少一个 AAB（首次需手动上传）
 > 2. 已配置 Google Play API Service Account 并授予发布权限
-> 3. Google Play 元数据（描述、关键词等）需在 Play Console 手动填写，`store.config.json` 不支持自动推送到 Google Play
+> 3. EAS Metadata 目前只接受 `store.config.json` 中的 `apple` 配置；Google Play 元数据备份在 `store.google.config.json`，需在 Play Console 手动填写
 > 4. Google Play 应用内商品需手动配置：
 >    - 类型：`Managed product`
 >    - Product ID：`com.qiyan.kidsprout.weight`

@@ -2,19 +2,34 @@
   "configVersion": 0,
   "apple": {
     "copyright": "2026 qiyan",
-    "version": "1.0.0",
-    "categories": ["MEDICAL", "HEALTH_AND_FITNESS"],
+    "version": "1.1.0",
+    "categories": [
+      "MEDICAL",
+      "HEALTH_AND_FITNESS"
+    ],
     "info": {
       "zh-Hans": {
         "title": "小芽成长",
         "subtitle": "家长专用 · 身高成长曲线追踪",
         "description": "小芽成长是一款专为家长设计的儿童身高成长记录与分析应用。\n\n通过整合 WHO、日本厚生劳动省、中国权威机构等多国权威统计数据，以可视化成长曲线的方式，帮助家长直观了解孩子在同龄人中的身高位置，并科学预测18岁成年后的预期身高。\n\n【核心功能】\n\n【成长曲线可视化】\n基于权威统计数据，实时矢量绘制 0～18 岁各百分位成长曲线，支持图表缩放，将孩子的实测身高叠加显示在曲线图上，一目了然。\n\n【多数据源支持】\n• WHO：世界卫生组织全球儿童生长标准\n• 日本厚生劳动省：日本儿童身高统计数据\n• 中国权威机构：中国儿童身高发育参考标准\n可随时切换数据源，重新绘制成长曲线进行对比。\n\n【身高记录管理】\n定期记录孩子身高，自动生成个人成长轨迹，支持多个孩子的独立档案管理，预测18岁成年后的预期身高区间。\n\n【多语言支持】\n支持中文、日語、English、Español、한국어。",
         "keywords": [
-          "身高", "成长曲线", "儿童", "宝宝", "发育", "百分位", "WHO", "身高预测", "成长记录", "育儿",
-          "生长发育", "儿科", "宝宝身高", "成长档案", "健康"
+          "身高",
+          "成长曲线",
+          "儿童",
+          "宝宝",
+          "发育",
+          "百分位",
+          "WHO",
+          "身高预测",
+          "成长记录",
+          "育儿",
+          "生长发育",
+          "儿科",
+          "宝宝身高",
+          "成长档案",
+          "健康"
         ],
         "releaseNotes": "这次更新，想让记录成长这件事更顺手一点。\n\n现在可以把体重也记进来了，和身高一样看看成长曲线和百分位。记录填错了也不用紧张，身高、体重都可以回去修改。\n\n还加了备份和恢复，换手机、重装 App 时心里更踏实。图表页、全屏图表、底部按钮和 Android 文件导入也顺手修了修。",
-        "promotionalText": "📏 同时记录身高与体重，用科学成长曲线全面追踪孩子的发育。支持 WHO 等多国权威数据。",
         "marketingUrl": "https://enki-work.github.io/KidSprout/",
         "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
         "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
@@ -24,11 +39,23 @@
         "subtitle": "家長專用 · 身高成長曲線追蹤",
         "description": "小芽成長是一款專為家長設計的兒童身高成長記錄與分析應用。\n\n透過整合 WHO、日本厚生勞動省、中國權威機構等多國官方統計數據，以可視化成長曲線的方式，幫助家長直觀了解孩子在同齡人中的身高位置，並科學預測18歲成年後的預期身高。\n\n【核心功能】\n\n【成長曲線可視化】\n基於權威統計數據，即時向量繪製 0～18 歲各百分位成長曲線，支援圖表縮放，將孩子的實測身高疊加顯示在曲線圖上，一目了然。\n\n【多數據源支援】\n• WHO：世界衛生組織全球兒童生長標準\n• 日本厚生勞動省：日本兒童身高統計數據\n• 中國權威機構：中國兒童身高發育參考標準\n可隨時切換數據源，重新繪製成長曲線進行比較。\n\n【身高記錄管理】\n定期記錄孩子身高，自動生成個人成長軌跡，支援多個孩子的獨立檔案管理，預測18歲成年後的預期身高區間。\n\n【多語言支援】\n支援繁體中文、简体中文、日語、English、Español、한국어。",
         "keywords": [
-          "身高", "成長曲線", "兒童", "寶寶", "發育", "百分位", "WHO", "身高預測", "成長記錄", "育兒",
-          "生長發育", "兒科", "寶寶身高", "成長檔案", "健康"
+          "身高",
+          "成長曲線",
+          "兒童",
+          "寶寶",
+          "發育",
+          "百分位",
+          "WHO",
+          "身高預測",
+          "成長記錄",
+          "育兒",
+          "生長發育",
+          "兒科",
+          "寶寶身高",
+          "成長檔案",
+          "健康"
         ],
         "releaseNotes": "這次更新，想讓記錄成長這件事更順手一點。\n\n現在也可以把體重記下來了，和身高一樣看看成長曲線與百分位。記錄填錯也不用擔心，身高、體重都可以回去修改。\n\n另外加了備份與復原，換手機或重新安裝時比較安心。圖表頁、全螢幕圖表、底部按鈕和 Android 檔案匯入也一起修順了。",
-        "promotionalText": "📏 同時記錄身高與體重，用科學成長曲線全面追蹤孩子的發育。支援 WHO 等多國權威數據。",
         "marketingUrl": "https://enki-work.github.io/KidSprout/",
         "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
         "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
@@ -38,24 +65,45 @@
         "subtitle": "保護者向け · 身長成長曲線管理",
         "description": "成長ツリーは、保護者のために設計された子どもの身長成長記録・分析アプリです。\n\nWHO・日本厚生労働省・中国権威機関などの各国公式統計データを統合し、成長曲線のビジュアライゼーションにより、お子さまの身長が同年齢の中でどの位置にあるかを直感的に把握できます。さらに、18歳時点での予測身長も科学的に算出します。\n\n【主な機能】\n\n【成長曲線の可視化】\n権威ある統計データをもとに、0〜18歳の各パーセンタイル成長曲線をリアルタイムでベクター描画。グラフのズームに対応し、実測身長を曲線に重ねて表示します。\n\n【複数データソース対応】\n• WHO：世界保健機関 グローバル小児成長基準\n• 日本厚生労働省：乳幼児身体発育調査データ\n• 中国権威機関：中国小児身長発育参考基準\nデータソースをいつでも切り替えて、曲線を比較できます。\n\n【身長記録の管理】\n定期的に身長を記録し、個人の成長軌跡を自動生成。複数のお子さまを独立したプロフィールで管理し、18歳時点の予測身長範囲を表示します。\n\n【多言語対応】\n日本語・中文・English・Español・한국어に対応。",
         "keywords": [
-          "身長", "成長曲線", "子ども", "赤ちゃん", "発育", "パーセンタイル", "WHO", "身長予測", "成長記録", "育児",
-          "成長管理", "小児", "子育て", "健康", "幼児身長"
+          "身長",
+          "成長曲線",
+          "子ども",
+          "赤ちゃん",
+          "発育",
+          "パーセンタイル",
+          "WHO",
+          "身長予測",
+          "成長記録",
+          "育児",
+          "成長管理",
+          "小児",
+          "子育て",
+          "健康",
+          "幼児身長"
         ],
         "releaseNotes": "今回の更新は、毎日の記録を少しだけ気楽に続けやすくするためのものです。\n\n身長に加えて、体重も記録できるようになりました。体重の成長曲線やパーセンタイルも確認できます。入力を間違えても、身長・体重の記録をあとから編集できます。\n\nバックアップと復元にも対応しました。機種変更や再インストールのときも安心です。グラフ画面、全画面グラフ、下部ボタン、Android のファイル読み込みも整えました。",
-        "promotionalText": "📏 身長・体重をまとめて記録し、WHO などの権威データで成長曲線を科学的に確認できます。",
         "marketingUrl": "https://enki-work.github.io/KidSprout/",
         "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
         "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
       },
       "en-US": {
         "title": "KidSprout",
-        "subtitle": "Growth Curve Tracker for Parents",
+        "subtitle": "Growth Tracker for Parents",
         "description": "KidSprout is a child height growth tracking and analysis app designed for parents.\n\nBy integrating authoritative statistical data from the WHO, Japan's Ministry of Health, and Chinese health authorities, KidSprout visualizes growth curves to help parents understand where their child's height stands among peers — and scientifically predict adult height at age 18.\n\n[Key Features]\n\nGrowth Curve Visualization\nReal-time vector rendering of 0-18 age percentile growth curves based on authoritative data. Supports chart zoom and overlays your child's measured heights directly on the curve.\n\nMultiple Data Sources\n• WHO: World Health Organization Global Child Growth Standards\n• Japan MHLW: Ministry of Health, Labour and Welfare growth data\n• China: National child height development reference standards\nSwitch data sources anytime to compare curves.\n\nHeight Record Management\nRegularly log your child's height to auto-generate a personal growth trajectory. Manage multiple children with separate profiles and view predicted adult height ranges.\n\nMultilingual Support\nAvailable in English, Chinese, Japanese, Spanish, and Korean.",
         "keywords": [
-          "height", "growth chart", "child", "baby", "percentile", "WHO", "parenting", "pediatric", "kids health", "toddler", "height tracker"
+          "height",
+          "growth chart",
+          "child",
+          "baby",
+          "percentile",
+          "WHO",
+          "parenting",
+          "pediatric",
+          "kids health",
+          "toddler",
+          "height tracker"
         ],
         "releaseNotes": "This update is about making growth tracking feel a little easier day to day.\n\nYou can now record weight too, with weight growth charts and percentiles alongside height. If a measurement was entered wrong, height and weight records can now be edited later.\n\nBackup and restore are also here, so switching phones or reinstalling feels less stressful. We also polished the chart screens, fullscreen charts, bottom buttons, and Android file import.",
-        "promotionalText": "📏 Track height & weight with WHO-backed growth curves — see exactly where your child stands among peers.",
         "marketingUrl": "https://enki-work.github.io/KidSprout/",
         "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
         "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
@@ -65,10 +113,19 @@
         "subtitle": "Registro de talla infantil",
         "description": "KidSprout es una aplicación de registro y análisis del crecimiento de estatura infantil diseñada para padres.\n\nIntegrando datos estadísticos oficiales de la OMS, el Ministerio de Salud de Japón e instituciones chinas autorizadas, KidSprout visualiza curvas de crecimiento para que los padres puedan entender la posición de la estatura de su hijo entre sus pares y predecir científicamente la estatura adulta a los 18 años.\n\n[Funciones principales]\n\nVisualización de curvas de crecimiento\nRepresentación vectorial en tiempo real de curvas de percentiles de 0 a 18 años. Compatible con zoom y muestra la estatura medida de tu hijo sobre la curva.\n\nMúltiples fuentes de datos\n• OMS: Estándares globales de crecimiento infantil\n• Japón MHLW: Datos de desarrollo infantil de Japón\n• China: Estándares de referencia de desarrollo infantil chinos\nCambia de fuente en cualquier momento para comparar curvas.\n\nGestión de registros de estatura\nRegistra regularmente la estatura de tu hijo para generar automáticamente una trayectoria de crecimiento personal. Gestiona varios hijos con perfiles independientes.\n\nSoporte multilingüe\nDisponible en Español, English, Chinese, Japanese y Korean.",
         "keywords": [
-          "estatura", "curva crecimiento", "niño", "bebé", "desarrollo", "percentil", "OMS", "talla", "crianza", "pediatría", "salud infantil"
+          "estatura",
+          "curva crecimiento",
+          "niño",
+          "bebé",
+          "desarrollo",
+          "percentil",
+          "OMS",
+          "talla",
+          "crianza",
+          "pediatría",
+          "salud infantil"
         ],
         "releaseNotes": "Esta actualización busca que registrar el crecimiento sea un poco más fácil en el día a día.\n\nAhora también puedes registrar el peso, con curvas de crecimiento y percentiles junto a la talla. Si te equivocas al introducir un dato, puedes editar después los registros de talla y peso.\n\nTambién añadimos copia de seguridad y restauración, para cambiar de móvil o reinstalar con más tranquilidad. Además, pulimos los gráficos, la vista a pantalla completa, los botones inferiores y la importación de archivos en Android.",
-        "promotionalText": "📏 Registra talla y peso con curvas basadas en datos de la OMS — sigue el crecimiento completo de tu hijo.",
         "marketingUrl": "https://enki-work.github.io/KidSprout/",
         "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
         "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
@@ -78,55 +135,26 @@
         "subtitle": "아이 키 성장 기록 & 분석",
         "description": "KidSprout은 부모를 위해 설계된 아동 키 성장 기록 및 분석 앱입니다.\n\nWHO, 일본 후생노동성, 중국 권위 기관 등 각국의 공식 통계 데이터를 통합하여 성장 곡선을 시각화함으로써, 부모가 자녀의 키가 또래 중 어느 위치에 있는지 직관적으로 파악하고 18세 성인 예측 키를 과학적으로 산출할 수 있습니다.\n\n【주요 기능】\n\n【성장 곡선 시각화】\n공신력 있는 통계 데이터를 기반으로 0~18세 백분위 성장 곡선을 실시간 벡터로 렌더링합니다. 차트 확대/축소를 지원하며 실측 키를 곡선 위에 겹쳐 표시합니다.\n\n【다중 데이터 소스 지원】\n• WHO: 세계보건기구 글로벌 아동 성장 기준\n• 일본 후생노동성: 일본 아동 신체 발육 조사 데이터\n• 중국 권위 기관: 중국 아동 키 발육 참고 기준\n언제든지 데이터 소스를 전환하여 곡선을 비교할 수 있습니다.\n\n【키 기록 관리】\n정기적으로 키를 기록하여 개인 성장 궤적을 자동 생성하고, 여러 자녀를 독립 프로필로 관리하며 18세 예측 키 범위를 확인할 수 있습니다.\n\n【다국어 지원】\n한국어, English, 中文, 日本語, Español을 지원합니다.",
         "keywords": [
-          "키", "성장곡선", "아이", "아기", "발육", "백분위", "WHO", "키예측", "성장기록", "육아",
-          "소아", "건강", "유아키", "신체발달", "성장추적"
+          "키",
+          "성장곡선",
+          "아이",
+          "아기",
+          "발육",
+          "백분위",
+          "WHO",
+          "키예측",
+          "성장기록",
+          "육아",
+          "소아",
+          "건강",
+          "유아키",
+          "신체발달",
+          "성장추적"
         ],
         "releaseNotes": "이번 업데이트는 성장 기록을 조금 더 편하게 이어갈 수 있도록 다듬었습니다.\n\n이제 키뿐 아니라 체중도 기록할 수 있고, 체중 성장 곡선과 백분위도 함께 볼 수 있습니다. 잘못 입력한 기록은 나중에 키/체중 모두 수정할 수 있어요.\n\n백업과 복원도 추가했습니다. 휴대폰을 바꾸거나 앱을 다시 설치할 때 조금 더 안심할 수 있습니다. 그래프 화면, 전체 화면 그래프, 하단 버튼, Android 파일 가져오기도 함께 정리했습니다.",
-        "promotionalText": "📏 키와 체중을 함께 기록하고 WHO 기반 성장 곡선으로 아이의 발육을 과학적으로 확인하세요.",
         "marketingUrl": "https://enki-work.github.io/KidSprout/",
         "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
         "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
-      }
-    }
-  },
-  "google": {
-    "package": "com.qiyan.KidSprout",
-    "info": {
-      "zh-CN": {
-        "title": "小芽成长",
-        "shortDescription": "科学记录孩子身高体重，可视化成长曲线",
-        "fullDescription": "小芽成长是一款专为家长设计的儿童身高成长记录与分析应用。\n\n通过整合 WHO、日本厚生劳动省、中国权威机构等多国权威统计数据，以可视化成长曲线的方式，帮助家长直观了解孩子在同龄人中的身高位置，并科学预测18岁成年后的预期身高。\n\n【核心功能】\n\n📈 成长曲线可视化\n基于权威统计数据，实时矢量绘制 0～18 岁各百分位成长曲线，支持图表缩放，将孩子的实测身高叠加显示在曲线图上，一目了然。\n\n🌍 多数据源支持\n• WHO：世界卫生组织全球儿童生长标准\n• 日本厚生劳动省：日本儿童身高统计数据\n• 中国权威机构：中国儿童身高发育参考标准\n可随时切换数据源，重新绘制成长曲线进行对比。\n\n👶 身高记录管理\n定期记录孩子身高，自动生成个人成长轨迹，支持多个孩子的独立档案管理，预测18岁成年后的预期身高区间。\n\n🌐 多语言支持\n支持中文、日語、English、Español、한국어。",
-        "releaseNotes": "这次让日常记录更顺手了一点：体重也能记了，也能看体重成长曲线。身高、体重记录填错都可以回去改。还加了备份和恢复，顺手优化了图表、底部按钮和 Android 文件导入。"
-      },
-      "zh-TW": {
-        "title": "小芽成長",
-        "shortDescription": "科學記錄孩子身高體重，可視化成長曲線",
-        "fullDescription": "小芽成長是一款專為家長設計的兒童身高成長記錄與分析應用。\n\n通過整合 WHO、日本厚生勞動省、中國權威機構等多國權威統計數據，以可視化成長曲線的方式，幫助家長直觀瞭解孩子在同齡人中的身高位置，並科學預測18歲成年後的預期身高。\n\n【核心功能】\n\n📈 成長曲線可視化\n基於權威統計數據，實時矢量繪制 0～18 歲各百分位成長曲線，支持圖表縮放，將孩子的實測身高疊加顯示在曲線圖上，一目瞭然。\n\n🌍 多數據源支持\n• WHO：世界衛生組織全球兒童生長標準\n• 日本厚生勞動省：日本兒童身高統計數據\n• 中國權威機構：中國兒童身高發育參考標準\n可隨時切換數據源，重新繪製成長曲線進行對比。\n\n👶 身高記錄管理\n定期記錄孩子身高，自動生成個人成長軌跡，支持多個孩子的獨立檔案管理，預測18歲成年後的預期身高區間。\n\n🌐 多語言支持\n支持中文、日語、English、Español、한국어。",
-        "releaseNotes": "這次讓日常記錄更順手了一點：體重也能記了，也能看體重成長曲線。身高、體重記錄填錯都可以回去改。也加了備份與復原，順手優化了圖表、底部按鈕和 Android 檔案匯入。"
-      },
-      "ja-JP": {
-        "title": "成長ツリー",
-        "shortDescription": "子どもの身長・体重を科学的に記録・分析",
-        "fullDescription": "成長ツリーは、保護者のために設計された子どもの身長成長記録・分析アプリです。\n\nWHO・日本厚生労働省・中国権威機関などの各国公式統計データを統合し、成長曲線のビジュアライゼーションにより、お子さまの身長が同年齢の中でどの位置にあるかを直感的に把握できます。さらに、18歳時点での予測身長も科学的に算出します。\n\n【主な機能】\n\n📈 成長曲線の可視化\n権威ある統計データをもとに、0〜18歳の各パーセンタイル成長曲線をリアルタイムでベクター描画。グラフのズームに対応し、実測身長を曲線に重ねて表示します。\n\n🌍 複数データソース対応\n• WHO：世界保健機関 グローバル小児成長基準\n• 日本厚生労働省：乳幼児身体発育調査データ\n• 中国権威機関：中国小児身長発育参考基準\nデータソースをいつでも切り替えて、曲線を比較できます。\n\n👶 身長記録の管理\n定期的に身長を記録し、個人の成長軌跡を自動生成。複数のお子さまを独立したプロフィールで管理し、18歳時点の予測身長範囲を表示します。\n\n🌐 多言語対応\n日本語・中文・English・Español・한국어に対応。",
-        "releaseNotes": "日々の記録を、少し続けやすくしました。体重も記録できるようになり、体重の成長曲線も見られます。身長・体重の記録はあとから編集できます。バックアップと復元、グラフ画面、下部ボタン、Android のファイル読み込みも整えました。"
-      },
-      "en-US": {
-        "title": "KidSprout",
-        "shortDescription": "Track your child's height & weight with growth curves",
-        "fullDescription": "KidSprout is a child height growth tracking and analysis app designed for parents.\n\nBy integrating authoritative statistical data from the WHO, Japan's Ministry of Health, and Chinese health authorities, KidSprout visualizes growth curves to help parents understand where their child's height stands among peers — and scientifically predict adult height at age 18.\n\n【Key Features】\n\n📈 Growth Curve Visualization\nReal-time vector rendering of 0–18 age percentile growth curves based on authoritative data. Supports chart zoom and overlays your child's measured heights directly on the curve.\n\n🌍 Multiple Data Sources\n• WHO: World Health Organization Global Child Growth Standards\n• Japan MHLW: Ministry of Health, Labour and Welfare growth data\n• China: National child height development reference standards\nSwitch data sources anytime to compare curves.\n\n👶 Height Record Management\nRegularly log your child's height to auto-generate a personal growth trajectory. Manage multiple children with separate profiles and view predicted adult height ranges.\n\n🌐 Multilingual Support\nAvailable in English, 中文, 日本語, Español, and 한국어.",
-        "releaseNotes": "A softer update for everyday tracking: weight records are now supported, with weight growth charts too. Height and weight entries can be edited later, and backup/restore is now available. We also polished charts, bottom buttons, and Android file import."
-      },
-      "es-ES": {
-        "title": "KidSprout",
-        "shortDescription": "Registra la talla y el peso de tu hijo con curvas de crecimiento",
-        "fullDescription": "KidSprout es una aplicación de registro y análisis del crecimiento de estatura infantil diseñada para padres.\n\nIntegrando datos estadísticos oficiales de la OMS, el Ministerio de Salud de Japón e instituciones chinas autorizadas, KidSprout visualiza curvas de crecimiento para que los padres puedan entender la posición de la estatura de su hijo entre sus pares y predecir científicamente la estatura adulta a los 18 años.\n\n【Funciones principales】\n\n📈 Visualización de curvas de crecimiento\nRepresentación vectorial en tiempo real de curvas de percentiles de 0 a 18 años. Compatible con zoom y muestra la estatura medida de tu hijo sobre la curva.\n\n🌍 Múltiples fuentes de datos\n• OMS: Estándares globales de crecimiento infantil\n• Japón MHLW: Datos de desarrollo infantil de Japón\n• China: Estándares de referencia de desarrollo infantil chinos\nCambia de fuente en cualquier momento para comparar curvas.\n\n👶 Gestión de registros de estatura\nRegistra regularmente la estatura de tu hijo para generar automáticamente una trayectoria de crecimiento personal. Gestiona varios hijos con perfiles independientes.\n\n🌐 Soporte multilingüe\nDisponible en Español, English, 中文, 日本語 y 한국어.",
-        "releaseNotes": "Una actualización para registrar el día a día con más calma: ahora puedes guardar el peso y ver su curva de crecimiento. Los registros de talla y peso se pueden editar después. También añadimos copia de seguridad/restauración y mejoras en gráficos, botones inferiores e importación en Android."
-      },
-      "ko-KR": {
-        "title": "KidSprout",
-        "shortDescription": "아이 키·체중 성장 곡선 기록 & 분석",
-        "fullDescription": "KidSprout은 부모를 위해 설계된 아동 키 성장 기록 및 분석 앱입니다.\n\nWHO, 일본 후생노동성, 중국 권위 기관 등 각국의 공식 통계 데이터를 통합하여 성장 곡선을 시각화함으로써, 부모가 자녀의 키가 또래 중 어느 위치에 있는지 직관적으로 파악하고 18세 성인 예측 키를 과학적으로 산출할 수 있습니다.\n\n【주요 기능】\n\n📈 성장 곡선 시각화\n공신력 있는 통계 데이터를 기반으로 0~18세 백분위 성장 곡선을 실시간 벡터로 렌더링합니다. 차트 확대/축소를 지원하며 실측 키를 곡선 위에 겹쳐 표시합니다.\n\n🌍 다중 데이터 소스 지원\n• WHO: 세계보건기구 글로벌 아동 성장 기준\n• 일본 후생노동성: 일본 아동 신체 발육 조사 데이터\n• 중국 권위 기관: 중국 아동 키 발육 참고 기준\n언제든지 데이터 소스를 전환하여 곡선을 비교할 수 있습니다.\n\n👶 키 기록 관리\n정기적으로 키를 기록하여 개인 성장 궤적을 자동 생성하고, 여러 자녀를 독립 프로필로 관리하며 18세 예측 키 범위를 확인할 수 있습니다.\n\n🌐 다국어 지원\n한국어, English, 中文, 日本語, Español을 지원합니다.",
-        "releaseNotes": "매일의 기록을 조금 더 편하게 이어갈 수 있도록 다듬었습니다. 이제 체중도 기록하고 성장 곡선으로 볼 수 있어요. 키/체중 기록은 나중에 수정할 수 있고, 백업/복원도 추가했습니다. 그래프, 하단 버튼, Android 파일 가져오기도 개선했습니다."
       }
     }
   }
