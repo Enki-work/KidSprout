@@ -1,5 +1,5 @@
-import { Stack } from 'expo-router';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Stack, useFocusEffect, useRouter } from 'expo-router';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
@@ -15,7 +15,6 @@ import {
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {
   ErrorCode,
-  endConnection,
   finishTransaction,
   initConnection,
   purchaseErrorListener,
@@ -28,20 +27,17 @@ import {
   loadUpgradeProducts,
   type UpgradeProduct,
 } from '@/services/purchase/upgradeProducts';
-import {
-  getWeightProductId,
-  restoreWeightPurchases,
-} from '@/services/purchase/weightEntitlement';
-import { usePurchaseStore } from '@/store/purchaseStore';
+import { getWeightProductId } from '@/services/purchase/weightEntitlement';
 
 export default function UpgradePage() {
   const { t } = useTranslation();
+  const router = useRouter();
   const [products, setProducts] = useState<UpgradeProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [purchasingProductId, setPurchasingProductId] = useState<string | null>(null);
   const [error, setError] = useState(false);
-  const setPurchased = usePurchaseStore((state) => state.setPurchased);
+  const hasLoadedRef = useRef(false);
   const productId = getWeightProductId();
 
   const hasPurchasedPlan = useMemo(
@@ -67,87 +63,84 @@ export default function UpgradePage() {
     } finally {
       setLoading(false);
       setRefreshing(false);
+      hasLoadedRef.current = true;
     }
   }, []);
 
-  useEffect(() => {
-    let mounted = true;
-    let purchaseSub: { remove: () => void } | undefined;
-    let errorSub: { remove: () => void } | undefined;
+  useFocusEffect(
+    useCallback(() => {
+      load(hasLoadedRef.current);
+    }, [load]),
+  );
 
-    async function setupPurchaseConnection() {
-      try {
-        purchaseSub = purchaseUpdatedListener(async (purchase: Purchase) => {
-          if (purchase.productId !== productId) return;
+  useFocusEffect(
+    useCallback(() => {
+      let mounted = true;
+      let purchaseSub: { remove: () => void } | undefined;
+      let errorSub: { remove: () => void } | undefined;
 
-          try {
-            const valid = Platform.OS === 'ios'
-              ? (await restoreWeightPurchases()) === 'restored'
-              : !!purchase.purchaseToken;
+      async function setupPurchaseConnection() {
+        try {
+          purchaseSub = purchaseUpdatedListener(async (purchase: Purchase) => {
+            if (purchase.productId === productId) return;
 
-            if (!valid) {
+            try {
+              const valid = Platform.OS === 'android' ? !!purchase.purchaseToken : true;
+              if (!valid) {
+                if (mounted) setPurchasingProductId(null);
+                Alert.alert(t('purchase.error.title'), t('purchase.error.receiptInvalid'));
+                return;
+              }
+
+              await finishTransaction({ purchase, isConsumable: false });
+
+              if (mounted) {
+                setProducts((currentProducts) => (
+                  currentProducts.map((product) => (
+                    product.id === purchase.productId
+                      ? { ...product, isPurchased: true }
+                      : product
+                  ))
+                ));
+                setPurchasingProductId(null);
+                await load(true);
+              }
+            } catch {
               if (mounted) setPurchasingProductId(null);
               Alert.alert(t('purchase.error.title'), t('purchase.error.receiptInvalid'));
-              return;
             }
+          });
 
-            if (Platform.OS === 'android') {
-              await finishTransaction({ purchase, isConsumable: false });
-              setPurchased(true);
+          errorSub = purchaseErrorListener((purchaseError: PurchaseError) => {
+            if (purchaseError.code !== ErrorCode.UserCancelled) {
+              Alert.alert(t('purchase.error.title'), purchaseError.message);
             }
-
-            if (mounted) {
-              setProducts((currentProducts) => (
-                currentProducts.map((product) => (
-                  product.id === purchase.productId
-                    ? { ...product, isPurchased: true }
-                    : product
-                ))
-              ));
-              setPurchasingProductId(null);
-              await load(true);
-            }
-          } catch {
             if (mounted) setPurchasingProductId(null);
-            Alert.alert(t('purchase.error.title'), t('purchase.error.receiptInvalid'));
-          }
-        });
+          });
 
-        errorSub = purchaseErrorListener((purchaseError: PurchaseError) => {
-          if (purchaseError.code !== ErrorCode.UserCancelled) {
-            Alert.alert(t('purchase.error.title'), purchaseError.message);
-          }
-          if (mounted) setPurchasingProductId(null);
-        });
-
-        await initConnection();
-        if (mounted) await load();
-      } catch {
-        if (mounted) {
-          setError(true);
-          setLoading(false);
+          await initConnection();
+        } catch {
+          // 商品一覧の読み込み側でエラー表示するため、ここでは何もしない
         }
       }
-    }
 
-    setupPurchaseConnection();
+      setupPurchaseConnection();
 
-    return () => {
-      mounted = false;
-      purchaseSub?.remove();
-      errorSub?.remove();
-      endConnection().catch(() => {});
-    };
-  }, [load, productId, setPurchased, t]);
+      return () => {
+        mounted = false;
+        purchaseSub?.remove();
+        errorSub?.remove();
+      };
+    }, [load, productId, t]),
+  );
 
-  async function handlePurchase(product: UpgradeProduct) {
-    if (product.isPurchased || purchasingProductId) return;
+  async function purchasePlan(product: UpgradeProduct) {
     setPurchasingProductId(product.id);
 
     try {
       await initConnection();
       await requestPurchase({
-        type: 'in-app',
+        type: product.type === 'subs' ? 'subs' : 'in-app',
         request: Platform.OS === 'ios'
           ? { apple: { sku: product.id } }
           : { google: { skus: [product.id] } },
@@ -161,6 +154,15 @@ export default function UpgradePage() {
       setPurchasingProductId(null);
       initConnection().catch(() => {});
     }
+  }
+
+  async function handlePlanPress(product: UpgradeProduct) {
+    if (product.isPurchased) return;
+    if (product.id === productId) {
+      router.push('/purchase/weight-feature' as never);
+      return;
+    }
+    await purchasePlan(product);
   }
   return (
     <View style={styles.root}>
@@ -219,7 +221,7 @@ export default function UpgradePage() {
               <TouchableOpacity
                 key={product.id}
                 style={[styles.productCard, product.isPurchased && styles.productCardPurchased]}
-                onPress={() => handlePurchase(product)}
+                onPress={() => handlePlanPress(product)}
                 activeOpacity={0.78}
                 disabled={product.isPurchased || !!purchasingProductId}
               >
