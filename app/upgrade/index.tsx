@@ -15,19 +15,17 @@ import {
   loadUpgradeProducts,
   type UpgradeProduct,
 } from '@/services/purchase/upgradeProducts';
-import type { ActiveSubscription } from 'react-native-iap';
 
 export default function UpgradePage() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [products, setProducts] = useState<UpgradeProduct[]>([]);
-  const [activeSubscriptions, setActiveSubscriptions] = useState<ActiveSubscription[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(false);
 
-  const activeSubscription = useMemo(
-    () => activeSubscriptions.find((subscription) => subscription.isActive),
-    [activeSubscriptions],
+  const hasPurchasedPlan = useMemo(
+    () => products.some((product) => product.isPurchased),
+    [products],
   );
 
   const load = useCallback(async (isRefresh = false) => {
@@ -41,11 +39,9 @@ export default function UpgradePage() {
     try {
       const result = await loadUpgradeProducts();
       setProducts(result.products);
-      setActiveSubscriptions(result.activeSubscriptions);
     } catch {
       setError(true);
       setProducts([]);
-      setActiveSubscriptions([]);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -55,11 +51,6 @@ export default function UpgradePage() {
   useEffect(() => {
     load();
   }, [load]);
-
-  function formatDate(timestamp?: number | null): string | undefined {
-    if (!timestamp) return undefined;
-    return new Intl.DateTimeFormat(i18n.language).format(new Date(timestamp));
-  }
 
   return (
     <View style={styles.root}>
@@ -73,21 +64,16 @@ export default function UpgradePage() {
         <View style={styles.statusPanel}>
           <View style={styles.statusIcon}>
             <Ionicons
-              name={activeSubscription ? 'checkmark-circle' : 'ellipse-outline'}
+              name={hasPurchasedPlan ? 'checkmark-circle' : 'ellipse-outline'}
               size={28}
-              color={activeSubscription ? '#2E9D67' : '#8A8F98'}
+              color={hasPurchasedPlan ? '#2E9D67' : '#8A8F98'}
             />
           </View>
           <View style={styles.statusTextWrap}>
-            <Text style={styles.statusLabel}>{t('upgrade.subscriptionStatus')}</Text>
+            <Text style={styles.statusLabel}>{t('upgrade.purchaseStatus')}</Text>
             <Text style={styles.statusValue}>
-              {activeSubscription ? t('upgrade.active') : t('upgrade.inactive')}
+              {hasPurchasedPlan ? t('upgrade.purchased') : t('upgrade.notPurchased')}
             </Text>
-            {activeSubscription?.expirationDateIOS ? (
-              <Text style={styles.statusMeta}>
-                {t('upgrade.expiresOn', { date: formatDate(activeSubscription.expirationDateIOS) })}
-              </Text>
-            ) : null}
           </View>
         </View>
 
@@ -137,7 +123,7 @@ export default function UpgradePage() {
 
               <View style={styles.productBottomRow}>
                 <Text style={styles.productType}>
-                  {product.type === 'subs' ? t('upgrade.subscription') : t('upgrade.oneTimePurchase')}
+                  {t('upgrade.oneTimePurchase')}
                 </Text>
                 <Text style={styles.price}>{product.displayPrice}</Text>
               </View>
@@ -176,7 +162,6 @@ const styles = StyleSheet.create({
   statusTextWrap: { flex: 1 },
   statusLabel: { fontSize: 13, color: '#777', marginBottom: 3 },
   statusValue: { fontSize: 20, fontWeight: '800', color: '#1A1A2E' },
-  statusMeta: { fontSize: 12, color: '#777', marginTop: 4 },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',

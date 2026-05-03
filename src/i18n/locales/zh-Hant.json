@@ -224,10 +224,8 @@
   },
   "upgrade": {
     "title": "升級",
-    "subscriptionStatus": "訂閱狀態",
-    "active": "有效",
-    "inactive": "未訂閱",
-    "expiresOn": "有效期至 {{date}}",
+    "purchaseStatus": "購買狀態",
+    "notPurchased": "未購買",
     "availableProducts": "可用產品",
     "refresh": "重新整理",
     "loading": "正在從商店取得產品...",
@@ -237,7 +235,6 @@
     "noProductsHint": "商店中的產品可用後，會顯示在這裡。",
     "purchased": "已購買",
     "available": "可用",
-    "subscription": "訂閱",
     "oneTimePurchase": "一次性購買"
   },
   "backup": {

@@ -223,10 +223,8 @@
   },
   "upgrade": {
     "title": "アップグレード",
-    "subscriptionStatus": "サブスクリプション状態",
-    "active": "有効",
-    "inactive": "未加入",
-    "expiresOn": "{{date}} まで有効",
+    "purchaseStatus": "購入状態",
+    "notPurchased": "未購入",
     "availableProducts": "利用可能なプロダクト",
     "refresh": "更新",
     "loading": "ストアからプロダクトを取得しています...",
@@ -236,7 +234,6 @@
     "noProductsHint": "ストア側でプロダクトが利用可能になると、ここに表示されます。",
     "purchased": "購入済み",
     "available": "利用可能",
-    "subscription": "サブスクリプション",
     "oneTimePurchase": "買い切り"
   },
   "backup": {

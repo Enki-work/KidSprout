@@ -223,10 +223,8 @@
   },
   "upgrade": {
     "title": "업그레이드",
-    "subscriptionStatus": "구독 상태",
-    "active": "활성",
-    "inactive": "비활성",
-    "expiresOn": "{{date}}까지 유효",
+    "purchaseStatus": "구매 상태",
+    "notPurchased": "미구매",
     "availableProducts": "사용 가능한 제품",
     "refresh": "새로고침",
     "loading": "스토어에서 제품을 불러오는 중...",
@@ -236,7 +234,6 @@
     "noProductsHint": "스토어에서 제품을 사용할 수 있게 되면 여기에 표시됩니다.",
     "purchased": "구매됨",
     "available": "사용 가능",
-    "subscription": "구독",
     "oneTimePurchase": "일회 구매"
   },
   "backup": {

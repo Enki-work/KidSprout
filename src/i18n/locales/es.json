@@ -223,10 +223,8 @@
   },
   "upgrade": {
     "title": "Mejorar",
-    "subscriptionStatus": "Estado de suscripción",
-    "active": "Activa",
-    "inactive": "Inactiva",
-    "expiresOn": "Válida hasta {{date}}",
+    "purchaseStatus": "Estado de compra",
+    "notPurchased": "No comprado",
     "availableProducts": "Productos disponibles",
     "refresh": "Actualizar",
     "loading": "Cargando productos desde la tienda...",
@@ -236,7 +234,6 @@
     "noProductsHint": "Los productos aparecerán aquí cuando estén disponibles en la tienda.",
     "purchased": "Comprado",
     "available": "Disponible",
-    "subscription": "Suscripción",
     "oneTimePurchase": "Compra única"
   },
   "backup": {

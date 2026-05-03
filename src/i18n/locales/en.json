@@ -223,10 +223,8 @@
   },
   "upgrade": {
     "title": "Upgrade",
-    "subscriptionStatus": "Subscription Status",
-    "active": "Active",
-    "inactive": "Inactive",
-    "expiresOn": "Valid until {{date}}",
+    "purchaseStatus": "Purchase Status",
+    "notPurchased": "Not Purchased",
     "availableProducts": "Available Products",
     "refresh": "Refresh",
     "loading": "Loading products from the store...",
@@ -236,7 +234,6 @@
     "noProductsHint": "Products will appear here after they become available in the store.",
     "purchased": "Purchased",
     "available": "Available",
-    "subscription": "Subscription",
     "oneTimePurchase": "One-time Purchase"
   },
   "backup": {
