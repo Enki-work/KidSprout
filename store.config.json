@@ -29,7 +29,7 @@
           "成长档案",
           "健康"
         ],
-        "releaseNotes": "这次更新，想让记录成长这件事更顺手一点。\n\n现在可以把体重也记进来了，和身高一样看看成长曲线和百分位。记录填错了也不用紧张，身高、体重都可以回去修改。\n\n还加了备份和恢复，换手机、重装 App 时心里更踏实。图表页、全屏图表、底部按钮和文件导入也顺手修了修。",
+        "releaseNotes": "这次更新，想让高级功能的查看和购买过程更清楚一点。\n\n侧边菜单里加入了升级入口，可以看到当前的购买状态，以及 App Store 中可用的买断计划。体重曲线计划会进入原来的购买页面，完成购买或关闭页面后，升级页也会重新更新状态。\n\n相关文案也补齐了多语言显示，希望不同语言环境下使用起来都更自然。",
         "marketingUrl": "https://enki-work.github.io/KidSprout/",
         "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
         "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
@@ -55,7 +55,7 @@
           "成長檔案",
           "健康"
         ],
-        "releaseNotes": "這次更新，想讓記錄成長這件事更順手一點。\n\n現在也可以把體重記下來了，和身高一樣看看成長曲線與百分位。記錄填錯也不用擔心，身高、體重都可以回去修改。\n\n另外加了備份與復原，換手機或重新安裝時比較安心。圖表頁、全螢幕圖表、底部按鈕和檔案匯入也一起修順了。",
+        "releaseNotes": "這次更新，想讓進階功能的查看和購買過程更清楚一點。\n\n側邊選單加入了升級入口，可以看到目前的購買狀態，以及 App Store 中可用的買斷方案。體重曲線方案會進入原本的購買頁面，完成購買或關閉頁面後，升級頁也會重新更新狀態。\n\n相關文字也補齊了多語言顯示，希望在不同語言環境下使用起來都更自然。",
         "marketingUrl": "https://enki-work.github.io/KidSprout/",
         "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
         "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
@@ -81,7 +81,7 @@
           "健康",
           "幼児身長"
         ],
-        "releaseNotes": "今回の更新は、毎日の記録を少しだけ気楽に続けやすくするためのものです。\n\n身長に加えて、体重も記録できるようになりました。体重の成長曲線やパーセンタイルも確認できます。入力を間違えても、身長・体重の記録をあとから編集できます。\n\nバックアップと復元にも対応しました。機種変更や再インストールのときも安心です。グラフ画面、全画面グラフ、下部ボタン、ファイル読み込みも整えました。",
+        "releaseNotes": "今回の更新では、プレミアム機能の確認や購入の流れを少しわかりやすく整えました。\n\nサイドメニューにアップグレードを追加し、現在の購入状態と、App Store で利用できる買い切りプランを確認できるようにしました。体重曲線のプランはこれまでの購入ページへ進み、購入後やページを閉じたあとも、アップグレード画面の状態が更新されます。\n\n関連する表示文言も多言語で整え、どの言語でも自然に使えるようにしました。",
         "marketingUrl": "https://enki-work.github.io/KidSprout/",
         "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
         "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
@@ -103,7 +103,7 @@
           "toddler",
           "height tracker"
         ],
-        "releaseNotes": "This update is about making growth tracking feel a little easier day to day.\n\nYou can now record weight too, with weight growth charts and percentiles alongside height. If a measurement was entered wrong, height and weight records can now be edited later.\n\nBackup and restore are also here, so switching phones or reinstalling feels less stressful. We also polished the chart screens, fullscreen charts, bottom buttons, and file import.",
+        "releaseNotes": "This update makes the premium feature flow a little clearer.\n\nThere is now an Upgrade entry in the side menu, where you can check your current purchase status and see the one-time plans available from the App Store. The weight curve plan opens the existing purchase page, and when that page is closed or a purchase is completed, the Upgrade screen refreshes its status.\n\nWe also added the related text across supported languages so the screen feels more natural in each locale.",
         "marketingUrl": "https://enki-work.github.io/KidSprout/",
         "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
         "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
@@ -125,7 +125,7 @@
           "pediatría",
           "salud infantil"
         ],
-        "releaseNotes": "Esta actualización busca que registrar el crecimiento sea un poco más fácil en el día a día.\n\nAhora también puedes registrar el peso, con curvas de crecimiento y percentiles junto a la talla. Si te equivocas al introducir un dato, puedes editar después los registros de talla y peso.\n\nTambién añadimos copia de seguridad y restauración, para cambiar de móvil o reinstalar con más tranquilidad. Además, pulimos los gráficos, la vista a pantalla completa, los botones inferiores y la importación de archivos.",
+        "releaseNotes": "Esta actualización hace que el acceso a las funciones premium sea un poco más claro.\n\nAhora hay una entrada de mejora en el menú lateral, donde puedes consultar el estado de compra actual y ver los planes de pago único disponibles en App Store. El plan de curva de peso abre la página de compra existente y, al cerrarla o completar la compra, la pantalla de mejora actualiza su estado.\n\nTambién añadimos los textos relacionados en los idiomas compatibles para que la pantalla se sienta más natural en cada idioma.",
         "marketingUrl": "https://enki-work.github.io/KidSprout/",
         "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
         "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
@@ -151,7 +151,7 @@
           "신체발달",
           "성장추적"
         ],
-        "releaseNotes": "이번 업데이트는 성장 기록을 조금 더 편하게 이어갈 수 있도록 다듬었습니다.\n\n이제 키뿐 아니라 체중도 기록할 수 있고, 체중 성장 곡선과 백분위도 함께 볼 수 있습니다. 잘못 입력한 기록은 나중에 키/체중 모두 수정할 수 있어요.\n\n백업과 복원도 추가했습니다. 휴대폰을 바꾸거나 앱을 다시 설치할 때 조금 더 안심할 수 있습니다. 그래프 화면, 전체 화면 그래프, 하단 버튼, 파일 가져오기도 함께 정리했습니다.",
+        "releaseNotes": "이번 업데이트에서는 프리미엄 기능을 확인하고 구매하는 흐름을 조금 더 알기 쉽게 정리했습니다.\n\n사이드 메뉴에 업그레이드 항목을 추가해 현재 구매 상태와 App Store에서 사용할 수 있는 일회 구매 플랜을 확인할 수 있습니다. 체중 곡선 플랜은 기존 구매 페이지로 이동하며, 구매를 완료하거나 페이지를 닫은 뒤에는 업그레이드 화면의 상태가 다시 업데이트됩니다.\n\n관련 문구도 지원 언어에 맞춰 정리해, 어떤 언어에서도 더 자연스럽게 보이도록 했습니다.",
         "marketingUrl": "https://enki-work.github.io/KidSprout/",
         "supportUrl": "https://enki-work.github.io/KidSprout/support.html",
         "privacyPolicyUrl": "https://enki-work.github.io/KidSprout/privacy.html"
