@@ -218,7 +218,26 @@
     "language": "言語",
     "about": "アプリについて",
     "manage": "プロフィール編集",
+    "upgrade": "アップグレード",
     "backup": "データバックアップ"
+  },
+  "upgrade": {
+    "title": "アップグレード",
+    "subscriptionStatus": "サブスクリプション状態",
+    "active": "有効",
+    "inactive": "未加入",
+    "expiresOn": "{{date}} まで有効",
+    "availableProducts": "利用可能なプロダクト",
+    "refresh": "更新",
+    "loading": "ストアからプロダクトを取得しています...",
+    "loadFailed": "ストアに接続できませんでした",
+    "loadFailedHint": "App Store または Google Play に接続できる環境で、もう一度お試しください。",
+    "noProducts": "プロダクトが見つかりません",
+    "noProductsHint": "ストア側でプロダクトが利用可能になると、ここに表示されます。",
+    "purchased": "購入済み",
+    "available": "利用可能",
+    "subscription": "サブスクリプション",
+    "oneTimePurchase": "買い切り"
   },
   "backup": {
     "exportError": {

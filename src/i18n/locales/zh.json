@@ -218,7 +218,26 @@
     "language": "语言",
     "about": "关于",
     "manage": "编辑档案",
+    "upgrade": "升级",
     "backup": "数据备份"
+  },
+  "upgrade": {
+    "title": "升级",
+    "subscriptionStatus": "订阅状态",
+    "active": "有效",
+    "inactive": "未订阅",
+    "expiresOn": "有效期至 {{date}}",
+    "availableProducts": "可用产品",
+    "refresh": "刷新",
+    "loading": "正在从商店获取产品...",
+    "loadFailed": "无法连接商店",
+    "loadFailedHint": "请在可访问 App Store 或 Google Play 的环境中重试。",
+    "noProducts": "未找到产品",
+    "noProductsHint": "商店中的产品可用后，会显示在这里。",
+    "purchased": "已购买",
+    "available": "可用",
+    "subscription": "订阅",
+    "oneTimePurchase": "一次性购买"
   },
   "backup": {
     "exportError": {

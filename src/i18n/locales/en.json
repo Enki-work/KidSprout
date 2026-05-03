@@ -218,7 +218,26 @@
     "language": "Language",
     "about": "About",
     "manage": "Edit Profiles",
+    "upgrade": "Upgrade",
     "backup": "Backup & Restore"
+  },
+  "upgrade": {
+    "title": "Upgrade",
+    "subscriptionStatus": "Subscription Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "expiresOn": "Valid until {{date}}",
+    "availableProducts": "Available Products",
+    "refresh": "Refresh",
+    "loading": "Loading products from the store...",
+    "loadFailed": "Could not connect to the store",
+    "loadFailedHint": "Try again in an environment that can access the App Store or Google Play.",
+    "noProducts": "No products found",
+    "noProductsHint": "Products will appear here after they become available in the store.",
+    "purchased": "Purchased",
+    "available": "Available",
+    "subscription": "Subscription",
+    "oneTimePurchase": "One-time Purchase"
   },
   "backup": {
     "exportError": {

@@ -218,7 +218,26 @@
     "language": "Idioma",
     "about": "Acerca de",
     "manage": "Editar perfiles",
+    "upgrade": "Mejorar",
     "backup": "Copia de seguridad"
+  },
+  "upgrade": {
+    "title": "Mejorar",
+    "subscriptionStatus": "Estado de suscripción",
+    "active": "Activa",
+    "inactive": "Inactiva",
+    "expiresOn": "Válida hasta {{date}}",
+    "availableProducts": "Productos disponibles",
+    "refresh": "Actualizar",
+    "loading": "Cargando productos desde la tienda...",
+    "loadFailed": "No se pudo conectar con la tienda",
+    "loadFailedHint": "Inténtalo de nuevo en un entorno con acceso a App Store o Google Play.",
+    "noProducts": "No se encontraron productos",
+    "noProductsHint": "Los productos aparecerán aquí cuando estén disponibles en la tienda.",
+    "purchased": "Comprado",
+    "available": "Disponible",
+    "subscription": "Suscripción",
+    "oneTimePurchase": "Compra única"
   },
   "backup": {
     "exportError": {

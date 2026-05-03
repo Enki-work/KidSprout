@@ -219,7 +219,26 @@
     "language": "語言",
     "about": "關於",
     "manage": "編輯檔案",
+    "upgrade": "升級",
     "backup": "資料備份"
+  },
+  "upgrade": {
+    "title": "升級",
+    "subscriptionStatus": "訂閱狀態",
+    "active": "有效",
+    "inactive": "未訂閱",
+    "expiresOn": "有效期至 {{date}}",
+    "availableProducts": "可用產品",
+    "refresh": "重新整理",
+    "loading": "正在從商店取得產品...",
+    "loadFailed": "無法連接商店",
+    "loadFailedHint": "請在可連接 App Store 或 Google Play 的環境中重試。",
+    "noProducts": "未找到產品",
+    "noProductsHint": "商店中的產品可用後，會顯示在這裡。",
+    "purchased": "已購買",
+    "available": "可用",
+    "subscription": "訂閱",
+    "oneTimePurchase": "一次性購買"
   },
   "backup": {
     "exportError": {

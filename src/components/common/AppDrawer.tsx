@@ -133,6 +133,16 @@ export function AppDrawer({ visible, onClose }: Props) {
 
           <TouchableOpacity
             style={styles.menuItem}
+            onPress={() => navigate('/upgrade')}
+            activeOpacity={0.6}
+          >
+            <Ionicons name="sparkles-outline" size={22} color="#4CAF82" style={styles.menuIcon} />
+            <Text style={styles.menuLabel}>{t('drawer.upgrade')}</Text>
+            <Ionicons name="chevron-forward" size={18} color="#CCC" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.menuItem}
             onPress={() => { onClose(); setTimeout(handleExport, 210); }}
             activeOpacity={0.6}
             disabled={isExporting}
