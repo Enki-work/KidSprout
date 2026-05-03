@@ -3,6 +3,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActivityIndicator,
+  Alert,
+  Platform,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -12,23 +14,42 @@ import {
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import {
+  ErrorCode,
+  endConnection,
+  finishTransaction,
+  initConnection,
+  purchaseErrorListener,
+  purchaseUpdatedListener,
+  requestPurchase,
+  type Purchase,
+  type PurchaseError,
+} from 'react-native-iap';
+import {
   loadUpgradeProducts,
   type UpgradeProduct,
 } from '@/services/purchase/upgradeProducts';
+import {
+  getWeightProductId,
+  restoreWeightPurchases,
+} from '@/services/purchase/weightEntitlement';
+import { usePurchaseStore } from '@/store/purchaseStore';
 
 export default function UpgradePage() {
   const { t } = useTranslation();
   const [products, setProducts] = useState<UpgradeProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [purchasingProductId, setPurchasingProductId] = useState<string | null>(null);
   const [error, setError] = useState(false);
+  const setPurchased = usePurchaseStore((state) => state.setPurchased);
+  const productId = getWeightProductId();
 
   const hasPurchasedPlan = useMemo(
     () => products.some((product) => product.isPurchased),
     [products],
   );
 
-  const load = useCallback(async (isRefresh = false) => {
+  const load = useCallback(async (isRefresh = false, manageConnection = false) => {
     if (isRefresh) {
       setRefreshing(true);
     } else {
@@ -37,7 +58,7 @@ export default function UpgradePage() {
     setError(false);
 
     try {
-      const result = await loadUpgradeProducts();
+      const result = await loadUpgradeProducts({ manageConnection });
       setProducts(result.products);
     } catch {
       setError(true);
@@ -49,9 +70,94 @@ export default function UpgradePage() {
   }, []);
 
   useEffect(() => {
-    load();
-  }, [load]);
+    let mounted = true;
+    let purchaseSub: { remove: () => void } | undefined;
+    let errorSub: { remove: () => void } | undefined;
 
+    async function setupPurchaseConnection() {
+      try {
+        purchaseSub = purchaseUpdatedListener(async (purchase: Purchase) => {
+          if (purchase.productId !== productId) return;
+
+          try {
+            const valid = Platform.OS === 'ios'
+              ? (await restoreWeightPurchases()) === 'restored'
+              : !!purchase.purchaseToken;
+
+            if (!valid) {
+              if (mounted) setPurchasingProductId(null);
+              Alert.alert(t('purchase.error.title'), t('purchase.error.receiptInvalid'));
+              return;
+            }
+
+            if (Platform.OS === 'android') {
+              await finishTransaction({ purchase, isConsumable: false });
+              setPurchased(true);
+            }
+
+            if (mounted) {
+              setProducts((currentProducts) => (
+                currentProducts.map((product) => (
+                  product.id === purchase.productId
+                    ? { ...product, isPurchased: true }
+                    : product
+                ))
+              ));
+              setPurchasingProductId(null);
+              await load(true, Platform.OS === 'ios');
+            }
+          } catch {
+            if (mounted) setPurchasingProductId(null);
+            Alert.alert(t('purchase.error.title'), t('purchase.error.receiptInvalid'));
+          }
+        });
+
+        errorSub = purchaseErrorListener((purchaseError: PurchaseError) => {
+          if (purchaseError.code !== ErrorCode.UserCancelled) {
+            Alert.alert(t('purchase.error.title'), purchaseError.message);
+          }
+          if (mounted) setPurchasingProductId(null);
+        });
+
+        await initConnection();
+        if (mounted) await load();
+      } catch {
+        if (mounted) {
+          setError(true);
+          setLoading(false);
+        }
+      }
+    }
+
+    setupPurchaseConnection();
+
+    return () => {
+      mounted = false;
+      purchaseSub?.remove();
+      errorSub?.remove();
+      endConnection().catch(() => {});
+    };
+  }, [load, productId, setPurchased, t]);
+
+  async function handlePurchase(product: UpgradeProduct) {
+    if (product.isPurchased || purchasingProductId) return;
+    setPurchasingProductId(product.id);
+
+    try {
+      await requestPurchase({
+        type: 'in-app',
+        request: Platform.OS === 'ios'
+          ? { apple: { sku: product.id } }
+          : { google: { skus: [product.id] } },
+      });
+    } catch (purchaseError) {
+      const errorCode = (purchaseError as PurchaseError)?.code;
+      if (errorCode !== ErrorCode.UserCancelled) {
+        Alert.alert(t('purchase.error.title'), String((purchaseError as Error)?.message ?? purchaseError));
+      }
+      setPurchasingProductId(null);
+    }
+  }
   return (
     <View style={styles.root}>
       <Stack.Screen options={{ title: t('upgrade.title') }} />
@@ -103,32 +209,45 @@ export default function UpgradePage() {
             <Text style={styles.emptyText}>{t('upgrade.noProductsHint')}</Text>
           </View>
         ) : (
-          products.map((product) => (
-            <View key={product.id} style={styles.productCard}>
-              <View style={styles.productTopRow}>
-                <View style={styles.productTitleWrap}>
-                  <Text style={styles.productTitle}>{product.displayName || product.title}</Text>
-                  <Text style={styles.productId}>{product.id}</Text>
+          products.map((product) => {
+            const isPurchasing = purchasingProductId === product.id;
+            return (
+              <TouchableOpacity
+                key={product.id}
+                style={[styles.productCard, product.isPurchased && styles.productCardPurchased]}
+                onPress={() => handlePurchase(product)}
+                activeOpacity={0.78}
+                disabled={product.isPurchased || !!purchasingProductId}
+              >
+                <View style={styles.productTopRow}>
+                  <View style={styles.productTitleWrap}>
+                    <Text style={styles.productTitle}>{product.displayName || product.title}</Text>
+                    <Text style={styles.productId}>{product.id}</Text>
+                  </View>
+                  <View style={[styles.badge, product.isPurchased && styles.badgeActive]}>
+                    <Text style={[styles.badgeText, product.isPurchased && styles.badgeTextActive]}>
+                      {product.isPurchased ? t('upgrade.purchased') : t('upgrade.available')}
+                    </Text>
+                  </View>
                 </View>
-                <View style={[styles.badge, product.isPurchased && styles.badgeActive]}>
-                  <Text style={[styles.badgeText, product.isPurchased && styles.badgeTextActive]}>
-                    {product.isPurchased ? t('upgrade.purchased') : t('upgrade.available')}
+
+                {product.description ? (
+                  <Text style={styles.productDescription}>{product.description}</Text>
+                ) : null}
+
+                <View style={styles.productBottomRow}>
+                  <Text style={styles.productType}>
+                    {t('upgrade.oneTimePurchase')}
                   </Text>
+                  {isPurchasing ? (
+                    <ActivityIndicator color="#4CAF82" size="small" />
+                  ) : (
+                    <Text style={styles.price}>{product.displayPrice}</Text>
+                  )}
                 </View>
-              </View>
-
-              {product.description ? (
-                <Text style={styles.productDescription}>{product.description}</Text>
-              ) : null}
-
-              <View style={styles.productBottomRow}>
-                <Text style={styles.productType}>
-                  {t('upgrade.oneTimePurchase')}
-                </Text>
-                <Text style={styles.price}>{product.displayPrice}</Text>
-              </View>
-            </View>
-          ))
+              </TouchableOpacity>
+            );
+          })
         )}
       </ScrollView>
     </View>
@@ -206,6 +325,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     elevation: 2,
   },
+  productCardPurchased: { opacity: 0.78 },
   productTopRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',

@@ -30,8 +30,15 @@ async function fetchUpgradeStoreProducts(): Promise<ProductOrSubscription[]> {
   return (inAppProducts ?? []) as ProductOrSubscription[];
 }
 
-export async function loadUpgradeProducts(): Promise<UpgradeProductsResult> {
-  await initConnection();
+type LoadUpgradeProductsOptions = {
+  manageConnection?: boolean;
+};
+
+export async function loadUpgradeProducts(
+  options: LoadUpgradeProductsOptions = {},
+): Promise<UpgradeProductsResult> {
+  const manageConnection = options.manageConnection ?? true;
+  if (manageConnection) await initConnection();
   try {
     const [storeProducts, purchases] = await Promise.all([
       fetchUpgradeStoreProducts(),
@@ -52,6 +59,6 @@ export async function loadUpgradeProducts(): Promise<UpgradeProductsResult> {
       purchases: purchases ?? [],
     };
   } finally {
-    await endConnection().catch(() => {});
+    if (manageConnection) await endConnection().catch(() => {});
   }
 }
