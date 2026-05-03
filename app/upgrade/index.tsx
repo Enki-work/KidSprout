@@ -49,7 +49,7 @@ export default function UpgradePage() {
     [products],
   );
 
-  const load = useCallback(async (isRefresh = false, manageConnection = false) => {
+  const load = useCallback(async (isRefresh = false) => {
     if (isRefresh) {
       setRefreshing(true);
     } else {
@@ -58,7 +58,8 @@ export default function UpgradePage() {
     setError(false);
 
     try {
-      const result = await loadUpgradeProducts({ manageConnection });
+      await initConnection();
+      const result = await loadUpgradeProducts({ manageConnection: false });
       setProducts(result.products);
     } catch {
       setError(true);
@@ -104,7 +105,7 @@ export default function UpgradePage() {
                 ))
               ));
               setPurchasingProductId(null);
-              await load(true, Platform.OS === 'ios');
+              await load(true);
             }
           } catch {
             if (mounted) setPurchasingProductId(null);
@@ -144,6 +145,7 @@ export default function UpgradePage() {
     setPurchasingProductId(product.id);
 
     try {
+      await initConnection();
       await requestPurchase({
         type: 'in-app',
         request: Platform.OS === 'ios'
@@ -155,7 +157,9 @@ export default function UpgradePage() {
       if (errorCode !== ErrorCode.UserCancelled) {
         Alert.alert(t('purchase.error.title'), String((purchaseError as Error)?.message ?? purchaseError));
       }
+    } finally {
       setPurchasingProductId(null);
+      initConnection().catch(() => {});
     }
   }
   return (
