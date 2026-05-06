@@ -18,6 +18,7 @@ import {
   ActivityIndicator,
   Alert,
   Linking,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -29,6 +30,7 @@ import { usePurchase } from '@/hooks/usePurchase';
 
 // 隐私政策 URL（来自 store.config.json）
 const PRIVACY_URL = 'https://enki-work.github.io/KidSprout/privacy.html';
+const TERMS_URL = 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
 
 /** 功能特性图标映射 */
 const FEATURE_ICONS = ['📊', '🎯', '📈', '👨‍👩‍👧‍👦', '♾️'];
@@ -173,11 +175,19 @@ export default function WeightFeaturePurchasePage() {
         {/* ── 法律声明（Apple 审核要求） ── */}
         <Text style={styles.legalText}>{t('purchase.weightPage.legalText')}</Text>
 
-        {/* ── 隐私政策链接 ── */}
+        {/* ── 隐私政策 / 使用条款链接 ── */}
         <View style={styles.linksRow}>
           <TouchableOpacity onPress={() => openUrl(PRIVACY_URL)} activeOpacity={0.6}>
             <Text style={styles.linkText}>{t('purchase.weightPage.privacy')}</Text>
           </TouchableOpacity>
+          {Platform.OS === 'ios' ? (
+            <>
+              <Text style={styles.linkSep}>|</Text>
+              <TouchableOpacity onPress={() => openUrl(TERMS_URL)} activeOpacity={0.6}>
+                <Text style={styles.linkText}>{t('purchase.weightPage.terms')}</Text>
+              </TouchableOpacity>
+            </>
+          ) : null}
         </View>
       </ScrollView>
     </View>
